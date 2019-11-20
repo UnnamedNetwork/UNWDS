@@ -4,9 +4,10 @@
 A open server software for Minecraft: Bedrock Edition. UNWDelicatedSoftware is a fork of [pmmp](https://github.com/pmmp/PocketMine-MP) and [Foxel](https://github.com/FoxelTeam/Foxel)
 
 ## Multi Version:
-Thank to Foxel, we have a multiversion for servers
--Support for 1.12
--Support 1.13 (Testing)
+Thank to Foxel, we have a multiversion for servers:
+
++Support for 1.12
++Support 1.13 (Testing)
 
 ## Plugins
 
