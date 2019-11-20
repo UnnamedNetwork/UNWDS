@@ -6,8 +6,8 @@ A open server software for Minecraft: Bedrock Edition. UNWDelicatedSoftware is a
 ## Multi Version:
 Thank to Foxel, we have a multiversion for servers:
 
-+Support for 1.12
-+Support 1.13 (Testing)
++ Support for 1.12
++ Support 1.13 (Testing)
 
 ## Plugins
 
