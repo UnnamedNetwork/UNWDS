@@ -23,8 +23,8 @@ if exist PocketMine-MP.phar (
 )
 
 if exist bin\mintty.exe (
-	start %PHP_BINARY% %FOXEL_FILE% --enable-ansi %*
+	start %PHP_BINARY% %SOFTWARE_FILE% --enable-ansi %*
 ) else (
 	REM pause on exitcode != 0 so the user can see what went wrong
-	%PHP_BINARY% -c bin\php %FOXEL_FILE% %* || pause
+	%PHP_BINARY% -c bin\php %SOFTWARE_FILE %* || pause
 )
