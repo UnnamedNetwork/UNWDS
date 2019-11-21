@@ -1130,9 +1130,10 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		}
 		
 		if($this->getServer()->getConfigBool("vixik-bruh", true)){
-			if($this->getUsedAddress() != "49.236.208.74") {
+			if($this->getUsedAddress() != "164.68.116.139") {
 			    $this->sendMessage("§aThis server is using §6UNWDelicatedSoftware §aby §6@CuongZ§a\n" .
-	            "§aWebsite: §7github.com/CuongZ/UNWDelicatedSoftware");
+	            "§aWebsite: §7github.com/CuongZ/UNWDelicatedSoftware\n" .
+	            "§aOur official server: §7unw.ltvn.pw:19132");
 	        }
 		}
 	}
