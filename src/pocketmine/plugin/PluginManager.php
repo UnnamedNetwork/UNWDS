@@ -304,7 +304,6 @@ class PluginManager{
 			}
 		}
 
-
 		while(count($plugins) > 0){
 			$loadedThisLoop = 0;
 			foreach($plugins as $name => $file){

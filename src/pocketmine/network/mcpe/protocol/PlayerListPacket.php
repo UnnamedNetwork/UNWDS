@@ -35,9 +35,7 @@ class PlayerListPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::PLAYER_LIST_PACKET;
 
 	/** @var int $protocol */
-	public $protocol = ProtocolInfo::CURRENT_PROTOCOL;
-
-	public const TYPE_ADD = 0;
+public const TYPE_ADD = 0;
 	public const TYPE_REMOVE = 1;
 
 	/** @var PlayerListEntry[] */
@@ -50,28 +48,7 @@ class PlayerListPacket extends DataPacket{
 		return parent::clean();
 	}
 
-	protected function decodePayload(){
-		$this->type = $this->getByte();
-		$count = $this->getUnsignedVarInt();
-		for($i = 0; $i < $count; ++$i){
-			$entry = new PlayerListEntry();
-            $entry->uuid = $this->getUUID();
-			if($this->type === self::TYPE_ADD){
-				$entry->entityUniqueId = $this->getEntityUniqueId();
-				$entry->username = $this->getString();
-				// 1.12 skin
-				$entry->xboxUserId = $this->getString();
-				$entry->platformChatId = $this->getString();
-
-
-				$this->getLInt();
-				$entry->skin = $this->getSkin();
-				$this->getBool();
-				$this->getBool();
-			}
-
-			$this->entries[$i] = $entry;
-		}
+	protected function decodePayload() {
 	}
 
     protected function encodePayload(){

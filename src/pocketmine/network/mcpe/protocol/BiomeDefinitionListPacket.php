@@ -32,9 +32,7 @@ class BiomeDefinitionListPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::BIOME_DEFINITION_LIST_PACKET;
 
 	/** @var int $protocol */
-	public $protocol = ProtocolInfo::CURRENT_PROTOCOL;
-
-	/** @var string */
+/** @var string */
 	public $namedtag;
 
 	protected function decodePayload(){

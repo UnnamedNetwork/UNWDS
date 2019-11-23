@@ -28,6 +28,7 @@ namespace pocketmine\network\mcpe\protocol;
 
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\PlayerNetworkSessionAdapter;
 use function assert;
 use function get_class;
 use function strlen;
@@ -123,6 +124,9 @@ class BatchPacket extends DataPacket{
 				throw new \UnexpectedValueException("Received invalid " . get_class($pk) . " inside BatchPacket");
 			}
 
+			if($session instanceof PlayerNetworkSessionAdapter) {
+			    $pk->protocol = $session->getProtocol();
+            }
 			$session->handleDataPacket($pk);
 		}
 

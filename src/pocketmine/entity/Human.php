@@ -164,7 +164,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		$pk = new PlayerSkinPacket();
 		$pk->uuid = $this->getUniqueId();
 		$pk->skin = $this->skin;
-		$this->server->broadcastPacket($targets ?? $this->hasSpawned, $pk);
+		$this->server->broadcastPacket($targets ?? $this->hasSpawned, $pk, true);
 	}
 
 	public function jump() : void{
@@ -823,6 +823,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		if(!($this instanceof Player)){
 			/* we don't use Server->updatePlayerListData() because that uses batches, which could cause race conditions in async compression mode */
 			$pk = new PlayerListPacket();
+
 			$pk->protocol = $player->getProtocol();
 			$pk->type = PlayerListPacket::TYPE_ADD;
 			$pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(), $this->skin)];

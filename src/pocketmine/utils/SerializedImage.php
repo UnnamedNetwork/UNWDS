@@ -35,6 +35,8 @@ class SerializedImage {
      */
     public static function fromLegacy(string $data): SerializedImage {
         switch (strlen($data)) {
+            case 0:
+                return self::createEmpty();
             case 64 * 32 * 4:
                 return new SerializedImage(64, 32, $data);
             case 64 * 64 * 4:

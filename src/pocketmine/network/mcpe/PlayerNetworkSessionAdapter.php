@@ -325,4 +325,11 @@ class PlayerNetworkSessionAdapter extends NetworkSession{
 	public function handleNetworkStackLatency(NetworkStackLatencyPacket $packet) : bool{
 		return true; //TODO: implement this properly - this is here to silence debug spam from MCPE dev builds
 	}
+
+    /**
+     * @return int
+     */
+	public function getProtocol(): int {
+	    return $this->player->getProtocol();
+    }
 }

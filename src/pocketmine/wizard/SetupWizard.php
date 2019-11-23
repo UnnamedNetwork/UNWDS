@@ -43,7 +43,7 @@ use const PHP_EOL;
 use const STDIN;
 
 class SetupWizard{
-	public const DEFAULT_NAME = \pocketmine\NAME . "Server powered by UNWDelicatedSoftware";
+	public const DEFAULT_NAME = \pocketmine\NAME . " Server software powered by UNWDelicatedSoftware";
 	public const DEFAULT_PORT = 19132;
 	public const DEFAULT_PLAYERS = 20;
 	public const DEFAULT_GAMEMODE = Player::SURVIVAL;
@@ -217,7 +217,7 @@ LICENSE;
 		}
 
 		$config->save();
-
+		
 		$vixik = "Do you want to disable Vixik-bruh message while you join your server?";
 		$vixik_bruh = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
 		if(strtolower($this->getInput($vixik, "n", "y/N")) === "y"){

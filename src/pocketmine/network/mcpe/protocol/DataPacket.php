@@ -39,6 +39,9 @@ abstract class DataPacket extends NetworkBinaryStream{
 
 	public const NETWORK_ID = 0;
 
+	/** @var int $protocol */
+	public $protocol = ProtocolInfo::CURRENT_PROTOCOL;
+
 	/** @var bool */
 	public $isEncoded = false;
 	/** @var CachedEncapsulatedPacket */
