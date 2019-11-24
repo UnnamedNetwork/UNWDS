@@ -43,7 +43,7 @@ use const PHP_EOL;
 use const STDIN;
 
 class SetupWizard{
-	public const DEFAULT_NAME = \pocketmine\NAME . " Server software powered by UNWDelicatedSoftware";
+	public const DEFAULT_NAME = "UNWDelicatedSoftware Bedrock Server";
 	public const DEFAULT_PORT = 19132;
 	public const DEFAULT_PLAYERS = 20;
 	public const DEFAULT_GAMEMODE = Player::SURVIVAL;
@@ -57,7 +57,7 @@ class SetupWizard{
 	}
 
 	public function run() : bool{
-		$this->message(\pocketmine\NAME . " set-up wizard");
+		$this->message(\pocketmine\NAME . " Server setup");
 
 		$langs = BaseLang::getLanguageList();
 		if(empty($langs)){
@@ -162,9 +162,7 @@ LICENSE;
 
 		$config->set("max-players", (int) $this->getInput($this->lang->get("max_players"), (string) self::DEFAULT_PLAYERS));
 
-		$this->message($this->lang->get("spawn_protection_info"));
-
-		if(strtolower($this->getInput($this->lang->get("spawn_protection"), "n", "y/N")) === "n"){
+		if(strtolower($this->getInput($this->lang->get("Enable spawn protection?"), "n", "y/N")) === "n"){
 			$config->set("spawn-protection", -1);
 		}else{
 			$config->set("spawn-protection", 16);
@@ -206,8 +204,7 @@ LICENSE;
 			$config->set("enable-query", true);
 		}
 
-		$this->message($this->lang->get("rcon_info"));
-		if(strtolower($this->getInput($this->lang->get("rcon_enable"), "n", "y/N")) === "y"){
+		if(strtolower($this->getInput($this->lang->get("Do you want server RCON-enabled?"), "n", "y/N")) === "y"){
 			$config->set("enable-rcon", true);
 			$password = substr(base64_encode(random_bytes(20)), 3, 10);
 			$config->set("rcon.password", $password);
@@ -218,14 +215,15 @@ LICENSE;
 
 		$config->save();
 		
-		$vixik = "Do you want to disable Vixik-bruh message while you join your server?";
+		$vixik = "Do you want enable Vixik-enable messages while your player join server?";
 		$vixik_bruh = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
-		if(strtolower($this->getInput($vixik, "n", "y/N")) === "y"){
+		$this->message($this->lang->get("An Vixik message is notify player while them join, they get a message about this server is powered by UNWDelicatedSoftware"));
+		if(strtolower($this->getInput($vixik, "n", "y/N")) === "n"){
 			$vixik_bruh->set("vixik-bruh", false);
-			$this->message("Yay, Vixik-bruh Message had  disabled, let's party!");
+			$this->message("Yay!! Vixik messages was disable on your server!");
 		}else{
 			$vixik_bruh->set("vixik-bruh", true);
-			$this->error("Vixik is too powerful, we can't chose this now, sorry");
+			$this->error("Thank you for supporting UNWDelicatedSoftware for more people know this software !!");
 		}
 		$vixik_bruh->save();
 
