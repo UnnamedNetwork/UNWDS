@@ -16,6 +16,6 @@ You can use these plugin by add "yes" in the end of "/plugin_data/<PLUGIN_FOLDER
 
 ## Known issues
 Some issue will be fixed at future version:
-+ [FUTURE RELEASE] Fix some translation, such as %pocketmine.command.reload.reloaded will be fix to Reload complete.
-+ It worked correctly in my server, so will be added later. 
++ I dunno, it worked correctly in my server
++ If you want a bug report, translate report,etc please open issues in this repo :) Thank you
 
