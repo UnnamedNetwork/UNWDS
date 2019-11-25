@@ -119,6 +119,7 @@ final class RuntimeBlockMapping{
     public static function init(): void {
         self::$pallet[ProtocolInfo::PROTOCOL_1_12] = new RuntimeBlockMapping(ProtocolInfo::PROTOCOL_1_12);
         self::$pallet[ProtocolInfo::PROTOCOL_1_13] = new RuntimeBlockMapping(ProtocolInfo::PROTOCOL_1_13);
+        self::$pallet[ProtocolInfo::PROTOCOL_1_14] = new RuntimeBlockMapping(ProtocolInfo::PROTOCOL_1_13); // seems equals to 1.13
     }
 
     private static function lazyInit(): void{

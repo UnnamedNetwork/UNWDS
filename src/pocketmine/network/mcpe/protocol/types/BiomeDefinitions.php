@@ -51,6 +51,7 @@ final class BiomeDefinitions {
     public static function init() {
         self::$biomeData[ProtocolInfo::PROTOCOL_1_12] = new BiomeDefinitions(\pocketmine\RESOURCE_PATH . "/vanilla/biomes_1_12.dat");
         self::$biomeData[ProtocolInfo::PROTOCOL_1_13] = new BiomeDefinitions(\pocketmine\RESOURCE_PATH . "/vanilla/biomes_1_13.dat");
+        self::$biomeData[ProtocolInfo::PROTOCOL_1_14] = new BiomeDefinitions(\pocketmine\RESOURCE_PATH . "/vanilla/biomes_1_13.dat");
     }
 
     /**

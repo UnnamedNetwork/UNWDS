@@ -43,13 +43,15 @@ interface ProtocolInfo{
 
 	public const PROTOCOL_1_12 = 361;
 	public const PROTOCOL_1_13 = 388;
+	public const PROTOCOL_1_14 = 389;
 
     /**
      * Supported protocols by Foxel
      */
 	public const SUPPORTED_PROTOCOLS = [
 	    self::PROTOCOL_1_12, // 1.12
-        self::PROTOCOL_1_13 // 1.13
+        self::PROTOCOL_1_13, // 1.13
+        self::PROTOCOL_1_14
     ];
 
 	/**
