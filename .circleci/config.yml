@@ -5,8 +5,7 @@
        - image: circleci/ruby:2.4.2-jessie-node
      steps:
        - checkout
-       - run: |
-        echo "Script will load..."
+       - run:
         wget https://jenkins.pmmp.io/job/PHP-7.3-Aggregate/lastSuccessfulBuild/artifact/PHP-7.3-Linux-x86_64.tar.gz
         tar -xzf PHP-7.3-Linux-x86_64.tar.gz
         wget https://getcomposer.org/download/1.9.1/composer.phar
