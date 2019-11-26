@@ -2,7 +2,7 @@
   "name": "cuongz/unwdelicatedsoftware",
   "description": "A server software for Minecraft: Pocket Edition written in PHP",
   "type": "project",
-  "homepage": "http://unw.ltvn.pw/software/UNWDelicatedSoftware",
+  "homepage": "https://unw.ltvn.pw",
   "license": "LGPL-3.0",
   "require": {
     "php": ">=7.2.0",
