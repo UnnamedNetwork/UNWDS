@@ -2,7 +2,7 @@
  jobs:
    build:
      docker:
-       - image: ubuntu-lastest
+       - image: android
      steps:
        - checkout
        - run: echo "Hello bae =))"
