@@ -5,4 +5,18 @@
        - image: circleci/ruby:2.4.2-jessie-node
      steps:
        - checkout
-       - run: echo "Hello bae =))"
+       - run: |
+        echo "Script will load..."
+        wget https://jenkins.pmmp.io/job/PHP-7.3-Aggregate/lastSuccessfulBuild/artifact/PHP-7.3-Linux-x86_64.tar.gz
+        tar -xzf PHP-7.3-Linux-x86_64.tar.gz
+        wget https://getcomposer.org/download/1.9.1/composer.phar
+        bin/php7/bin/php composer.phar install
+        wget https://raw.githubusercontent.com/pmmp/DevTools/master/src/DevTools/ConsoleScript.php
+        mkdir builds
+        bin/php7/bin/php -dphar.readonly=0 ConsoleScript.php --make src,vendor --relative "" --entry "src/pocketmine/PocketMine.php" --out builds/UNWDelicatedSoftware.phar
+    - name: Archive build to builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifacts
+        path: builds/UNWDelicatedSoftwar.phar
+        
