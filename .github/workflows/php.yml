@@ -1,0 +1,25 @@
+name: PHP Composer
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run a multi-line script
+      run: 
+        mkdir builds
+        wget https://jenkins.pmmp.io/job/PHP-7.3-Aggregate/lastSuccessfulBuild/artifact/PHP-7.3-Linux-x86_64.tar.gz
+        tar -xzf PHP-7.3-Linux-x86_64.tar.gz
+        wget https://getcomposer.org/download/1.9.1/composer.phar
+        bin/php7/bin/php composer.phar install
+        wget https://raw.githubusercontent.com/pmmp/DevTools/master/src/DevTools/ConsoleScript.php
+        bin/php7/bin/php -dphar.readonly=0 ConsoleScript.php --make src,vendor --relative "" --entry "src/pocketmine/PocketMine.php" --out builds/UNWDelicatedSoftware.phar
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifacts
+        path: builds/UNWDelicatedSoftware.phar
