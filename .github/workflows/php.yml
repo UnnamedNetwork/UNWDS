@@ -8,7 +8,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Validate composer.json and composer.lock
-      run: composer validate
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
