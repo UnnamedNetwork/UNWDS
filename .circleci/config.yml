@@ -2,7 +2,7 @@
  jobs:
    build:
      docker:
-       - image: circleci/android
+       - image: circleci/dynamodb:[14-ea-9-jdk-oraclelinux7]
      steps:
        - checkout
        - run:
