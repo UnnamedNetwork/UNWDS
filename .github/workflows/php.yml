@@ -14,7 +14,7 @@ jobs:
         mkdir builds
         wget https://jenkins.pmmp.io/job/PHP-7.3-Aggregate/lastSuccessfulBuild/artifact/PHP-7.3-Linux-x86_64.tar.gz
         tar -xzf PHP-7.3-Linux-x86_64.tar.gz
-        curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+        curl -sS https://getcomposer.org/installer | sudo php -- --filename=composer
         wget https://getcomposer.org/download/1.9.1/composer.phar
         bin/php7/bin/php composer.phar install
         wget https://raw.githubusercontent.com/pmmp/DevTools/master/src/DevTools/ConsoleScript.php
