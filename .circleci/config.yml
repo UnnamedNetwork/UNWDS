@@ -4,7 +4,7 @@
      docker:
        - image: circleci/dynamodb:[14-ea-9-jdk-oraclelinux7]
      steps:
-       - run:
+       - run: |
         wget https://jenkins.pmmp.io/job/PHP-7.3-Aggregate/lastSuccessfulBuild/artifact/PHP-7.3-Linux-x86_64.tar.gz
         tar -xzf PHP-7.3-Linux-x86_64.tar.gz
         wget https://getcomposer.org/download/1.9.1/composer.phar
