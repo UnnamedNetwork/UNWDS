@@ -16,6 +16,7 @@ jobs:
         mkdir build
         wget https://getcomposer.org/download/1.9.1/composer.phar
         bin/php7/bin/php composer.phar install
+        composer config -g github-oauth.github.com aa63c1d3462bcc313e438a6a70202e80e102807b
         wget https://raw.githubusercontent.com/pmmp/DevTools/master/src/DevTools/ConsoleScript.php
         bin/php7/bin/php -dphar.readonly=0 ConsoleScript.php --make src,vendor --relative "" --entry "src/pocketmine/PocketMine.php" --out build/UNWDelicatedSoftware.phar
     - name: Archive production artifacts
