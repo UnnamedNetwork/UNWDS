@@ -6,8 +6,9 @@ A open server software for Minecraft: Bedrock Edition. UNWDelicatedSoftware is a
 # Multi Version:
 Thank to Foxel, we have a multiversion for clients:
 
-+ Support for 1.12
-+ Support 1.13 (Testing)
++ Support for 1.12 (OK)
++ Support 1.13 (OK)
++ Support for 1.14 ( tested with 1.14.0.51 beta Win10UWP, protocol 389 )
 
 # About plugins:
 Most of PMMP can used with UNWDelicatedSoftware, but few plugin is included Spoon, that will auto-disable load plugin after checked that the server image is 3rd build, not by PMMP.
@@ -23,4 +24,4 @@ None
 + You can contribute/donate for this project by enable Vixik messages for your server.
 + You MUST submit a bug with an console logs, system information. Your console logs and system infomation play a big role in our inprovement this project
 
-(c) Remake with <3 by CuongZ
+# (c) Remake with <3 by CuongZ
