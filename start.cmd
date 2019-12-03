@@ -13,39 +13,7 @@ if exist UNWDelicatedSoftware.phar (
 ) else (
 	echo = - UNWDelicatedSoftware.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
-	echo = - Finding UNWDSX software images...
-    echo ==================================================
-	goto UNWDSX
-)
-:UNWDSX
-if exist UNWDSX.phar (
-	set UNWDS_FILE=UNWDSX.phar
-	echo = - Found
-	echo = - Server starting...
-	echo ==================================================
-) else (
-	echo = - UNWDSX.phar not found
-	echo = - Server software can be found at github.com/CuongZ/UNWDSX/releases
-	echo = - Finding PocketMine-MP software images...
-    echo ==================================================
-	goto PMMP
-)
-@echo off
-TITLE UNWDelicatedSoftware software for Minecraft: Bedrock Edition
-cd /d %~dp0
-:UNWDS
-echo ==========UNWDelicatedSoftware software load==========
-echo = - Server will start...
-echo = - Checking Server file...
-if exist UNWDelicatedSoftware.phar (
-	set UNWDS_FILE=UNWDelicatedSoftware.phar
-	echo = - Found
-	echo = - Server starting...
-	echo ==================================================
-) else (
-	echo = - UNWDelicatedSoftware.phar not found
-	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
-	echo = - Finding UNWDSX software images...
+	echo = - Finding UNWDSX software image...
     echo ==================================================
 	goto UNWDSX
 )
@@ -58,6 +26,7 @@ if exist UNWDSX.phar (
 ) else (
 	echo = - UNWDSX.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
+	echo = - Finding PocketMine-MP software image...
     echo ==================================================
 	goto PMMP
 )
