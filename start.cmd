@@ -1,6 +1,7 @@
 @echo off
 TITLE UNWDelicatedSoftware software for Minecraft: Bedrock Edition
 cd /d %~dp0
+:UNWDS
 echo ==========UNWDelicatedSoftware software load==========
 echo = - Server will start...
 echo = - Checking Server file...
@@ -11,6 +12,19 @@ if exist UNWDelicatedSoftware.phar (
 	echo ==================================================
 ) else (
 	echo = - UNWDelicatedSoftware.phar not found
+	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
+	echo = - Finding UNWDSX software images...
+    echo ==================================================
+	goto UNWDSX
+)
+:UNWDSX
+if exist UNWDSX.phar (
+	set UNWDS_FILE=UNWDSX.phar
+	echo = - Found
+	echo = - Server starting...
+	echo ==================================================
+) else (
+	echo = - UNWDSX.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
     echo ==================================================
 	pause
