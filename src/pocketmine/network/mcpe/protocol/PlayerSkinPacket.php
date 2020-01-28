@@ -49,15 +49,14 @@ class PlayerSkinPacket extends DataPacket{
         }
 		else {
 		    $skin = new Skin();
-		    $skin->setSkinId($this->getString());
 
+		    $skin->setSkinId($this->getString());
 		    $this->oldSkinName = $this->getString();
 		    $this->newSkinName = $this->getString();
-
 		    $skin->setSkinData(SerializedImage::fromLegacy($this->getString()));
 		    $skin->setCapeData(SerializedImage::fromLegacy($this->getString()));
-		    $skin->setSkinResourcePatch($this->getString());
-		    $skin->setGeometryData($this->getString());
+		    $skin->setSkinResourcePatch(Skin::DEFAULT_SKIN_RESOURCE_PATCH); // $this->>getString(); geometry name
+		    $skin->setGeometryData(""); // $this->getString(); ->geometry data
 		    $this->skin = $skin;
         }
 	}
@@ -65,16 +64,20 @@ class PlayerSkinPacket extends DataPacket{
 	protected function encodePayload(){
 		$this->putUUID($this->uuid);
 		if($this->protocol >= ProtocolInfo::PROTOCOL_1_13) {
-            $this->putSkin($this->skin); // 1.13
+            $this->putSkin($this->skin); // 1.13+
         }
 		else {
+		    if($this->skin->version > ProtocolInfo::PROTOCOL_1_12) {
+		        $this->skin = Skin::getRandomSkin();
+            }
+
 		    $this->putString($this->skin->getSkinId());
 		    $this->putString($this->oldSkinName);
 		    $this->putString($this->newSkinName);
 		    $this->putString($this->skin->getSkinData()->data);
 		    $this->putString($this->skin->getCapeData()->data);
-		    $this->putString($this->skin->getSkinResourcePatch());
-		    $this->putString($this->skin->getGeometryData());
+		    $this->putString($this->skin->getSkinGeometryName());
+		    $this->putString(Skin::prepareGeometryDataForOld($this->skin->getGeometryData()));
         }
 	}
 

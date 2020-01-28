@@ -28,6 +28,10 @@ namespace pocketmine\network\mcpe\protocol;
  */
 interface ProtocolInfo{
 
+    public const PROTOCOL_1_12 = 361;
+    public const PROTOCOL_1_13 = 388;
+    public const PROTOCOL_1_14 = 389;
+
 	/**
 	 * NOTE TO DEVELOPERS
 	 * Do not waste your time or ours submitting pull requests changing game and/or protocol version numbers.
@@ -39,11 +43,7 @@ interface ProtocolInfo{
 	/**
 	 * Actual Minecraft: PE protocol version
 	 */
-	public const CURRENT_PROTOCOL = 388;
-
-	public const PROTOCOL_1_12 = 361;
-	public const PROTOCOL_1_13 = 388;
-	public const PROTOCOL_1_14 = 389;
+	public const CURRENT_PROTOCOL = self::PROTOCOL_1_14;
 
     /**
      * Supported protocols by Foxel
@@ -57,11 +57,11 @@ interface ProtocolInfo{
 	/**
 	 * Current Minecraft PE version reported by the server. This is usually the earliest currently supported version.
 	 */
-	public const MINECRAFT_VERSION = 'v1.13.0';
+	public const MINECRAFT_VERSION = 'v1.14.0';
 	/**
 	 * Version number sent to clients in ping responses.
 	 */
-	public const MINECRAFT_VERSION_NETWORK = '1.13.0';
+	public const MINECRAFT_VERSION_NETWORK = '1.14.0';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;

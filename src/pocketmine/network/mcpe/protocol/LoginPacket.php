@@ -35,6 +35,7 @@ use pocketmine\utils\SerializedImage;
 use pocketmine\utils\Utils;
 use function get_class;
 use function json_decode;
+use const pocketmine\RESOURCE_PATH;
 
 class LoginPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;
@@ -142,6 +143,7 @@ class LoginPacket extends DataPacket{
 
 	protected function decodeSkin() {
         $skin = new Skin();
+
         $skinToken = $this->clientData;
 
         if(isset($skinToken["SkinId"])) {
@@ -174,9 +176,12 @@ class LoginPacket extends DataPacket{
         $skin->setPersona($persona);
         $skin->setCapeOnClassic($capeOnClassic);
 
+        $skin->version = $this->protocol > ProtocolInfo::PROTOCOL_1_12 ? ProtocolInfo::PROTOCOL_1_13 : ProtocolInfo::PROTOCOL_1_12;
+
         $skinResourcePatch = Skin::getGeometryCustomConstant();
         $skinGeometryData = "";
 
+        // 1.13+
         if(isset($skinToken["SkinResourcePatch"])) {
             $skinResourcePatch = base64_decode($skinToken["SkinResourcePatch"]);
         }
@@ -184,6 +189,15 @@ class LoginPacket extends DataPacket{
         if(isset($skinToken["SkinGeometryData"])) {
             $skinGeometryData = base64_decode($skinToken["SkinGeometryData"]);
         }
+
+        // 1.12
+        /*if(isset($skinToken["SkinGeometryName"])) {
+            $skinResourcePatch = str_replace(Skin::DEFAULT_SKIN_GEOMETRY_NAME, $skinToken["SkinGeometryName"], Skin::DEFAULT_SKIN_RESOURCE_PATCH);
+        }
+
+        if(isset($skinToken["SkinGeometry"])) {
+            $skinGeometryData = base64_decode($skinToken["SkinGeometry"]);
+        }*/
 
         $skin->setSkinResourcePatch($skinResourcePatch);
         $skin->setGeometryData($skinGeometryData);

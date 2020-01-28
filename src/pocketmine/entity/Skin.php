@@ -29,10 +29,15 @@ use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\utils\SerializedImage;
 use function strlen;
+use const pocketmine\RESOURCE_PATH;
 
-class Skin{
+class Skin {
+
+    public const DEFAULT_SKIN_RESOURCE_PATCH = '{"geometry" : {"default" : "geometry.humanoid.custom"}}';
+    public const DEFAULT_SKIN_GEOMETRY_NAME = "geometry.humanoid.custom";
 
 	public const ACCEPTED_SKIN_SIZES = [
 		64 * 32 * 4,
@@ -41,10 +46,16 @@ class Skin{
 		128 * 128 * 4
 	];
 
+	/** @var Skin[] $defaultSkins */
+	public static $defaultSkins = [];
+
+	/** @var int $version */
+	public $version = ProtocolInfo::PROTOCOL_1_12;
+
 	/** @var string $skinId*/
 	private $skinId = "Standard_Custom";
 	/** @var string $skinResourcePatch */
-	private $skinResourcePatch = '{"geometry" : {"default" : "geometry.humanoid.custom"}}'; // old geometry name
+	private $skinResourcePatch = self::DEFAULT_SKIN_RESOURCE_PATCH; // old geometry name
 	/** @var SerializedImage */
 	private $skinData;
 	/** @var SkinAnimation[] $animations */
@@ -63,6 +74,21 @@ class Skin{
 	private $isPersona = false;
 	/** @var bool $capeOnClassic */
 	private $capeOnClassic = false;
+
+	public static function init() {
+	    foreach (glob(RESOURCE_PATH . "/skins/*.dat") as $file) {
+	        $skin = new Skin();
+	        $skin->setSkinData(SerializedImage::fromLegacy(base64_decode(file_get_contents($file))));
+	        self::$defaultSkins[basename($file, ".dat")] = $skin;
+        }
+    }
+
+    /**
+     * @return Skin
+     */
+    public static function getRandomSkin(): Skin {
+	    return self::$defaultSkins[array_rand(self::$defaultSkins, 1)];
+    }
 
 	/**
 	 * @deprecated
@@ -105,6 +131,18 @@ class Skin{
     }
 
     /**
+     * @return string
+     */
+    public function getSkinGeometryName(): string {
+        try {
+            return (json_decode($this->getSkinResourcePatch()))->geometry->default;
+        }
+        catch (\Exception $e) {
+            return self::DEFAULT_SKIN_GEOMETRY_NAME;
+        }
+    }
+
+    /**
      * @param SerializedImage|null $skinData
      */
     public function setSkinData(SerializedImage $skinData = null): void {
@@ -115,7 +153,7 @@ class Skin{
      * @return SerializedImage
      */
 	public function getSkinData(): SerializedImage {
-		return $this->skinData;
+		return $this->skinData === null ? SerializedImage::createEmpty() : $this->skinData;
 	}
 
     /**
@@ -129,7 +167,7 @@ class Skin{
      * @return SerializedImage
      */
 	public function getCapeData(): SerializedImage {
-		return $this->capeData;
+		return $this->capeData === null ? SerializedImage::createEmpty() : $this->capeData;
 	}
 
     /**
@@ -178,20 +216,18 @@ class Skin{
         return (string)$this->animationData;
     }
 
-
+    /**
+     * @param bool $isPremium
+     */
+    public function setPremium(bool $isPremium = false): void {
+        $this->isPremium = $isPremium;
+    }
 
     /**
      * @return bool
      */
     public function isPremium(): bool {
         return $this->isPremium;
-    }
-
-    /**
-     * @param bool $isPremium
-     */
-    public function setPremium(bool $isPremium = false): void {
-        $this->isPremium = $isPremium;
     }
 
     /**
@@ -326,4 +362,22 @@ class Skin{
         $skin->setCapeData(SerializedImage::createEmpty());
         return $skin;
     }
+
+    /**
+     * Source: Steafast2
+     *
+     * @param $skinGeometryData
+     * @return false|string
+     */
+    public static function prepareGeometryDataForOld($skinGeometryData) {
+        if (!empty($skinGeometryData)) {
+            if (($tempData = @json_decode($skinGeometryData, true))) {
+                unset($tempData["format_version"]);
+                return json_encode($tempData);
+            }
+        }
+        return $skinGeometryData;
+    }
+
+
 }

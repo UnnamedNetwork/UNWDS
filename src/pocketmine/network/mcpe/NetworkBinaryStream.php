@@ -37,6 +37,7 @@ use pocketmine\math\Vector3;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\types\CommandOriginData;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\network\mcpe\protocol\types\StructureSettings;
@@ -637,6 +638,7 @@ class NetworkBinaryStream extends BinaryStream{
 	public function putSkin(Skin $skin) {
 	    $this->putString($skin->getSkinId());
 	    $this->putString($skin->getSkinResourcePatch());
+
 	    $this->putImage($skin->getSkinData());
 
 	    $this->putLInt(count($skin->animations)); // TODO: Animations
@@ -647,7 +649,7 @@ class NetworkBinaryStream extends BinaryStream{
         }
 
         $this->putImage($skin->getCapeData());
-        $this->putString($skin->getGeometryData());
+        $this->putString($skin->version > ProtocolInfo::PROTOCOL_1_12 ? $skin->getGeometryData() : '');
         $this->putString($skin->getAnimationData());
 
         $this->putBool($skin->isPremium());
@@ -704,135 +706,5 @@ class NetworkBinaryStream extends BinaryStream{
         return new SerializedImage($width, $height, $data);
     }
 
-    /**
-     * @param $skinId
-     * @param $skinData
-     * @param $skinGeometryName
-     * @param $skinGeometryData
-     * @param $capeData
-     * @param $additionalSkinData
-     */
-    public function putSerializedSkin($skinId, $skinData, $skinGeometryName, $skinGeometryData, $capeData, $additionalSkinData) {
-        SkinUtils::fixSkinGeometry($skinGeometryName, $additionalSkinData);
-        if (!isset($additionalSkinData['PersonaSkin']) || !$additionalSkinData['PersonaSkin']) {
-            $additionalSkinData = [];
-        }
-        if (isset($additionalSkinData['skinData'])) {
-            $skinData = $additionalSkinData['skinData'];
-        }
-        if (isset($additionalSkinData['skinGeometryName'])) {
-            $skinGeometryName = $additionalSkinData['skinGeometryName'];
-        }
-        if (isset($additionalSkinData['skinGeometryData'])) {
-            $skinGeometryData = $additionalSkinData['skinGeometryData'];
-        }
-        if (empty($skinGeometryName)) {
-            $skinGeometryName = "geometry.humanoid.custom";
-        }
-        $this->putString($skinId);
-        $this->putString(isset($additionalSkinData['SkinResourcePatch']) ? $additionalSkinData['SkinResourcePatch'] : '{"geometry" : {"default" : "' . $skinGeometryName . '"}}');
-        if (isset($additionalSkinData['SkinImageHeight']) && isset($additionalSkinData['SkinImageWidth'])) {
-            $width = $additionalSkinData['SkinImageWidth'];
-            $height = $additionalSkinData['SkinImageHeight'];
-        } else {
-            $width = 64;
-            $height = strlen($skinData) >> 8;
-            while ($height > $width) {
-                $width <<= 1;
-                $height >>= 1;
-            }
-        }
-        $this->putLInt($width);
-        $this->putLInt($height);
-        $this->putString($skinData);
-        if (isset($additionalSkinData['AnimatedImageData'])) {
-            $this->putLInt(count($additionalSkinData['AnimatedImageData']));
-            foreach ($additionalSkinData['AnimatedImageData'] as $animation) {
-                $this->putLInt($animation['ImageWidth']);
-                $this->putLInt($animation['ImageHeight']);
-                $this->putString($animation['Image']);
-                $this->putLInt($animation['Type']);
-                $this->putLFloat($animation['Frames']);
-            }
-        } else {
-            $this->putLInt(0);
-        }
 
-        if (empty($capeData)) {
-            $this->putLInt(0);
-            $this->putLInt(0);
-            $this->putString('');
-        } else {
-            if (isset($additionalSkinData['CapeImageWidth']) && isset($additionalSkinData['CapeImageHeight'])) {
-                $width = $additionalSkinData['CapeImageWidth'];
-                $height = $additionalSkinData['CapeImageHeight'];
-            } else {
-                $width = 1;
-                $height = strlen($capeData) >> 2;
-                while ($height > $width) {
-                    $width <<= 1;
-                    $height >>= 1;
-                }
-            }
-            $this->putLInt($width);
-            $this->putLInt($height);
-            $this->putString($capeData);
-        }
-        $this->putString($skinGeometryData); // Skin Geometry Data
-        $this->putString(isset($additionalSkinData['SkinAnimationData']) ? $additionalSkinData['SkinAnimationData'] : ''); // Serialized SkinAnimation Data
-        $this->putBool(isset($additionalSkinData['PremiumSkin']) ? (bool)$additionalSkinData['PremiumSkin'] : false); // Is Premium Skin
-        $this->putBool(isset($additionalSkinData['PersonaSkin']) ? (bool)$additionalSkinData['PersonaSkin'] : false); // Is Persona Skin
-        $this->putBool(isset($additionalSkinData['CapeOnClassicSkin']) ? (bool)$additionalSkinData['CapeOnClassicSkin'] : false); // Is Persona Cape on Classic Skin
-
-        $this->putString(isset($additionalSkinData['CapeId']) ? $additionalSkinData['CapeId'] : '');
-        $uniqId = $skinId . $skinGeometryName . "-" . microtime(true);
-        $this->putString($uniqId); // Full Skin ID*/
-    }
-
-    /**
-     * @param $skinId
-     * @param $skinData
-     * @param $skinGeometryName
-     * @param $skinGeometryData
-     * @param $capeData
-     * @param $additionalSkinData
-     */
-    public function getSerializedSkin(&$skinId, &$skinData, &$skinGeometryName, &$skinGeometryData, &$capeData, &$additionalSkinData) {
-        $skinId = $this->getString();
-        $additionalSkinData['SkinResourcePatch'] = $this->getString();
-        $geometryData = json_decode($additionalSkinData['SkinResourcePatch'], true);
-        $skinGeometryName = isset($geometryData['geometry']['default']) ? $geometryData['geometry']['default'] : '';
-
-        $additionalSkinData['SkinImageWidth'] = $this->getLInt();
-        $additionalSkinData['SkinImageHeight'] = $this->getLInt();
-        $skinData = $this->getString();
-
-        $animationCount = $this->getLInt();
-        $additionalSkinData['AnimatedImageData'] = [];
-        for ($i = 0; $i < $animationCount; $i++) {
-            $additionalSkinData['AnimatedImageData'][] = [
-                'ImageWidth' => $this->getLInt(),
-                'ImageHeight' => $this->getLInt(),
-                'Image' => $this->getString(),
-                'Type' => $this->getLInt(),
-                'Frames' => $this->getLFloat(),
-            ];
-        }
-
-        $additionalSkinData['CapeImageWidth'] = $this->getLInt();
-        $additionalSkinData['CapeImageHeight'] = $this->getLInt();
-        $capeData = $this->getString();
-
-        $skinGeometryData = $this->getString();
-        if (strpos($skinGeometryData, 'null') === 0) {
-            $skinGeometryData = '';
-        }
-        $additionalSkinData['SkinAnimationData'] = $this->getString();
-        $additionalSkinData['PremiumSkin'] = $this->getByte();
-        $additionalSkinData['PersonaSkin'] = $this->getByte();
-        $additionalSkinData['CapeOnClassicSkin'] = $this->getByte();
-
-        $additionalSkinData['CapeId'] = $this->getString();
-        $this->getString(); // Full Skin ID
-    }
 }

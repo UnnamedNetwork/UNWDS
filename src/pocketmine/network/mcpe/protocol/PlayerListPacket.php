@@ -62,6 +62,9 @@ public const TYPE_ADD = 0;
                 $this->putString($entry->username);
 
                 if($this->protocol <= ProtocolInfo::PROTOCOL_1_12) {
+                    if($entry->skin->version > ProtocolInfo::PROTOCOL_1_12) {
+                        $entry->skin = Skin::getRandomSkin();
+                    }
                     $this->putString($entry->skin->getSkinId());
                     $this->putString($entry->skin->getSkinData()->data);
                     $this->putString($entry->skin->getCapeData()->data);
