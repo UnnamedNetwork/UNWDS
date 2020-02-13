@@ -43,7 +43,7 @@ use const PHP_EOL;
 use const STDIN;
 
 class SetupWizard{
-	public const DEFAULT_NAME = "UNWDelicatedSoftware Bedrock Server";
+	public const DEFAULT_NAME = "UNWDS for Minecraft: Bedrock Edition";
 	public const DEFAULT_PORT = 19132;
 	public const DEFAULT_PLAYERS = 20;
 	public const DEFAULT_GAMEMODE = Player::SURVIVAL;
@@ -217,13 +217,13 @@ LICENSE;
 		
 		$vixik = "Do you want enable Vixik-enable messages while your player join server?";
 		$vixik_bruh = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
-		$this->message($this->lang->get("An Vixik message is notify player while them join, they get a message about this server is powered by UNWDelicatedSoftware"));
+		$this->message($this->lang->get("An Vixik message is notify player while them join, they get a message about this server is powered by UNWDS ( default is No ). This can be configured by editing the source code at bin/src/PocketMine/Player.php at line 1134."));
 		if(strtolower($this->getInput($vixik, "n", "y/N")) === "n"){
 			$vixik_bruh->set("vixik-bruh", false);
 			$this->message("Yay!! Vixik messages was disable on your server!");
 		}else{
 			$vixik_bruh->set("vixik-bruh", true);
-			$this->error("Thank you for supporting UNWDelicatedSoftware for more people know this software !!");
+			$this->error("Thank you for supporting UNWDS for more people know this software !!");
 		}
 		$vixik_bruh->save();
 

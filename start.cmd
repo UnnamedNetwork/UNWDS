@@ -1,8 +1,24 @@
 @echo off
-TITLE UNWDelicatedSoftware software for Minecraft: Bedrock Edition
+TITLE UNWDS for Minecraft: Bedrock Edition
 cd /d %~dp0
+:UNWS2
+echo ==========UNWDS load==========
+echo = - Server will start...
+echo = - Checking Server file...
+if exist UNWDS.phar (
+	set UNWDS_FILE=UNWDS.phar
+	echo = - Found
+	echo = - Server starting...
+	echo ==================================================
+) else (
+	echo = - UNWDelicatedSoftware.phar not found
+	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
+	echo = - Finding UNWDS  older version  software image...
+    echo ==================================================
+	goto UNWDS
+)
 :UNWDS
-echo ==========UNWDelicatedSoftware software load==========
+echo ==========UNWDS  older version  load==========
 echo = - Server will start...
 echo = - Checking Server file...
 if exist UNWDelicatedSoftware.phar (
@@ -41,7 +57,7 @@ if exist PocketMine-MP.phar (
 	echo = - Server software can be found at github.com/pmmp/PocketMine-MP/releases
     echo ==================================================
 	pause
-	exit 1
+	exit
 )
 if exist bin\php\php.exe (
 	set PHPRC=""

@@ -21,7 +21,7 @@
 
 namespace pocketmine;
 
-const NAME = "UNWDelicatedSoftware";
-const BASE_VERSION = "1.1.0.0";
+const NAME = "UNWDS";
+const BASE_VERSION = "1.3.0.0";
 const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 1100;
+const BUILD_NUMBER = 1300;

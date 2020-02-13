@@ -1514,7 +1514,7 @@ class Server{
 				@file_put_contents($this->dataPath . "pocketmine.yml", $content);
 			}
 			$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
-            $this->logger->info("Thank you for using UNWDelicatedSoftware. This software is mastered with love by CuongZ.");
+            $this->logger->info("Thank you for using UNWDS.");
 			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 				"motd" => \pocketmine\NAME . " Server",
