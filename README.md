@@ -8,7 +8,7 @@ Thank to Foxel, we have a multiversion for clients:
 
 + Support for 1.12 (OK)
 + Support 1.13 (OK)
-+ Support for 1.14 ( tested with 1.14.1 Win10UWP, protocol 389 )
++ Support for 1.14 ( tested with 1.14.30 Android 5.1, protocol 389 )
 
 # About plugins:
 Most of PMMP can used with UNWDelicatedSoftware, but few plugin is included Spoon, that will auto-disable load plugin after checked that the server image is 3rd build, not by PMMP.
