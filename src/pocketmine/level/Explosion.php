@@ -61,7 +61,7 @@ class Explosion{
 	public $affectedBlocks = [];
 	/** @var float */
 	public $stepLen = 0.3;
-	/** @var Entity|Block */
+	/** @var Entity|Block|null */
 	private $what;
 
 	/** @var SubChunkIteratorManager */
@@ -70,7 +70,7 @@ class Explosion{
 	/**
 	 * @param Position     $center
 	 * @param float        $size
-	 * @param Entity|Block $what
+	 * @param Entity|Block|null $what
 	 */
 	public function __construct(Position $center, float $size, $what = null){
 		if(!$center->isValid()){

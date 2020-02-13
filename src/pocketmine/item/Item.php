@@ -51,6 +51,8 @@ use function file_get_contents;
 use function get_class;
 use function hex2bin;
 use function json_decode;
+use function is_string;
+use function strlen;
 use const DIRECTORY_SEPARATOR;
 
 class Item implements ItemIds, \JsonSerializable{
@@ -62,7 +64,7 @@ class Item implements ItemIds, \JsonSerializable{
 	public const TAG_DISPLAY_LORE = "Lore";
 
 
-	/** @var LittleEndianNBTStream */
+	/** @var LittleEndianNBTStream|null */
 	private static $cachedParser = null;
 
 	private static function parseCompoundTag(string $tag) : CompoundTag{
@@ -200,10 +202,8 @@ class Item implements ItemIds, \JsonSerializable{
 	protected $id;
 	/** @var int */
 	protected $meta;
-	/** @var string */
-	private $tags = "";
 	/** @var CompoundTag|null */
-	private $cachedNBT = null;
+	private $nbt = null;
 	/** @var int */
 	public $count = 1;
 	/** @var string */
@@ -230,7 +230,8 @@ class Item implements ItemIds, \JsonSerializable{
 	}
 
 	/**
-	 * Sets the Item's NBT
+	 * @deprecated This method accepts NBT serialized in a network-dependent format.
+	 * @see Item::setNamedTag()
 	 *
 	 * @param CompoundTag|string|null $tags
 	 *
@@ -239,9 +240,10 @@ class Item implements ItemIds, \JsonSerializable{
 	public function setCompoundTag($tags) : Item{
 		if($tags instanceof CompoundTag){
 			$this->setNamedTag($tags);
+		}elseif(is_string($tags) and strlen($tags) > 0){
+			$this->setNamedTag(self::parseCompoundTag($tags));
 		}else{
-			$this->tags = $tags === null ? "" : (string) $tags;
-			$this->cachedNBT = null;
+			$this->clearNamedTag();
 		}
 
 		return $this;
@@ -255,7 +257,7 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return string
 	 */
 	public function getCompoundTag() : string{
-		return $this->tags;
+		return $this->nbt !== null ? self::writeCompoundTag($this->nbt) : "";
 	}
 
 	/**
@@ -263,7 +265,7 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return bool
 	 */
 	public function hasCompoundTag() : bool{
-		return $this->tags !== "";
+		return $this->nbt !== null and $this->nbt->getCount() > 0;
 	}
 
 	/**
@@ -577,11 +579,8 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return CompoundTag
 	 */
 	public function getNamedTag() : CompoundTag{
-		if(!$this->hasCompoundTag() and $this->cachedNBT === null){
-			$this->cachedNBT = new CompoundTag();
-		}
+		return $this->nbt ?? ($this->nbt = new CompoundTag());
 
-		return $this->cachedNBT ?? ($this->cachedNBT = self::parseCompoundTag($this->tags));
 	}
 
 	/**
@@ -595,9 +594,7 @@ class Item implements ItemIds, \JsonSerializable{
 		if($tag->getCount() === 0){
 			return $this->clearNamedTag();
 		}
-
-		$this->cachedNBT = $tag;
-		$this->tags = self::writeCompoundTag($tag);
+		$this->nbt = clone $tag;
 
 		return $this;
 	}
@@ -607,7 +604,8 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return Item
 	 */
 	public function clearNamedTag() : Item{
-		return $this->setCompoundTag("");
+		$this->nbt = null;
+		return $this;
 	}
 
 	/**
@@ -881,20 +879,9 @@ class Item implements ItemIds, \JsonSerializable{
 	 * @return bool
 	 */
 	final public function equals(Item $item, bool $checkDamage = true, bool $checkCompound = true) : bool{
-		if($this->id === $item->getId() and (!$checkDamage or $this->getDamage() === $item->getDamage())){
-			if($checkCompound){
-				if($item->getCompoundTag() === $this->getCompoundTag()){
-					return true;
-				}elseif($this->hasCompoundTag() and $item->hasCompoundTag()){
-					//Serialized NBT didn't match, check the cached object tree.
-					return $this->getNamedTag()->equals($item->getNamedTag());
-				}
-			}else{
-				return true;
-			}
-		}
-
-		return false;
+		return $this->id === $item->getId() and
+			(!$checkDamage or $this->getDamage() === $item->getDamage()) and
+			(!$checkCompound or $this->getNamedTag()->equals($item->getNamedTag()));
 	}
 
 	/**
@@ -1037,6 +1024,8 @@ class Item implements ItemIds, \JsonSerializable{
 	}
 
 	public function __clone(){
-		$this->cachedNBT = null;
+		if($this->nbt !== null){
+			$this->nbt = clone $this->nbt;
+		}
 	}
 }

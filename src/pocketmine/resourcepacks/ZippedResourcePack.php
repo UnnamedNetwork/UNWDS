@@ -67,7 +67,7 @@ class ZippedResourcePack implements ResourcePack{
 	/** @var \stdClass */
 	protected $manifest;
 
-	/** @var string */
+	/** @var string|null */
 	protected $sha256 = null;
 
 	/** @var resource */

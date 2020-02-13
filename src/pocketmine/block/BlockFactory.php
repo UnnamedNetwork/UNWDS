@@ -32,22 +32,54 @@ use function min;
  * Manages block registration and instance creation
  */
 class BlockFactory{
-	/** @var \SplFixedArray<Block> */
+	/**
+	 * @var \SplFixedArray|Block[]
+	 * @phpstan-var \SplFixedArray<Block>
+	 */
 	private static $fullList = null;
 
-	/** @var \SplFixedArray<bool> */
+    /**
+	 * @var \SplFixedArray|bool[]
+	 * @phpstan-var \SplFixedArray<bool>
+	 */
+
 	public static $solid = null;
-	/** @var \SplFixedArray<bool> */
+
+	/**
+	 * @var \SplFixedArray|bool[]
+	 * @phpstan-var \SplFixedArray<bool>
+	 */
+
 	public static $transparent = null;
-	/** @var \SplFixedArray<float> */
+	/**
+	 * @var \SplFixedArray|float[]
+	 * @phpstan-var \SplFixedArray<float>
+	 */
+
 	public static $hardness = null;
-	/** @var \SplFixedArray<int> */
+
+	/**
+	 * @var \SplFixedArray|int[]
+	 * @phpstan-var \SplFixedArray<int>
+	 */
 	public static $light = null;
-	/** @var \SplFixedArray<int> */
+
+	/**
+	 * @var \SplFixedArray|int[]
+	 * @phpstan-var \SplFixedArray<int>
+	 */
 	public static $lightFilter = null;
-	/** @var \SplFixedArray<bool> */
+
+	/**
+	 * @var \SplFixedArray|bool[]
+	 * @phpstan-var \SplFixedArray<bool>
+	 */
 	public static $diffusesSkyLight = null;
-	/** @var \SplFixedArray<float> */
+
+	/**
+	 * @var \SplFixedArray|float[]
+	 * @phpstan-var \SplFixedArray<float>
+	 */
 	public static $blastResistance = null;
 
 	/**

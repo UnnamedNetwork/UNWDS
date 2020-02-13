@@ -44,7 +44,7 @@ abstract class DataPacket extends NetworkBinaryStream{
 
 	/** @var bool */
 	public $isEncoded = false;
-	/** @var CachedEncapsulatedPacket */
+	/** @var CachedEncapsulatedPacket|null */
 	public $__encapsulatedPacket = null;
 
 	/** @var int */
