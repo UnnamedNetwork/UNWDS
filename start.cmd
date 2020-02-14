@@ -10,6 +10,7 @@ if exist UNWDS.phar (
 	echo = - Found
 	echo = - Server starting...
 	echo ==================================================
+	goto SS
 ) else (
 	echo = - UNWDelicatedSoftware.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
@@ -26,6 +27,7 @@ if exist UNWDelicatedSoftware.phar (
 	echo = - Found
 	echo = - Server starting...
 	echo ==================================================
+	goto SS
 ) else (
 	echo = - UNWDelicatedSoftware.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
@@ -39,6 +41,7 @@ if exist UNWDSX.phar (
 	echo = - Found
 	echo = - Server starting...
 	echo ==================================================
+	goto SS
 ) else (
 	echo = - UNWDSX.phar not found
 	echo = - Server software can be found at github.com/CuongZ/UNWDelicatedSoftware/releases
@@ -52,6 +55,7 @@ if exist PocketMine-MP.phar (
 	echo = - Found
 	echo = - Server starting...
 	echo ==================================================
+	goto SS
 ) else (
 	echo = - PocketMine-MP.phar not found
 	echo = - Server software can be found at github.com/pmmp/PocketMine-MP/releases
@@ -59,6 +63,7 @@ if exist PocketMine-MP.phar (
 	pause
 	exit
 )
+:SS
 if exist bin\php\php.exe (
 	set PHPRC=""
 	set PHP_BINARY=bin\php\php.exe
