@@ -1697,7 +1697,8 @@ class Server{
 			Biome::init();
 			RuntimeBlockMapping::init();
 			BiomeDefinitions::init();
-
+			Skin::init();
+			
 			LevelProviderManager::init();
 			if(extension_loaded("leveldb")){
 				$this->logger->debug($this->getLanguage()->translateString("pocketmine.debug.enable"));
