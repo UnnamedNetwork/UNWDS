@@ -22,6 +22,6 @@
 namespace pocketmine;
 
 const NAME = "UNWDS";
-const BASE_VERSION = "1.4.2.0";
+const BASE_VERSION = "1.4.2.3";
 const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 1420;
+const BUILD_NUMBER = 1423;

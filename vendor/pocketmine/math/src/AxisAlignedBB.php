@@ -65,25 +65,17 @@ class AxisAlignedBB{
 		return $this->setBounds($bb->minX, $bb->minY, $bb->minZ, $bb->maxX, $bb->maxY, $bb->maxZ);
 	}
 
-	public function extend(int $face, float $distance) : AxisAlignedBB{
-		if($face === Facing::DOWN){
-			$this->minY -= $distance;
-		}elseif($face === Facing::UP){
-			$this->maxY += $distance;
-		}elseif($face === Facing::NORTH){
-			$this->minZ -= $distance;
-		}elseif($face === Facing::SOUTH){
-			$this->maxZ += $distance;
-		}elseif($face === Facing::WEST){
-			$this->minX -= $distance;
-		}elseif($face === Facing::EAST){
-			$this->maxX += $distance;
-		}else{
-			throw new \InvalidArgumentException("Invalid face $face");
-		}
-		return $this;
-	}
-	
+	/**
+	 * Returns a new AxisAlignedBB extended by the specified X, Y and Z.
+	 * If each of X, Y and Z are positive, the relevant max bound will be increased. If negative, the relevant min
+	 * bound will be decreased.
+	 *
+	 * @param float $x
+	 * @param float $y
+	 * @param float $z
+	 *
+	 * @return AxisAlignedBB
+	 */
 	public function addCoord(float $x, float $y, float $z) : AxisAlignedBB{
 		$minX = $this->minX;
 		$minY = $this->minY;
@@ -372,23 +364,30 @@ class AxisAlignedBB{
 		if($v1 !== null and !$this->isVectorInYZ($v1)){
 			$v1 = null;
 		}
+
 		if($v2 !== null and !$this->isVectorInYZ($v2)){
 			$v2 = null;
 		}
+
 		if($v3 !== null and !$this->isVectorInXZ($v3)){
 			$v3 = null;
 		}
+
 		if($v4 !== null and !$this->isVectorInXZ($v4)){
 			$v4 = null;
 		}
+
 		if($v5 !== null and !$this->isVectorInXY($v5)){
 			$v5 = null;
 		}
+
 		if($v6 !== null and !$this->isVectorInXY($v6)){
 			$v6 = null;
 		}
+
 		$vector = null;
 		$distance = PHP_INT_MAX;
+
 		foreach([$v1, $v2, $v3, $v4, $v5, $v6] as $v){
 			if($v !== null and ($d = $pos1->distanceSquared($v)) < $distance){
 				$vector = $v;
@@ -421,23 +420,5 @@ class AxisAlignedBB{
 
 	public function __toString(){
 		return "AxisAlignedBB({$this->minX}, {$this->minY}, {$this->minZ}, {$this->maxX}, {$this->maxY}, {$this->maxZ})";
-	}
-	
-	public function trim(int $face, float $distance) : AxisAlignedBB{
-		return $this->extend($face, -$distance);
-	}
-
-	/**
-	 * Returns a trimmed clone of this bounding box.
-	 * @see AxisAlignedBB::trim()
-	 *
-	 * @param int   $face
-	 * @param float $distance
-	 *
-	 * @return AxisAlignedBB
-	 * @throws \InvalidArgumentException
-	 */
-	public function trimmedCopy(int $face, float $distance) : AxisAlignedBB{
-		return $this->extendedCopy($face, -$distance);
 	}
 }
