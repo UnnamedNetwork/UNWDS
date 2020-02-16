@@ -1,4 +1,4 @@
-# Main configuration file for PocketMine-MP
+# Main configuration file for UNWDS-X
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
@@ -35,26 +35,26 @@ memory:
 
   #Main thread hard memory limit in megabytes. Set to 0 to disable
   #This will stop the server when the limit is surpassed
-  main-hard-limit: 1024
+  main-hard-limit: 0
 
   #AsyncWorker threads' hard memory limit in megabytes. Set to 0 to disable
   #This will crash the task currently executing on the worker if the task exceeds the limit
   #NOTE: THIS LIMIT APPLIES PER WORKER, NOT TO THE WHOLE PROCESS.
-  async-worker-hard-limit: 256
+  async-worker-hard-limit: 0
 
   #Period in ticks to check memory (default 1 second)
-  check-rate: 20
+  check-rate: 10
 
   #Continue firing low-memory-triggers and event while on low memory
   continuous-trigger: true
 
   #Only if memory.continuous-trigger is enabled. Specifies the rate in memory.check-rate steps (default 30 seconds)
-  continuous-trigger-rate: 30
+  continuous-trigger-rate: 20
 
   garbage-collection:
     #Period in ticks to fire the garbage collector manually (default 30 minutes), set to 0 to disable
     #This only affects the main thread. Other threads should fire their own collections
-    period: 36000
+    period: 360
 
     #Fire asynchronous tasks to collect garbage from workers
     collect-async-worker: true
@@ -84,11 +84,11 @@ memory:
 network:
   #Threshold for batching packets, in bytes. Only these packets will be compressed
   #Set to 0 to compress everything, -1 to disable.
-  batch-threshold: 256
+  batch-threshold: 0
   #Compression level used when sending batched packets. Higher = more CPU, less bandwidth usage
-  compression-level: 7
+  compression-level: 8
   #Use AsyncTasks for compression. Adds half/one tick delay, less CPU load on main thread
-  async-compression: false
+  async-compression: true
   #Experimental, only for Windows. Tries to use UPnP to automatically port forward
   upnp-forwarding: false
   #Maximum size in bytes of packets sent over the network (default 1492 bytes). Packets larger than this will be
@@ -113,15 +113,15 @@ level-settings:
 chunk-sending:
   #To change server normal render distance, change view-distance in server.properties.
   #Amount of chunks sent to players per tick
-  per-tick: 4
+  per-tick: 6
   #Radius of chunks that need to be sent before spawning the player
-  spawn-radius: 4
+  spawn-radius: 6
 
 chunk-ticking:
   #Max amount of chunks processed each tick
-  per-tick: 40
+  per-tick: 100
   #Radius of chunks around a player to tick
-  tick-radius: 3
+  tick-radius: 4
   light-updates: false
   clear-tick-list: true
   #IDs of blocks not to perform random ticking on.
@@ -133,21 +133,32 @@ chunk-generation:
   population-queue-size: 8
 
 ticks-per:
-  autosave: 6000
+  autosave: 600
 
 auto-report:
   #Send crash reports for processing
-  enabled: true
-  send-code: true
-  send-settings: true
+  enabled: false
+  send-code: false
+  send-settings: false
   send-phpinfo: false
-  use-https: true
-  host: crash.pmmp.io
+  use-https: false
+  host: dont.enable.this.setting.io
 
 anonymous-statistics:
   #Sends anonymous statistics for data aggregation, plugin usage tracking
   enabled: false #TODO: re-enable this when we have a new stats host
-  host: stats.pocketmine.net
+  host: dont.enable.this.setting.io
+
+auto-updater:
+  enabled: false
+  on-update:
+    warn-console: false
+    warn-ops: false
+  #Can be development, alpha, beta or stable.
+  preferred-channel: stable
+  #If using a development version, it will suggest changing the channel
+  suggest-channels: false
+  host: dont.enable.this.setting.io
 
 timings:
   #Choose the host to use for viewing your timings results.
