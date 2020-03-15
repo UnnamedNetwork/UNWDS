@@ -1,8 +1,5 @@
 # UNWDelicatedSoftware (UNWDS)
 
-This repo has been set to Archived ( read-only ), when I have time or there have an critical update in PMMP or Foxel base, I will update it on this.
-See you guys again, with a new, cleaner MC:BE Server Software or in UNWDSX, soon.
-
 A open-source server software for Minecraft: Bedrock Edition. UNWDelicatedSoftware is a fork of [pmmp](https://github.com/pmmp/PocketMine-MP) and [Foxel](https://github.com/FoxelTeam/Foxel). This software based by the good of Foxel and keep stabilty as PocketMine.
 
 You can try lastest version server software in:
