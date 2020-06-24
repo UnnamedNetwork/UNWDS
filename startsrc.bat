@@ -1,8 +1,8 @@
 @echo off
-REM This code is used to run SteadFast2 on source code (using the src folder).
+REM This code is used to run UNWDS on source code (using the src folder).
 REM Set TIMEOUT to how many seconds you want in between when the server stops to when the next restart takes place
 REM Prepare your PHP binary first.
-REM This file from : https://github.com/Todo56/SteadFastScripts/blob/master/startsrc.cmd 
+REM This file is based from : https://github.com/Todo56/SteadFastScripts/blob/master/startsrc.cmd 
 set TIMEOUT=0
 cd /d %~dp0
 netstat -o -n -a | findstr 0.0.0.0:19132 > NUL
