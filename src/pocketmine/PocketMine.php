@@ -225,7 +225,7 @@ namespace pocketmine {
 			//other server wrote its PID and released exclusive lock before we get our lock
 			flock(\pocketmine\LOCK_FILE, LOCK_SH);
 			$pid = stream_get_contents(\pocketmine\LOCK_FILE);
-			critical_error("Another " . \pocketmine\NAME . " instance (PID $pid) is already using this folder (" . realpath(\pocketmine\DATA) . ").");
+			critical_error("Another " . \pocketmine\DISTRO_NAME . " instance (PID $pid) is already using this folder (" . realpath(\pocketmine\DATA) . ").");
 			critical_error("Please stop the other server first before running a new one.");
 			exit(1);
 		}
