@@ -2,7 +2,7 @@
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
-
+# What I was did on this file...
 settings:
   #Whether to send all strings translated to server locale or let the device handle them
   force-language: false
@@ -10,6 +10,7 @@ settings:
   #Allow listing plugins via Query
   query-plugins: true
   #Show a console message when a plugin uses deprecated API methods
+  # Verbose mode, enable by default, help for debugging, change "true" to "false" if you dont want.
   deprecated-verbose: true
   #Enable plugin and core profiling by default
   enable-profiling: false
@@ -23,7 +24,8 @@ settings:
   #Whether to allow running development builds. Dev builds might crash, break your plugins, corrupt your world and more.
   #It is recommended to avoid using development builds where possible.
   enable-dev-builds: false
-
+  
+# This disable some memory limit protect, bcuz I dont want to enable this
 memory:
   #Global soft memory limit in megabytes. Set to 0 to disable
   #This will trigger low-memory-triggers and fire an event to free memory when the usage goes over this
@@ -52,14 +54,16 @@ memory:
   continuous-trigger-rate: 20
 
   garbage-collection:
-    #Period in ticks to fire the garbage collector manually (default 30 minutes), set to 0 to disable
+    #Period in ticks to fire the garbage collector manually (default 30 minutes = 36000) set to 0 to disable
     #This only affects the main thread. Other threads should fire their own collections
+    #Garbage collection now do usually than execpted
     period: 360
 
     #Fire asynchronous tasks to collect garbage from workers
     collect-async-worker: true
 
     #Trigger on low memory
+    #Ya, this is needed
     low-memory-trigger: true
 
   #Settings controlling memory dump handling.
@@ -68,6 +72,7 @@ memory:
     dump-async-worker: true
 
   max-chunks:
+    #4 is absolute number
     #Cap maximum render distance per player when low memory is triggered. Set to 0 to disable cap.
     chunk-radius: 4
 
@@ -84,6 +89,7 @@ memory:
 network:
   #Threshold for batching packets, in bytes. Only these packets will be compressed
   #Set to 0 to compress everything, -1 to disable.
+  #Compress to avoid some attack
   batch-threshold: 0
   #Compression level used when sending batched packets. Higher = more CPU, less bandwidth usage
   compression-level: 8
@@ -142,12 +148,12 @@ auto-report:
   send-settings: false
   send-phpinfo: false
   use-https: false
-  host: dont.enable.this.setting.io
+  host: null.dtcg.xyz
 
 anonymous-statistics:
   #Sends anonymous statistics for data aggregation, plugin usage tracking
   enabled: false #TODO: re-enable this when we have a new stats host
-  host: dont.enable.this.setting.io
+  host: null.dtcg.xyz
 
 auto-updater:
   enabled: false
@@ -158,10 +164,11 @@ auto-updater:
   preferred-channel: stable
   #If using a development version, it will suggest changing the channel
   suggest-channels: false
-  host: dont.enable.this.setting.io
+  host: null.dtcg.xyz
 
 timings:
   #Choose the host to use for viewing your timings results.
+  #Timings is nessesary so set to pmmp's default servers.
   host: timings.pmmp.io
 
 console:
