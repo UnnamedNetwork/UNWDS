@@ -34,7 +34,7 @@ const _VERSION_INFO_INCLUDED = true;
 
 # This mask will bypass Spoon
 const NAME = "PocketMine-MP";
-const BASE_VERSION= "not yet set";
+const BASE_VERSION= "3.11.0" # UNWDS based on this pmmp version, change it can... I dont know :)
 const BUILD_NUMBER = 0;
 const IS_DEVELOPMENT_BUILD = true;
 
