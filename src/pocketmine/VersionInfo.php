@@ -22,6 +22,8 @@
 namespace pocketmine;
 
 const NAME = "UNWDS";
+const SPOOF_NAME= "PocketMine"
+const SPOOF_BASE_VERSION= "not set yet"
 const BASE_VERSION = "1.5.0.0";
 const IS_DEVELOPMENT_BUILD = false;
 const BUILD_NUMBER = 1500;
