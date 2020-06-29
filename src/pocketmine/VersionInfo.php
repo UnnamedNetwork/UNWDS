@@ -19,11 +19,28 @@
  *
 */
 
+declare(strict_types=1);
+
 namespace pocketmine;
 
-const NAME = "UNWDS";
-const SPOOF_NAME= "PocketMine"
-const SPOOF_BASE_VERSION= "not set yet"
-const BASE_VERSION = "1.5.0.0";
-const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 1500;
+use function defined;
+
+// composer autoload doesn't use require_once and also pthreads can inherit things
+// TODO: drop this file and use a final class with constants
+if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
+	return;
+}
+const _VERSION_INFO_INCLUDED = true;
+
+# This mask will bypass Spoon
+const NAME = "PocketMine-MP";
+const BASE_VERSION= "not yet set";
+const BUILD_NUMBER = 0;
+const IS_DEVELOPMENT_BUILD = true;
+
+# Real face XD
+const DISTRO_NAME= "UNWDS";
+const DISTRO_VERSION = "2.0.0.0";
+
+# Don't use this when this is not set to "true", bcuz that mayn't run
+const IF_BUILD_SUCCESSFULLY = false;
