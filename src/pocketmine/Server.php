@@ -348,7 +348,7 @@ class Server{
 	 * @return string
 	 */
 	public function getName() : string{
-		return \pocketmine\NAME;
+		return \pocketmine\DISTRO_NAME;
 	}
 
 	/**
