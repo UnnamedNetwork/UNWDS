@@ -40,7 +40,8 @@ const IS_DEVELOPMENT_BUILD = true;
 
 # Real face XD
 const DISTRO_NAME= "UNWDS";
-const DISTRO_VERSION = "2.0.0.0";
+const DISTRO_VERSION = "2.0.0.1";
+const DISTRO_BUILD = "300620.2001"
 
 # Don't use this when this is not set to "true", bcuz that mayn't run
-const IF_BUILD_SUCCESSFULLY = false;
+const IS_BUILD_SUCCESSFULLY = false;
