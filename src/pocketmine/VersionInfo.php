@@ -19,12 +19,9 @@
  *
 */
 
-declare(strict_types=1);
-
 namespace pocketmine;
 
-# Resetted builds
 const NAME = "UNWDS";
-const BASE_VERSION= "3.11.0" # UNWDS based on this pmmp build
-const BUILD_NUMBER = 0;
-const IS_DEVELOPMENT_BUILD = true;
+const BASE_VERSION = "1.5.0.0";
+const IS_DEVELOPMENT_BUILD = false;
+const BUILD_NUMBER = 1500;

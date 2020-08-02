@@ -1,8 +1,8 @@
-# Main configuration file for UNWDS-X
+# Main configuration file for PocketMine-MP
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
-# What I was did on this file...
+
 settings:
   #Whether to send all strings translated to server locale or let the device handle them
   force-language: false
@@ -10,7 +10,6 @@ settings:
   #Allow listing plugins via Query
   query-plugins: true
   #Show a console message when a plugin uses deprecated API methods
-  # Verbose mode, enable by default, help for debugging, change "true" to "false" if you dont want.
   deprecated-verbose: true
   #Enable plugin and core profiling by default
   enable-profiling: false
@@ -24,8 +23,7 @@ settings:
   #Whether to allow running development builds. Dev builds might crash, break your plugins, corrupt your world and more.
   #It is recommended to avoid using development builds where possible.
   enable-dev-builds: false
-  
-# This disable some memory limit protect, bcuz I dont want to enable this
+
 memory:
   #Global soft memory limit in megabytes. Set to 0 to disable
   #This will trigger low-memory-triggers and fire an event to free memory when the usage goes over this
@@ -37,33 +35,31 @@ memory:
 
   #Main thread hard memory limit in megabytes. Set to 0 to disable
   #This will stop the server when the limit is surpassed
-  main-hard-limit: 0
+  main-hard-limit: 1024
 
   #AsyncWorker threads' hard memory limit in megabytes. Set to 0 to disable
   #This will crash the task currently executing on the worker if the task exceeds the limit
   #NOTE: THIS LIMIT APPLIES PER WORKER, NOT TO THE WHOLE PROCESS.
-  async-worker-hard-limit: 0
+  async-worker-hard-limit: 256
 
   #Period in ticks to check memory (default 1 second)
-  check-rate: 10
+  check-rate: 20
 
   #Continue firing low-memory-triggers and event while on low memory
   continuous-trigger: true
 
   #Only if memory.continuous-trigger is enabled. Specifies the rate in memory.check-rate steps (default 30 seconds)
-  continuous-trigger-rate: 20
+  continuous-trigger-rate: 30
 
   garbage-collection:
-    #Period in ticks to fire the garbage collector manually (default 30 minutes = 36000) set to 0 to disable
+    #Period in ticks to fire the garbage collector manually (default 30 minutes), set to 0 to disable
     #This only affects the main thread. Other threads should fire their own collections
-    #Garbage collection now do usually than execpted
-    period: 360
+    period: 36000
 
     #Fire asynchronous tasks to collect garbage from workers
     collect-async-worker: true
 
     #Trigger on low memory
-    #Ya, this is needed
     low-memory-trigger: true
 
   #Settings controlling memory dump handling.
@@ -72,7 +68,6 @@ memory:
     dump-async-worker: true
 
   max-chunks:
-    #4 is absolute number
     #Cap maximum render distance per player when low memory is triggered. Set to 0 to disable cap.
     chunk-radius: 4
 
@@ -89,12 +84,11 @@ memory:
 network:
   #Threshold for batching packets, in bytes. Only these packets will be compressed
   #Set to 0 to compress everything, -1 to disable.
-  #Compress to avoid some attack
-  batch-threshold: 0
+  batch-threshold: 256
   #Compression level used when sending batched packets. Higher = more CPU, less bandwidth usage
-  compression-level: 8
+  compression-level: 7
   #Use AsyncTasks for compression. Adds half/one tick delay, less CPU load on main thread
-  async-compression: true
+  async-compression: false
   #Experimental, only for Windows. Tries to use UPnP to automatically port forward
   upnp-forwarding: false
   #Maximum size in bytes of packets sent over the network (default 1492 bytes). Packets larger than this will be
@@ -119,15 +113,15 @@ level-settings:
 chunk-sending:
   #To change server normal render distance, change view-distance in server.properties.
   #Amount of chunks sent to players per tick
-  per-tick: 6
+  per-tick: 4
   #Radius of chunks that need to be sent before spawning the player
-  spawn-radius: 6
+  spawn-radius: 4
 
 chunk-ticking:
   #Max amount of chunks processed each tick
-  per-tick: 100
+  per-tick: 40
   #Radius of chunks around a player to tick
-  tick-radius: 4
+  tick-radius: 3
   light-updates: false
   clear-tick-list: true
   #IDs of blocks not to perform random ticking on.
@@ -139,36 +133,24 @@ chunk-generation:
   population-queue-size: 8
 
 ticks-per:
-  autosave: 600
+  autosave: 6000
 
 auto-report:
   #Send crash reports for processing
-  enabled: false
-  send-code: false
-  send-settings: false
+  enabled: true
+  send-code: true
+  send-settings: true
   send-phpinfo: false
-  use-https: false
-  host: null.dtcg.xyz
+  use-https: true
+  host: crash.pmmp.io
 
 anonymous-statistics:
   #Sends anonymous statistics for data aggregation, plugin usage tracking
   enabled: false #TODO: re-enable this when we have a new stats host
-  host: null.dtcg.xyz
-
-auto-updater:
-  enabled: false
-  on-update:
-    warn-console: false
-    warn-ops: false
-  #Can be development, alpha, beta or stable.
-  preferred-channel: stable
-  #If using a development version, it will suggest changing the channel
-  suggest-channels: false
-  host: null.dtcg.xyz
+  host: stats.pocketmine.net
 
 timings:
   #Choose the host to use for viewing your timings results.
-  #Timings is nessesary so set to pmmp's default servers.
   host: timings.pmmp.io
 
 console:
