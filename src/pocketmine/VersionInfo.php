@@ -33,6 +33,6 @@ if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 const _VERSION_INFO_INCLUDED = true;
 
 const NAME = "UNWDS";
-const BASE_VERSION = "2.0.0-alpha1";
+const BASE_VERSION = "2.0.0";
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0001;
+const BUILD_NUMBER = 0003;
