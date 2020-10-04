@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -40,13 +40,13 @@ class GuiDataPickItemPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->itemDescription = $this->getString();
 		$this->itemEffects = $this->getString();
-		$this->hotbarSlot = $this->getLInt();
+		$this->hotbarSlot = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->itemDescription);
 		$this->putString($this->itemEffects);
-		$this->putLInt($this->hotbarSlot);
+		($this->buffer .= (\pack("V", $this->hotbarSlot)));
 	}
 
 	public function handle(NetworkSession $session) : bool{

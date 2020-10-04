@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 use raklib\RakLib;
 use raklib\utils\InternetAddress;
@@ -43,20 +43,20 @@ class ConnectionRequestAccepted extends Packet{
 
 	protected function encodePayload() : void{
 		$this->putAddress($this->address);
-		$this->putShort(0);
+		($this->buffer .= (\pack("n", 0)));
 
 		$dummy = new InternetAddress("0.0.0.0", 0, 4);
 		for($i = 0; $i < RakLib::$SYSTEM_ADDRESS_COUNT; ++$i){
 			$this->putAddress($this->systemAddresses[$i] ?? $dummy);
 		}
 
-		$this->putLong($this->sendPingTime);
-		$this->putLong($this->sendPongTime);
+		($this->buffer .= (\pack("NN", $this->sendPingTime >> 32, $this->sendPingTime & 0xFFFFFFFF)));
+		($this->buffer .= (\pack("NN", $this->sendPongTime >> 32, $this->sendPongTime & 0xFFFFFFFF)));
 	}
 
 	protected function decodePayload() : void{
 		$this->address = $this->getAddress();
-		$this->getShort(); //TODO: check this
+		((\unpack("n", $this->get(2))[1])); //TODO: check this
 
 		$len = strlen($this->buffer);
 		$dummy = new InternetAddress("0.0.0.0", 0, 4);
@@ -65,7 +65,7 @@ class ConnectionRequestAccepted extends Packet{
 			$this->systemAddresses[$i] = $this->offset + 16 < $len ? $this->getAddress() : $dummy; //HACK: avoids trying to read too many addresses on bad data
 		}
 
-		$this->sendPingTime = $this->getLong();
-		$this->sendPongTime = $this->getLong();
+		$this->sendPingTime = (Binary::readLong($this->get(8)));
+		$this->sendPongTime = (Binary::readLong($this->get(8)));
 	}
 }

@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\inventory\FurnaceRecipe;
 use pocketmine\inventory\ShapedRecipe;
@@ -33,9 +32,8 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkSession;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
+use pocketmine\network\mcpe\protocol\types\PotionContainerChangeRecipe;
+use pocketmine\network\mcpe\protocol\types\PotionTypeRecipe;
 use function count;
 use function str_repeat;
 
@@ -53,9 +51,14 @@ class CraftingDataPacket extends DataPacket{
 
 	/** @var object[] */
 	public $entries = [];
+	/** @var PotionTypeRecipe[] */
+	public $potionTypeRecipes = [];
+	/** @var PotionContainerChangeRecipe[] */
+	public $potionContainerRecipes = [];
 	/** @var bool */
 	public $cleanRecipes = false;
 
+	/** @var mixed[][] */
 	public $decodedEntries = [];
 
 	public function clean(){
@@ -91,6 +94,7 @@ class CraftingDataPacket extends DataPacket{
 					$entry["uuid"] = $this->getUUID()->toString();
 					$entry["block"] = $this->getString();
 					$entry["priority"] = $this->getVarInt();
+					$entry["net_id"] = $this->readGenericTypeNetworkId();
 
 					break;
 				case self::ENTRY_SHAPED:
@@ -112,6 +116,7 @@ class CraftingDataPacket extends DataPacket{
 					$entry["uuid"] = $this->getUUID()->toString();
 					$entry["block"] = $this->getString();
 					$entry["priority"] = $this->getVarInt();
+					$entry["net_id"] = $this->readGenericTypeNetworkId();
 
 					break;
 				case self::ENTRY_FURNACE:
@@ -134,16 +139,35 @@ class CraftingDataPacket extends DataPacket{
 					break;
 				case self::ENTRY_MULTI:
 					$entry["uuid"] = $this->getUUID()->toString();
+					$entry["net_id"] = $this->readGenericTypeNetworkId();
 					break;
 				default:
 					throw new \UnexpectedValueException("Unhandled recipe type $recipeType!"); //do not continue attempting to decode
 			}
 			$this->decodedEntries[] = $entry;
 		}
-		$this->getBool(); //cleanRecipes
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$input = $this->getVarInt();
+			$inputMeta = $this->getVarInt();
+			$ingredient = $this->getVarInt();
+			$ingredientMeta = $this->getVarInt();
+			$output = $this->getVarInt();
+			$outputMeta = $this->getVarInt();
+			$this->potionTypeRecipes[] = new PotionTypeRecipe($input, $inputMeta, $ingredient, $ingredientMeta, $output, $outputMeta);
+		}
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$input = $this->getVarInt();
+			$ingredient = $this->getVarInt();
+			$output = $this->getVarInt();
+			$this->potionContainerRecipes[] = new PotionContainerChangeRecipe($input, $ingredient, $output);
+		}
+		$this->cleanRecipes = (($this->get(1) !== "\x00"));
 	}
 
-	private static function writeEntry($entry, NetworkBinaryStream $stream, int $pos){
+	/**
+	 * @param object              $entry
+	 */
+	private static function writeEntry($entry, NetworkBinaryStream $stream, int $pos) : int{
 		if($entry instanceof ShapelessRecipe){
 			return self::writeShapelessRecipe($entry, $stream, $pos);
 		}elseif($entry instanceof ShapedRecipe){
@@ -156,8 +180,8 @@ class CraftingDataPacket extends DataPacket{
 		return -1;
 	}
 
-	private static function writeShapelessRecipe(ShapelessRecipe $recipe, NetworkBinaryStream $stream, int $pos){
-		$stream->putString(Binary::writeInt($pos)); //some kind of recipe ID, doesn't matter what it is as long as it's unique
+	private static function writeShapelessRecipe(ShapelessRecipe $recipe, NetworkBinaryStream $stream, int $pos) : int{
+		$stream->putString((\pack("N", $pos))); //some kind of recipe ID, doesn't matter what it is as long as it's unique
 		$stream->putUnsignedVarInt($recipe->getIngredientCount());
 		foreach($recipe->getIngredientList() as $item){
 			$stream->putRecipeIngredient($item);
@@ -172,12 +196,13 @@ class CraftingDataPacket extends DataPacket{
 		$stream->put(str_repeat("\x00", 16)); //Null UUID
 		$stream->putString("crafting_table"); //TODO: blocktype (no prefix) (this might require internal API breaks)
 		$stream->putVarInt(50); //TODO: priority
+		$stream->writeGenericTypeNetworkId($pos); //TODO: ANOTHER recipe ID, only used on the network
 
 		return CraftingDataPacket::ENTRY_SHAPELESS;
 	}
 
-	private static function writeShapedRecipe(ShapedRecipe $recipe, NetworkBinaryStream $stream, int $pos){
-		$stream->putString(Binary::writeInt($pos)); //some kind of recipe ID, doesn't matter what it is as long as it's unique
+	private static function writeShapedRecipe(ShapedRecipe $recipe, NetworkBinaryStream $stream, int $pos) : int{
+		$stream->putString((\pack("N", $pos))); //some kind of recipe ID, doesn't matter what it is as long as it's unique
 		$stream->putVarInt($recipe->getWidth());
 		$stream->putVarInt($recipe->getHeight());
 
@@ -196,11 +221,12 @@ class CraftingDataPacket extends DataPacket{
 		$stream->put(str_repeat("\x00", 16)); //Null UUID
 		$stream->putString("crafting_table"); //TODO: blocktype (no prefix) (this might require internal API breaks)
 		$stream->putVarInt(50); //TODO: priority
+		$stream->writeGenericTypeNetworkId($pos); //TODO: ANOTHER recipe ID, only used on the network
 
 		return CraftingDataPacket::ENTRY_SHAPED;
 	}
 
-	private static function writeFurnaceRecipe(FurnaceRecipe $recipe, NetworkBinaryStream $stream){
+	private static function writeFurnaceRecipe(FurnaceRecipe $recipe, NetworkBinaryStream $stream) : int{
 		$stream->putVarInt($recipe->getInput()->getId());
 		$result = CraftingDataPacket::ENTRY_FURNACE;
 		if(!$recipe->getInput()->hasAnyDamageValue()){ //Data recipe
@@ -212,14 +238,23 @@ class CraftingDataPacket extends DataPacket{
 		return $result;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function addShapelessRecipe(ShapelessRecipe $recipe){
 		$this->entries[] = $recipe;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function addShapedRecipe(ShapedRecipe $recipe){
 		$this->entries[] = $recipe;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function addFurnaceRecipe(FurnaceRecipe $recipe){
 		$this->entries[] = $recipe;
 	}
@@ -233,17 +268,30 @@ class CraftingDataPacket extends DataPacket{
 			$entryType = self::writeEntry($d, $writer, $counter++);
 			if($entryType >= 0){
 				$this->putVarInt($entryType);
-				$this->put($writer->getBuffer());
+				($this->buffer .= $writer->getBuffer());
 			}else{
 				$this->putVarInt(-1);
 			}
 
 			$writer->reset();
 		}
+		$this->putUnsignedVarInt(count($this->potionTypeRecipes));
+		foreach($this->potionTypeRecipes as $recipe){
+			$this->putVarInt($recipe->getInputItemId());
+			$this->putVarInt($recipe->getInputItemMeta());
+			$this->putVarInt($recipe->getIngredientItemId());
+			$this->putVarInt($recipe->getIngredientItemMeta());
+			$this->putVarInt($recipe->getOutputItemId());
+			$this->putVarInt($recipe->getOutputItemMeta());
+		}
+		$this->putUnsignedVarInt(count($this->potionContainerRecipes));
+		foreach($this->potionContainerRecipes as $recipe){
+			$this->putVarInt($recipe->getInputItemId());
+			$this->putVarInt($recipe->getIngredientItemId());
+			$this->putVarInt($recipe->getOutputItemId());
+		}
 
-		$this->putVarInt(0); // 1.13
-		$this->putVarInt(0); // 1.13
-		$this->putBool($this->cleanRecipes);
+		($this->buffer .= ($this->cleanRecipes ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

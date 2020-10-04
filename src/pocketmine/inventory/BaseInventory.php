@@ -31,7 +31,9 @@ use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\InventoryContentPacket;
 use pocketmine\network\mcpe\protocol\InventorySlotPacket;
 use pocketmine\network\mcpe\protocol\types\ContainerIds;
+use pocketmine\network\mcpe\protocol\types\inventory\ItemStackWrapper;
 use pocketmine\Player;
+use function array_map;
 use function array_slice;
 use function count;
 use function max;
@@ -46,17 +48,18 @@ abstract class BaseInventory implements Inventory{
 	protected $name;
 	/** @var string */
 	protected $title;
-	/** @var \SplFixedArray|Item[] */
-	protected $slots = [];
+	/**
+	 * @var \SplFixedArray|(Item|null)[]
+	 * @phpstan-var \SplFixedArray<Item|null>
+	 */
+	protected $slots;
 	/** @var Player[] */
 	protected $viewers = [];
-	/** @var InventoryEventProcessor */
+	/** @var InventoryEventProcessor|null */
 	protected $eventProcessor;
 
 	/**
 	 * @param Item[] $items
-	 * @param int    $size
-	 * @param string $title
 	 */
 	public function __construct(array $items = [], int $size = null, string $title = null){
 		$this->slots = new \SplFixedArray($size ?? $this->getDefaultSize());
@@ -73,7 +76,6 @@ abstract class BaseInventory implements Inventory{
 
 	/**
 	 * Returns the size of the inventory.
-	 * @return int
 	 */
 	public function getSize() : int{
 		return $this->slots->getSize();
@@ -83,7 +85,7 @@ abstract class BaseInventory implements Inventory{
 	 * Sets the new size of the inventory.
 	 * WARNING: If the size is smaller, any items past the new size will be lost.
 	 *
-	 * @param int $size
+	 * @return void
 	 */
 	public function setSize(int $size){
 		$this->slots->setSize($size);
@@ -100,8 +102,6 @@ abstract class BaseInventory implements Inventory{
 	}
 
 	/**
-	 * @param bool $includeEmpty
-	 *
 	 * @return Item[]
 	 */
 	public function getContents(bool $includeEmpty = false) : array{
@@ -121,7 +121,6 @@ abstract class BaseInventory implements Inventory{
 
 	/**
 	 * @param Item[] $items
-	 * @param bool   $send
 	 */
 	public function setContents(array $items, bool $send = true) : void{
 		if(count($items) > $this->getSize()){
@@ -148,9 +147,6 @@ abstract class BaseInventory implements Inventory{
 	/**
 	 * Drops the contents of the inventory into the specified Level at the specified position and clears the inventory
 	 * contents.
-	 *
-	 * @param Level   $level
-	 * @param Vector3 $position
 	 */
 	public function dropContents(Level $level, Vector3 $position) : void{
 		foreach($this->getContents() as $item){
@@ -252,18 +248,18 @@ abstract class BaseInventory implements Inventory{
 	}
 
 	public function canAddItem(Item $item) : bool{
-		$item = clone $item;
+		$count = $item->getCount();
 		for($i = 0, $size = $this->getSize(); $i < $size; ++$i){
 			$slot = $this->getItem($i);
 			if($item->equals($slot)){
 				if(($diff = $slot->getMaxStackSize() - $slot->getCount()) > 0){
-					$item->setCount($item->getCount() - $diff);
+					$count -= $diff;
 				}
 			}elseif($slot->isNull()){
-				$item->setCount($item->getCount() - $this->getMaxStackSize());
+				$count -= $this->getMaxStackSize();
 			}
 
-			if($item->getCount() <= 0){
+			if($count <= 0){
 				return true;
 			}
 		}
@@ -430,7 +426,6 @@ abstract class BaseInventory implements Inventory{
 		}
 	}
 
-
 	/**
 	 * @param Player|Player[] $target
 	 */
@@ -440,7 +435,7 @@ abstract class BaseInventory implements Inventory{
 		}
 
 		$pk = new InventoryContentPacket();
-		$pk->items = $this->getContents(true);
+		$pk->items = array_map([ItemStackWrapper::class, 'legacy'], $this->getContents(true));
 
 		foreach($target as $player){
 			if(($id = $player->getWindowId($this)) === ContainerIds::NONE){
@@ -453,7 +448,6 @@ abstract class BaseInventory implements Inventory{
 	}
 
 	/**
-	 * @param int             $index
 	 * @param Player|Player[] $target
 	 */
 	public function sendSlot(int $index, $target) : void{
@@ -463,7 +457,7 @@ abstract class BaseInventory implements Inventory{
 
 		$pk = new InventorySlotPacket();
 		$pk->inventorySlot = $index;
-		$pk->item = $this->getItem($index);
+		$pk->item = ItemStackWrapper::legacy($this->getItem($index));
 
 		foreach($target as $player){
 			if(($id = $player->getWindowId($this)) === ContainerIds::NONE){

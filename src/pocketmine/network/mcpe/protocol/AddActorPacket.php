@@ -23,14 +23,13 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\entity\Attribute;
 use pocketmine\entity\EntityIds;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\EntityLink;
-use function array_search;
 use function count;
 
 class AddActorPacket extends DataPacket{
@@ -148,7 +147,7 @@ class AddActorPacket extends DataPacket{
 	public $entityUniqueId = null; //TODO
 	/** @var int */
 	public $entityRuntimeId;
-	/** @var int */
+	/** @var string */
 	public $type;
 	/** @var Vector3 */
 	public $position;
@@ -163,7 +162,10 @@ class AddActorPacket extends DataPacket{
 
 	/** @var Attribute[] */
 	public $attributes = [];
-	/** @var array */
+	/**
+	 * @var mixed[][]
+	 * @phpstan-var array<int, array{0: int, 1: mixed}>
+	 */
 	public $metadata = [];
 	/** @var EntityLink[] */
 	public $links = [];
@@ -171,22 +173,19 @@ class AddActorPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->entityUniqueId = $this->getEntityUniqueId();
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->type = array_search($t = $this->getString(), self::LEGACY_ID_MAP_BC, true);
-		if($this->type === false){
-			throw new \UnexpectedValueException("Can't map ID $t to legacy ID");
-		}
+		$this->type = $this->getString();
 		$this->position = $this->getVector3();
 		$this->motion = $this->getVector3();
-		$this->pitch = $this->getLFloat();
-		$this->yaw = $this->getLFloat();
-		$this->headYaw = $this->getLFloat();
+		$this->pitch = ((\unpack("g", $this->get(4))[1]));
+		$this->yaw = ((\unpack("g", $this->get(4))[1]));
+		$this->headYaw = ((\unpack("g", $this->get(4))[1]));
 
 		$attrCount = $this->getUnsignedVarInt();
 		for($i = 0; $i < $attrCount; ++$i){
 			$name = $this->getString();
-			$min = $this->getLFloat();
-			$current = $this->getLFloat();
-			$max = $this->getLFloat();
+			$min = ((\unpack("g", $this->get(4))[1]));
+			$current = ((\unpack("g", $this->get(4))[1]));
+			$max = ((\unpack("g", $this->get(4))[1]));
 			$attr = Attribute::getAttributeByName($name);
 
 			if($attr !== null){
@@ -209,22 +208,19 @@ class AddActorPacket extends DataPacket{
 	protected function encodePayload(){
 		$this->putEntityUniqueId($this->entityUniqueId ?? $this->entityRuntimeId);
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		if(!isset(self::LEGACY_ID_MAP_BC[$this->type])){
-			throw new \InvalidArgumentException("Unknown entity numeric ID $this->type");
-		}
-		$this->putString(self::LEGACY_ID_MAP_BC[$this->type]);
+		$this->putString($this->type);
 		$this->putVector3($this->position);
 		$this->putVector3Nullable($this->motion);
-		$this->putLFloat($this->pitch);
-		$this->putLFloat($this->yaw);
-		$this->putLFloat($this->headYaw);
+		($this->buffer .= (\pack("g", $this->pitch)));
+		($this->buffer .= (\pack("g", $this->yaw)));
+		($this->buffer .= (\pack("g", $this->headYaw)));
 
 		$this->putUnsignedVarInt(count($this->attributes));
 		foreach($this->attributes as $attribute){
 			$this->putString($attribute->getName());
-			$this->putLFloat($attribute->getMinValue());
-			$this->putLFloat($attribute->getValue());
-			$this->putLFloat($attribute->getMaxValue());
+			($this->buffer .= (\pack("g", $attribute->getMinValue())));
+			($this->buffer .= (\pack("g", $attribute->getValue())));
+			($this->buffer .= (\pack("g", $attribute->getMaxValue())));
 		}
 
 		$this->putEntityMetadata($this->metadata);

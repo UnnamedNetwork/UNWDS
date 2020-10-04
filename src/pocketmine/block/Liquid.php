@@ -38,6 +38,7 @@ use function min;
 
 abstract class Liquid extends Transparent{
 
+	/** @var int */
 	public $adjacentSources = 0;
 
 	/** @var Vector3|null */
@@ -90,6 +91,9 @@ abstract class Liquid extends Transparent{
 
 	abstract public function getBucketEmptySound() : int;
 
+	/**
+	 * @return float
+	 */
 	public function getFluidHeightPercent(){
 		$d = $this->meta;
 		if($d >= 8){
@@ -207,8 +211,6 @@ abstract class Liquid extends Transparent{
 
 	/**
 	 * Returns how many liquid levels are lost per block flowed horizontally. Affects how far the liquid can flow.
-	 *
-	 * @return int
 	 */
 	public function getFlowDecayPerBlock() : int{
 		return 1;
@@ -335,7 +337,7 @@ abstract class Liquid extends Transparent{
 				++$z;
 			}
 
-			if(!isset($this->flowCostVisited[$hash = Level::blockHash($x, $y, $z)])){
+			if(!isset($this->flowCostVisited[$hash = ((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)])){
 				$blockSide = $this->level->getBlockAt($x, $y, $z);
 				if(!$this->canFlowInto($blockSide)){
 					$this->flowCostVisited[$hash] = self::BLOCKED;
@@ -391,13 +393,13 @@ abstract class Liquid extends Transparent{
 			$block = $this->level->getBlockAt($x, $y, $z);
 
 			if(!$this->canFlowInto($block)){
-				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::BLOCKED;
+				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::BLOCKED;
 				continue;
 			}elseif($this->level->getBlockAt($x, $y - 1, $z)->canBeFlowedInto()){
-				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::CAN_FLOW_DOWN;
+				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::CAN_FLOW_DOWN;
 				$flowCost[$j] = $maxCost = 0;
 			}elseif($maxCost > 0){
-				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::CAN_FLOW;
+				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::CAN_FLOW;
 				$flowCost[$j] = $this->calculateFlowCost($x, $y, $z, 1, $maxCost, $j ^ 0x01, $j ^ 0x01);
 				$maxCost = min($maxCost, $flowCost[$j]);
 			}
@@ -430,6 +432,9 @@ abstract class Liquid extends Transparent{
 		return ($decay >= 0 && $blockDecay >= $decay) ? $decay : $blockDecay;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function checkForHarden(){
 
 	}

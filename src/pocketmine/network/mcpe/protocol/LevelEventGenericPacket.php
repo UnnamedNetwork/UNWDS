@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
@@ -44,16 +44,10 @@ class LevelEventGenericPacket extends DataPacket/* implements ClientboundPacket*
 		return $result;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getEventId() : int{
 		return $this->eventId;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getEventData() : string{
 		return $this->eventData;
 	}
@@ -65,7 +59,7 @@ class LevelEventGenericPacket extends DataPacket/* implements ClientboundPacket*
 
 	protected function encodePayload() : void{
 		$this->putVarInt($this->eventId);
-		$this->put($this->eventData);
+		($this->buffer .= $this->eventData);
 	}
 
 	public function handle(NetworkSession $handler) : bool{

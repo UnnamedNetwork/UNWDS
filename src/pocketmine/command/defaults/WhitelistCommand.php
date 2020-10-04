@@ -31,7 +31,9 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use function count;
 use function implode;
+use function sort;
 use function strtolower;
+use const SORT_STRING;
 
 class WhitelistCommand extends VanillaCommand{
 
@@ -47,10 +49,6 @@ class WhitelistCommand extends VanillaCommand{
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		if(!$this->testPermission($sender)){
 			return true;
-		}
-
-		if(count($args) === 0 or count($args) > 2){
-			throw new InvalidCommandSyntaxException();
 		}
 
 		if(count($args) === 1){
@@ -75,7 +73,8 @@ class WhitelistCommand extends VanillaCommand{
 					return true;
 				case "list":
 					$entries = $sender->getServer()->getWhitelisted()->getAll(true);
-					$result = implode($entries, ", ");
+					sort($entries, SORT_STRING);
+					$result = implode(", ", $entries);
 					$count = count($entries);
 
 					$sender->sendMessage(new TranslationContainer("commands.whitelist.list", [$count, $count]));
@@ -112,7 +111,7 @@ class WhitelistCommand extends VanillaCommand{
 			}
 		}
 
-		return true;
+		throw new InvalidCommandSyntaxException();
 	}
 
 	private function badPerm(CommandSender $sender, string $subcommand) : bool{

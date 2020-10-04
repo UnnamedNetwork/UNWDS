@@ -28,10 +28,6 @@ namespace pocketmine\network\mcpe\protocol;
  */
 interface ProtocolInfo{
 
-    public const PROTOCOL_1_12 = 361;
-    public const PROTOCOL_1_13 = 388;
-    public const PROTOCOL_1_14 = 389;
-
 	/**
 	 * NOTE TO DEVELOPERS
 	 * Do not waste your time or ours submitting pull requests changing game and/or protocol version numbers.
@@ -40,28 +36,12 @@ interface ProtocolInfo{
 	 * This file is generated automatically, do not edit it manually.
 	 */
 
-	/**
-	 * Actual Minecraft: PE protocol version
-	 */
-	public const CURRENT_PROTOCOL = self::PROTOCOL_1_14;
-
-    /**
-     * Supported protocols by Foxel
-     */
-	public const SUPPORTED_PROTOCOLS = [
-	    self::PROTOCOL_1_12, // 1.12
-        self::PROTOCOL_1_13, // 1.13
-        self::PROTOCOL_1_14
-    ];
-
-	/**
-	 * Current Minecraft PE version reported by the server. This is usually the earliest currently supported version.
-	 */
-	public const MINECRAFT_VERSION = 'v1.14.0';
-	/**
-	 * Version number sent to clients in ping responses.
-	 */
-	public const MINECRAFT_VERSION_NETWORK = '1.14.0';
+	/** Actual Minecraft: PE protocol version */
+	public const CURRENT_PROTOCOL = 408;
+	/** Current Minecraft PE version reported by the server. This is usually the earliest currently supported version. */
+	public const MINECRAFT_VERSION = 'v1.16.20';
+	/** Version number sent to clients in ping responses. */
+	public const MINECRAFT_VERSION_NETWORK = '1.16.20';
 
 	public const LOGIN_PACKET = 0x01;
 	public const PLAY_STATUS_PACKET = 0x02;
@@ -85,7 +65,7 @@ interface ProtocolInfo{
 	public const RIDER_JUMP_PACKET = 0x14;
 	public const UPDATE_BLOCK_PACKET = 0x15;
 	public const ADD_PAINTING_PACKET = 0x16;
-	public const EXPLODE_PACKET = 0x17;
+	public const TICK_SYNC_PACKET = 0x17;
 	public const LEVEL_SOUND_EVENT_PACKET_V1 = 0x18;
 	public const LEVEL_EVENT_PACKET = 0x19;
 	public const BLOCK_EVENT_PACKET = 0x1a;
@@ -188,18 +168,36 @@ interface ProtocolInfo{
 	public const LEVEL_SOUND_EVENT_PACKET = 0x7b;
 	public const LEVEL_EVENT_GENERIC_PACKET = 0x7c;
 	public const LECTERN_UPDATE_PACKET = 0x7d;
-	public const VIDEO_STREAM_CONNECT_PACKET = 0x7e;
+
 	public const ADD_ENTITY_PACKET = 0x7f;
 	public const REMOVE_ENTITY_PACKET = 0x80;
 	public const CLIENT_CACHE_STATUS_PACKET = 0x81;
 	public const ON_SCREEN_TEXTURE_ANIMATION_PACKET = 0x82;
 	public const MAP_CREATE_LOCKED_COPY_PACKET = 0x83;
-	public const STRUCTURE_TEMPLATE_DATA_EXPORT_REQUEST_PACKET = 0x84;
-	public const STRUCTURE_TEMPLATE_DATA_EXPORT_RESPONSE_PACKET = 0x85;
+	public const STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET = 0x84;
+	public const STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET = 0x85;
 	public const UPDATE_BLOCK_PROPERTIES_PACKET = 0x86;
 	public const CLIENT_CACHE_BLOB_STATUS_PACKET = 0x87;
 	public const CLIENT_CACHE_MISS_RESPONSE_PACKET = 0x88;
-
+	public const EDUCATION_SETTINGS_PACKET = 0x89;
+	public const EMOTE_PACKET = 0x8a;
+	public const MULTIPLAYER_SETTINGS_PACKET = 0x8b;
+	public const SETTINGS_COMMAND_PACKET = 0x8c;
+	public const ANVIL_DAMAGE_PACKET = 0x8d;
 	public const COMPLETED_USING_ITEM_PACKET = 0x8e;
+	public const NETWORK_SETTINGS_PACKET = 0x8f;
+	public const PLAYER_AUTH_INPUT_PACKET = 0x90;
+	public const CREATIVE_CONTENT_PACKET = 0x91;
+	public const PLAYER_ENCHANT_OPTIONS_PACKET = 0x92;
+	public const ITEM_STACK_REQUEST_PACKET = 0x93;
+	public const ITEM_STACK_RESPONSE_PACKET = 0x94;
+	public const PLAYER_ARMOR_DAMAGE_PACKET = 0x95;
+	public const CODE_BUILDER_PACKET = 0x96;
+	public const UPDATE_PLAYER_GAME_TYPE_PACKET = 0x97;
+	public const EMOTE_LIST_PACKET = 0x98;
+	public const POSITION_TRACKING_D_B_SERVER_BROADCAST_PACKET = 0x99;
+	public const POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET = 0x9a;
+	public const DEBUG_INFO_PACKET = 0x9b;
+	public const PACKET_VIOLATION_WARNING_PACKET = 0x9c;
 
 }

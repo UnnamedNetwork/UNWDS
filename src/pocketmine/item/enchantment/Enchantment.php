@@ -26,7 +26,7 @@ namespace pocketmine\item\enchantment;
 use pocketmine\event\entity\EntityDamageEvent;
 use function constant;
 use function defined;
-use function strtoupper;
+use function mb_strtoupper;
 
 /**
  * Manages enchantment type data.
@@ -66,6 +66,10 @@ class Enchantment{
 	public const RIPTIDE = 30;
 	public const LOYALTY = 31;
 	public const CHANNELING = 32;
+	public const MULTISHOT = 33;
+	public const PIERCING = 34;
+	public const QUICK_CHARGE = 35;
+	public const SOUL_SPEED = 36;
 
 	public const RARITY_COMMON = 10;
 	public const RARITY_UNCOMMON = 5;
@@ -94,7 +98,10 @@ class Enchantment{
 	public const SLOT_ELYTRA = 0x4000;
 	public const SLOT_TRIDENT = 0x8000;
 
-	/** @var Enchantment[] */
+	/**
+	 * @var \SplFixedArray|Enchantment[]
+	 * @phpstan-var \SplFixedArray<Enchantment>
+	 */
 	protected static $enchantments;
 
 	public static function init() : void{
@@ -142,29 +149,20 @@ class Enchantment{
 
 	/**
 	 * Registers an enchantment type.
-	 *
-	 * @param Enchantment $enchantment
 	 */
 	public static function registerEnchantment(Enchantment $enchantment) : void{
 		self::$enchantments[$enchantment->getId()] = clone $enchantment;
 	}
 
-	/**
-	 * @param int $id
-	 *
-	 * @return Enchantment|null
-	 */
 	public static function getEnchantment(int $id) : ?Enchantment{
+		if($id < 0 or $id >= self::$enchantments->getSize()){
+			return null;
+		}
 		return self::$enchantments[$id] ?? null;
 	}
 
-	/**
-	 * @param string $name
-	 *
-	 * @return Enchantment|null
-	 */
 	public static function getEnchantmentByName(string $name) : ?Enchantment{
-		$const = Enchantment::class . "::" . strtoupper($name);
+		$const = Enchantment::class . "::" . mb_strtoupper($name);
 		if(defined($const)){
 			return self::getEnchantment(constant($const));
 		}
@@ -184,14 +182,6 @@ class Enchantment{
 	/** @var int */
 	private $maxLevel;
 
-	/**
-	 * @param int    $id
-	 * @param string $name
-	 * @param int    $rarity
-	 * @param int    $primaryItemFlags
-	 * @param int    $secondaryItemFlags
-	 * @param int    $maxLevel
-	 */
 	public function __construct(int $id, string $name, int $rarity, int $primaryItemFlags, int $secondaryItemFlags, int $maxLevel){
 		$this->id = $id;
 		$this->name = $name;
@@ -203,7 +193,6 @@ class Enchantment{
 
 	/**
 	 * Returns the ID of this enchantment as per Minecraft PE
-	 * @return int
 	 */
 	public function getId() : int{
 		return $this->id;
@@ -211,7 +200,6 @@ class Enchantment{
 
 	/**
 	 * Returns a translation key for this enchantment's name.
-	 * @return string
 	 */
 	public function getName() : string{
 		return $this->name;
@@ -219,7 +207,6 @@ class Enchantment{
 
 	/**
 	 * Returns an int constant indicating how rare this enchantment type is.
-	 * @return int
 	 */
 	public function getRarity() : int{
 		return $this->rarity;
@@ -227,8 +214,6 @@ class Enchantment{
 
 	/**
 	 * Returns a bitset indicating what item types can have this item applied from an enchanting table.
-	 *
-	 * @return int
 	 */
 	public function getPrimaryItemFlags() : int{
 		return $this->primaryItemFlags;
@@ -237,8 +222,6 @@ class Enchantment{
 	/**
 	 * Returns a bitset indicating what item types cannot have this item applied from an enchanting table, but can from
 	 * an anvil.
-	 *
-	 * @return int
 	 */
 	public function getSecondaryItemFlags() : int{
 		return $this->secondaryItemFlags;
@@ -246,10 +229,6 @@ class Enchantment{
 
 	/**
 	 * Returns whether this enchantment can apply to the item type from an enchanting table.
-	 *
-	 * @param int $flag
-	 *
-	 * @return bool
 	 */
 	public function hasPrimaryItemType(int $flag) : bool{
 		return ($this->primaryItemFlags & $flag) !== 0;
@@ -257,10 +236,6 @@ class Enchantment{
 
 	/**
 	 * Returns whether this enchantment can apply to the item type from an anvil, if it is not a primary item.
-	 *
-	 * @param int $flag
-	 *
-	 * @return bool
 	 */
 	public function hasSecondaryItemType(int $flag) : bool{
 		return ($this->secondaryItemFlags & $flag) !== 0;
@@ -268,7 +243,6 @@ class Enchantment{
 
 	/**
 	 * Returns the maximum level of this enchantment that can be found on an enchantment table.
-	 * @return int
 	 */
 	public function getMaxLevel() : int{
 		return $this->maxLevel;

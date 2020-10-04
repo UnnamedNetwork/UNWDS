@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 use function count;
@@ -47,7 +47,7 @@ class UpdateSoftEnumPacket extends DataPacket{
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->values[] = $this->getString();
 		}
-		$this->type = $this->getByte();
+		$this->type = (\ord($this->get(1)));
 	}
 
 	protected function encodePayload(){
@@ -56,7 +56,7 @@ class UpdateSoftEnumPacket extends DataPacket{
 		foreach($this->values as $v){
 			$this->putString($v);
 		}
-		$this->putByte($this->type);
+		($this->buffer .= \chr($this->type));
 	}
 
 	public function handle(NetworkSession $session) : bool{

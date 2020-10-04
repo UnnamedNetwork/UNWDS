@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -40,14 +39,14 @@ class ActorFallPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->fallDistance = $this->getLFloat();
-		$this->isInVoid = $this->getBool();
+		$this->fallDistance = ((\unpack("g", $this->get(4))[1]));
+		$this->isInVoid = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putLFloat($this->fallDistance);
-		$this->putBool($this->isInVoid);
+		($this->buffer .= (\pack("g", $this->fallDistance)));
+		($this->buffer .= ($this->isInVoid ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

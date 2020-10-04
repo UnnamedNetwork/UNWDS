@@ -25,7 +25,7 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\level\Position;
-use pocketmine\network\mcpe\protocol\types\RuntimeBlockMapping;
+use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
 use function min;
 
 /**
@@ -36,51 +36,43 @@ class BlockFactory{
 	 * @var \SplFixedArray|Block[]
 	 * @phpstan-var \SplFixedArray<Block>
 	 */
-	private static $fullList = null;
-
-    /**
-	 * @var \SplFixedArray|bool[]
-	 * @phpstan-var \SplFixedArray<bool>
-	 */
-
-	public static $solid = null;
+	private static $fullList;
 
 	/**
 	 * @var \SplFixedArray|bool[]
 	 * @phpstan-var \SplFixedArray<bool>
 	 */
-
-	public static $transparent = null;
+	public static $solid;
+	/**
+	 * @var \SplFixedArray|bool[]
+	 * @phpstan-var \SplFixedArray<bool>
+	 */
+	public static $transparent;
 	/**
 	 * @var \SplFixedArray|float[]
 	 * @phpstan-var \SplFixedArray<float>
 	 */
-
-	public static $hardness = null;
-
+	public static $hardness;
 	/**
 	 * @var \SplFixedArray|int[]
 	 * @phpstan-var \SplFixedArray<int>
 	 */
-	public static $light = null;
-
+	public static $light;
 	/**
 	 * @var \SplFixedArray|int[]
 	 * @phpstan-var \SplFixedArray<int>
 	 */
-	public static $lightFilter = null;
-
+	public static $lightFilter;
 	/**
 	 * @var \SplFixedArray|bool[]
 	 * @phpstan-var \SplFixedArray<bool>
 	 */
-	public static $diffusesSkyLight = null;
-
+	public static $diffusesSkyLight;
 	/**
 	 * @var \SplFixedArray|float[]
 	 * @phpstan-var \SplFixedArray<float>
 	 */
-	public static $blastResistance = null;
+	public static $blastResistance;
 
 	/**
 	 * Initializes the block factory. By default this is called only once on server start, however you may wish to use
@@ -366,7 +358,6 @@ class BlockFactory{
 	 * NOTE: If you are registering a new block type, you will need to add it to the creative inventory yourself - it
 	 * will not automatically appear there.
 	 *
-	 * @param Block $block
 	 * @param bool  $override Whether to override existing registrations
 	 *
 	 * @throws \RuntimeException if something attempted to override an already-registered block without specifying the
@@ -396,12 +387,6 @@ class BlockFactory{
 
 	/**
 	 * Returns a new Block instance with the specified ID, meta and position.
-	 *
-	 * @param int      $id
-	 * @param int      $meta
-	 * @param Position $pos
-	 *
-	 * @return Block
 	 */
 	public static function get(int $id, int $meta = 0, Position $pos = null) : Block{
 		if($meta < 0 or $meta > 0xf){
@@ -430,7 +415,7 @@ class BlockFactory{
 
 	/**
 	 * @internal
-	 * @return \SplFixedArray
+	 * @phpstan-return \SplFixedArray<Block>
 	 */
 	public static function getBlockStatesArray() : \SplFixedArray{
 		return self::$fullList;
@@ -438,10 +423,6 @@ class BlockFactory{
 
 	/**
 	 * Returns whether a specified block ID is already registered in the block factory.
-	 *
-	 * @param int $id
-	 *
-	 * @return bool
 	 */
 	public static function isRegistered(int $id) : bool{
 		$b = self::$fullList[$id << 4];
@@ -451,11 +432,6 @@ class BlockFactory{
 	/**
 	 * @internal
 	 * @deprecated
-	 *
-	 * @param int $id
-	 * @param int $meta
-	 *
-	 * @return int
 	 */
 	public static function toStaticRuntimeId(int $id, int $meta = 0) : int{
 		return RuntimeBlockMapping::toStaticRuntimeId($id, $meta);
@@ -464,8 +440,6 @@ class BlockFactory{
 	/**
 	 * @deprecated
 	 * @internal
-	 *
-	 * @param int $runtimeId
 	 *
 	 * @return int[] [id, meta]
 	 */

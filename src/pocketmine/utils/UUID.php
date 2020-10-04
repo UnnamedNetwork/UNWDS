@@ -59,23 +59,18 @@ class UUID{
 
 	/**
 	 * Creates an UUID from an hexadecimal representation
-	 *
-	 * @param string $uuid
-	 * @param int    $version
-	 *
-	 * @return UUID
 	 */
 	public static function fromString(string $uuid, int $version = null) : UUID{
-		return self::fromBinary(hex2bin(str_replace("-", "", trim($uuid))), $version);
+		//TODO: should we be stricter about the notation (8-4-4-4-12)?
+		$binary = @hex2bin(str_replace("-", "", trim($uuid)));
+		if($binary === false){
+			throw new \InvalidArgumentException("Invalid hex string UUID representation");
+		}
+		return self::fromBinary($binary, $version);
 	}
 
 	/**
 	 * Creates an UUID from a binary representation
-	 *
-	 * @param string $uuid
-	 * @param int    $version
-	 *
-	 * @return UUID
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -84,15 +79,13 @@ class UUID{
 			throw new \InvalidArgumentException("Must have exactly 16 bytes");
 		}
 
-		return new UUID(Binary::readInt(substr($uuid, 0, 4)), Binary::readInt(substr($uuid, 4, 4)), Binary::readInt(substr($uuid, 8, 4)), Binary::readInt(substr($uuid, 12, 4)), $version);
+		return new UUID((\unpack("N", substr($uuid, 0, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 4, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 8, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 12, 4))[1] << 32 >> 32), $version);
 	}
 
 	/**
 	 * Creates an UUIDv3 from binary data or list of binary data
 	 *
 	 * @param string ...$data
-	 *
-	 * @return UUID
 	 */
 	public static function fromData(string ...$data) : UUID{
 		$hash = hash("md5", implode($data), true);
@@ -101,11 +94,11 @@ class UUID{
 	}
 
 	public static function fromRandom() : UUID{
-		return self::fromData(Binary::writeInt(time()), Binary::writeShort(getmypid()), Binary::writeShort(getmyuid()), Binary::writeInt(mt_rand(-0x7fffffff, 0x7fffffff)), Binary::writeInt(mt_rand(-0x7fffffff, 0x7fffffff)));
+		return self::fromData((\pack("N", time())), (\pack("n", getmypid())), (\pack("n", getmyuid())), (\pack("N", mt_rand(-0x7fffffff, 0x7fffffff))), (\pack("N", mt_rand(-0x7fffffff, 0x7fffffff))));
 	}
 
 	public function toBinary() : string{
-		return Binary::writeInt($this->parts[0]) . Binary::writeInt($this->parts[1]) . Binary::writeInt($this->parts[2]) . Binary::writeInt($this->parts[3]);
+		return (\pack("N", $this->parts[0])) . (\pack("N", $this->parts[1])) . (\pack("N", $this->parts[2])) . (\pack("N", $this->parts[3]));
 	}
 
 	public function toString() : string{
@@ -119,6 +112,10 @@ class UUID{
 		return $this->toString();
 	}
 
+	/**
+	 * @return int
+	 * @throws \InvalidArgumentException
+	 */
 	public function getPart(int $partNumber){
 		if($partNumber < 0 or $partNumber > 3){
 			throw new \InvalidArgumentException("Invalid UUID part index $partNumber");
@@ -126,6 +123,9 @@ class UUID{
 		return $this->parts[$partNumber];
 	}
 
+	/**
+	 * @return int[]
+	 */
 	public function getParts() : array{
 		return $this->parts;
 	}

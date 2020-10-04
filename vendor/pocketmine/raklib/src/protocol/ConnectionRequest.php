@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 class ConnectionRequest extends Packet{
 	public static $ID = MessageIdentifiers::ID_CONNECTION_REQUEST;
@@ -30,14 +30,14 @@ class ConnectionRequest extends Packet{
 	public $useSecurity = false;
 
 	protected function encodePayload() : void{
-		$this->putLong($this->clientID);
-		$this->putLong($this->sendPingTime);
-		$this->putByte($this->useSecurity ? 1 : 0);
+		($this->buffer .= (\pack("NN", $this->clientID >> 32, $this->clientID & 0xFFFFFFFF)));
+		($this->buffer .= (\pack("NN", $this->sendPingTime >> 32, $this->sendPingTime & 0xFFFFFFFF)));
+		($this->buffer .= \chr($this->useSecurity ? 1 : 0));
 	}
 
 	protected function decodePayload() : void{
-		$this->clientID = $this->getLong();
-		$this->sendPingTime = $this->getLong();
-		$this->useSecurity = $this->getByte() !== 0;
+		$this->clientID = (Binary::readLong($this->get(8)));
+		$this->sendPingTime = (Binary::readLong($this->get(8)));
+		$this->useSecurity = (\ord($this->get(1))) !== 0;
 	}
 }

@@ -29,6 +29,7 @@ use pocketmine\item\Item;
 
 /**
  * Called before a slot in an entity's inventory changes.
+ * @phpstan-extends EntityEvent<Entity>
  */
 class EntityInventoryChangeEvent extends EntityEvent implements Cancellable{
 	/** @var Item */
@@ -47,7 +48,6 @@ class EntityInventoryChangeEvent extends EntityEvent implements Cancellable{
 
 	/**
 	 * Returns the inventory slot number affected by the event.
-	 * @return int
 	 */
 	public function getSlot() : int{
 		return $this->slot;
@@ -55,22 +55,17 @@ class EntityInventoryChangeEvent extends EntityEvent implements Cancellable{
 
 	/**
 	 * Returns the item which will be in the slot after the event.
-	 * @return Item
 	 */
 	public function getNewItem() : Item{
 		return $this->newItem;
 	}
 
-	/**
-	 * @param Item $item
-	 */
 	public function setNewItem(Item $item) : void{
 		$this->newItem = $item;
 	}
 
 	/**
 	 * Returns the item currently in the slot.
-	 * @return Item
 	 */
 	public function getOldItem() : Item{
 		return $this->oldItem;

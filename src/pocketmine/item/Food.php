@@ -24,60 +24,13 @@ declare(strict_types=1);
 namespace pocketmine\item;
 
 use pocketmine\entity\Living;
-use pocketmine\event\player\PlayerItemConsumeEvent;
-use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\CompletedUsingItemPacket;
-use pocketmine\network\mcpe\protocol\ProtocolInfo;
-use pocketmine\Player;
 
 abstract class Food extends Item implements FoodSource{
-
 	public function requiresHunger() : bool{
 		return true;
 	}
 
-    /**
-     * @param Player $player
-     * @param int $usedTicks
-     *
-     * @return int
-     */
-	public function completeAction(Player $player, int $usedTicks): int {
-        return CompletedUsingItemPacket::ACTION_EAT;
-    }
-
-    /**
-     * @param Player $player
-     * @param int $ticksUsed
-     * @return bool
-     */
-    public function onUse(Player $player, int $ticksUsed): bool {
-        if(!($player instanceof Player && $player->getProtocol() >= ProtocolInfo::PROTOCOL_1_13)) {
-            return false;
-        }
-
-        $event = new PlayerItemConsumeEvent($player, $this);
-        $player->getServer()->getPluginManager()->callEvent($event);
-
-        if($event->isCancelled()) {
-            return false;
-        }
-
-        if($player->getGamemode() === $player::SURVIVAL && $player->consumeObject($this)) {
-            $this->pop();
-            $player->getInventory()->setItemInHand($this);
-            $player->getInventory()->addItem($this->getResidue());
-        }
-
-        foreach ($this->getAdditionalEffects() as $effect) {
-            $player->addEffect($effect);
-        }
-
-        return true;
-    }
-
-
-    /**
+	/**
 	 * @return Item
 	 */
 	public function getResidue(){
@@ -88,17 +41,7 @@ abstract class Food extends Item implements FoodSource{
 		return [];
 	}
 
-    /**
-     * @param Player $player
-     * @param Vector3 $directionVector
-     *
-     * @return bool
-     */
-	public function onClickAir(Player $player, Vector3 $directionVector): bool {
-        return $player->getFood() !== $player->getMaxFood();
-    }
-
-    public function onConsume(Living $consumer){
+	public function onConsume(Living $consumer){
 
 	}
 }

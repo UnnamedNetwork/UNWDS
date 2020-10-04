@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\entity\Attribute;
 use pocketmine\network\mcpe\NetworkSession;

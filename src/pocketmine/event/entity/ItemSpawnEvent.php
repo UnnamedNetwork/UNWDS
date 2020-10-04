@@ -25,11 +25,11 @@ namespace pocketmine\event\entity;
 
 use pocketmine\entity\object\ItemEntity;
 
+/**
+ * @phpstan-extends EntityEvent<ItemEntity>
+ */
 class ItemSpawnEvent extends EntityEvent{
 
-	/**
-	 * @param ItemEntity $item
-	 */
 	public function __construct(ItemEntity $item){
 		$this->entity = $item;
 

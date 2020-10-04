@@ -96,6 +96,7 @@ class SessionManager{
 	/** @var int[] string (address) => int (number of packets) */
 	protected $ipSec = [];
 
+	/** @var bool */
 	public $portChecking = false;
 
 	/** @var int */
@@ -104,6 +105,7 @@ class SessionManager{
 	/** @var int */
 	protected $maxMtuSize;
 
+	/** @var InternetAddress */
 	protected $reusableAddress;
 
 	public function __construct(RakLibServer $server, UDPServerSocket $socket, int $maxMtuSize){
@@ -124,7 +126,6 @@ class SessionManager{
 
 	/**
 	 * Returns the time in milliseconds since server start.
-	 * @return int
 	 */
 	public function getRakNetTimeMS() : int{
 		return ((int) (microtime(true) * 1000)) - $this->startTimeMS;
@@ -161,11 +162,13 @@ class SessionManager{
 			 * when high traffic is coming either way. Yielding will occur after 100 messages.
 			 */
 			do{
-				for($stream = true, $i = 0; $i < 100 && $stream && !$this->shutdown; ++$i){
+				$stream = true;
+				for($i = 0; $i < 100 && $stream && !$this->shutdown; ++$i){
 					$stream = $this->receiveStream();
 				}
 
-				for($socket = true, $i = 0; $i < 100 && $socket && !$this->shutdown; ++$i){
+				$socket = true;
+				for($i = 0; $i < 100 && $socket && !$this->shutdown; ++$i){
 					$socket = $this->receivePacket();
 				}
 			}while(!$this->shutdown && ($stream || $socket));
@@ -215,7 +218,6 @@ class SessionManager{
 		++$this->ticks;
 	}
 
-
 	private function receivePacket() : bool{
 		$address = $this->reusableAddress;
 
@@ -256,9 +258,9 @@ class SessionManager{
 			$session = $this->getSession($address);
 			if($session !== null){
 				if(($pid & Datagram::BITFLAG_VALID) !== 0){
-					if($pid & Datagram::BITFLAG_ACK){
+					if(($pid & Datagram::BITFLAG_ACK) !== 0){
 						$session->handlePacket(new ACK($buffer));
-					}elseif($pid & Datagram::BITFLAG_NAK){
+					}elseif(($pid & Datagram::BITFLAG_NAK) !== 0){
 						$session->handlePacket(new NACK($buffer));
 					}else{
 						$session->handlePacket(new Datagram($buffer));
@@ -319,7 +321,7 @@ class SessionManager{
 	}
 
 	public function streamRaw(InternetAddress $source, string $payload) : void{
-		$buffer = chr(RakLib::PACKET_RAW) . chr(strlen($source->ip)) . $source->ip . Binary::writeShort($source->port) . $payload;
+		$buffer = chr(RakLib::PACKET_RAW) . chr(strlen($source->ip)) . $source->ip . (\pack("n", $source->port)) . $payload;
 		$this->server->pushThreadToMainPacket($buffer);
 	}
 
@@ -336,17 +338,16 @@ class SessionManager{
 	protected function streamOpen(Session $session) : void{
 		$address = $session->getAddress();
 		$identifier = $address->toString();
-		$buffer = chr(RakLib::PACKET_OPEN_SESSION) . chr(strlen($identifier)) . $identifier . chr(strlen($address->ip)) . $address->ip . Binary::writeShort($address->port) . Binary::writeLong($session->getID());
+		$buffer = chr(RakLib::PACKET_OPEN_SESSION) . chr(strlen($identifier)) . $identifier . chr(strlen($address->ip)) . $address->ip . (\pack("n", $address->port)) . (\pack("NN", $session->getID() >> 32, $session->getID() & 0xFFFFFFFF));
 		$this->server->pushThreadToMainPacket($buffer);
 	}
 
 	protected function streamACK(string $identifier, int $identifierACK) : void{
-		$buffer = chr(RakLib::PACKET_ACK_NOTIFICATION) . chr(strlen($identifier)) . $identifier . Binary::writeInt($identifierACK);
+		$buffer = chr(RakLib::PACKET_ACK_NOTIFICATION) . chr(strlen($identifier)) . $identifier . (\pack("N", $identifierACK));
 		$this->server->pushThreadToMainPacket($buffer);
 	}
 
 	/**
-	 * @param string $name
 	 * @param mixed  $value
 	 */
 	protected function streamOption(string $name, $value) : void{
@@ -356,7 +357,7 @@ class SessionManager{
 
 	public function streamPingMeasure(Session $session, int $pingMS) : void{
 		$identifier = $session->getAddress()->toString();
-		$buffer = chr(RakLib::PACKET_REPORT_PING) . chr(strlen($identifier)) . $identifier . Binary::writeInt($pingMS);
+		$buffer = chr(RakLib::PACKET_REPORT_PING) . chr(strlen($identifier)) . $identifier . (\pack("N", $pingMS));
 		$this->server->pushThreadToMainPacket($buffer);
 	}
 
@@ -380,7 +381,7 @@ class SessionManager{
 				$len = ord($packet[$offset++]);
 				$address = substr($packet, $offset, $len);
 				$offset += $len;
-				$port = Binary::readShort(substr($packet, $offset, 2));
+				$port = (\unpack("n", substr($packet, $offset, 2))[1]);
 				$offset += 2;
 				$payload = substr($packet, $offset);
 				$this->socket->writePacket($payload, $address, $port);
@@ -418,7 +419,7 @@ class SessionManager{
 				$len = ord($packet[$offset++]);
 				$address = substr($packet, $offset, $len);
 				$offset += $len;
-				$timeout = Binary::readInt(substr($packet, $offset, 4));
+				$timeout = (\unpack("N", substr($packet, $offset, 4))[1] << 32 >> 32);
 				$this->blockAddress($address, $timeout);
 			}elseif($id === RakLib::PACKET_UNBLOCK_ADDRESS){
 				$len = ord($packet[$offset++]);
@@ -462,11 +463,6 @@ class SessionManager{
 		$this->getLogger()->debug("Unblocked $address");
 	}
 
-	/**
-	 * @param InternetAddress $address
-	 *
-	 * @return Session|null
-	 */
 	public function getSession(InternetAddress $address) : ?Session{
 		return $this->sessions[$address->toString()] ?? null;
 	}
@@ -526,20 +522,10 @@ class SessionManager{
 		return $this->server->getServerId();
 	}
 
-	/**
-	 * @param int    $id
-	 * @param string $class
-	 */
 	private function registerPacket(int $id, string $class) : void{
 		$this->packetPool[$id] = new $class;
 	}
 
-	/**
-	 * @param int    $id
-	 * @param string $buffer
-	 *
-	 * @return Packet|null
-	 */
 	public function getPacketFromPool(int $id, string $buffer = "") : ?Packet{
 		$pk = $this->packetPool[$id];
 		if($pk !== null){

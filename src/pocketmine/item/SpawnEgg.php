@@ -41,10 +41,10 @@ class SpawnEgg extends Item{
 			$nbt->setString("CustomName", $this->getCustomName());
 		}
 
-		$entity = Entity::createEntity($this->meta, $player->getLevel(), $nbt);
+		$entity = Entity::createEntity($this->meta, $player->getLevelNonNull(), $nbt);
 
 		if($entity instanceof Entity){
-			--$this->count;
+			$this->pop();
 			$entity->spawnToAll();
 			return true;
 		}

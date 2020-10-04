@@ -27,12 +27,11 @@ use function abs;
 use function date_default_timezone_set;
 use function date_parse;
 use function exec;
-use function file_exists;
 use function file_get_contents;
 use function implode;
 use function ini_get;
 use function ini_set;
-use function is_link;
+use function is_string;
 use function json_decode;
 use function parse_ini_file;
 use function preg_match;
@@ -47,13 +46,20 @@ use function trim;
 abstract class Timezone{
 
 	public static function get() : string{
-		return ini_get('date.timezone');
+		$tz = ini_get('date.timezone');
+		if($tz === false){
+			throw new AssumptionFailedError('date.timezone INI entry should always exist');
+		}
+		return $tz;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	public static function init() : array{
 		$messages = [];
 		do{
-			$timezone = ini_get("date.timezone");
+			$timezone = self::get();
 			if($timezone !== ""){
 				/*
 				 * This is here so that people don't come to us complaining and fill up the issue tracker when they put
@@ -100,9 +106,12 @@ abstract class Timezone{
 		return $messages;
 	}
 
+	/**
+	 * @return string|false
+	 */
 	public static function detectSystemTimezone(){
 		switch(Utils::getOS()){
-			case 'win':
+			case Utils::OS_WINDOWS:
 				$regex = '/(UTC)(\+*\-*\d*\d*\:*\d*\d*)/';
 
 				/*
@@ -137,24 +146,20 @@ abstract class Timezone{
 				}
 
 				return self::parseOffset($offset);
-			case 'linux':
+			case Utils::OS_LINUX:
 				// Ubuntu / Debian.
-				if(file_exists('/etc/timezone')){
-					$data = file_get_contents('/etc/timezone');
-					if($data){
-						return trim($data);
-					}
+				$data = @file_get_contents('/etc/timezone');
+				if($data !== false){
+					return trim($data);
 				}
 
 				// RHEL / CentOS
-				if(file_exists('/etc/sysconfig/clock')){
-					$data = parse_ini_file('/etc/sysconfig/clock');
-					if(!empty($data['ZONE'])){
-						return trim($data['ZONE']);
-					}
+				$data = @parse_ini_file('/etc/sysconfig/clock');
+				if($data !== false and isset($data['ZONE']) and is_string($data['ZONE'])){
+					return trim($data['ZONE']);
 				}
 
-				//Portable method for incompatible linux distributions.
+				//Portable method for incompatible 1 distributions.
 
 				$offset = trim(exec('date +%:z'));
 
@@ -163,13 +168,11 @@ abstract class Timezone{
 				}
 
 				return self::parseOffset($offset);
-			case 'mac':
-				if(is_link('/etc/localtime')){
-					$filename = readlink('/etc/localtime');
-					if(strpos($filename, '/usr/share/zoneinfo/') === 0){
-						$timezone = substr($filename, 20);
-						return trim($timezone);
-					}
+			case Utils::OS_MACOS:
+				$filename = @readlink('/etc/localtime');
+				if($filename !== false and strpos($filename, '/usr/share/zoneinfo/') === 0){
+					$timezone = substr($filename, 20);
+					return trim($timezone);
 				}
 
 				return false;
@@ -178,11 +181,10 @@ abstract class Timezone{
 		}
 	}
 
-
 	/**
 	 * @param string $offset In the format of +09:00, +02:00, -04:00 etc.
 	 *
-	 * @return string|bool
+	 * @return string|false
 	 */
 	private static function parseOffset($offset){
 		//Make signed offsets unsigned for date_parse
@@ -199,6 +201,9 @@ abstract class Timezone{
 		}
 
 		$parsed = date_parse($offset);
+		if($parsed === false){
+			return false;
+		}
 		$offset = $parsed['hour'] * 3600 + $parsed['minute'] * 60 + $parsed['second'];
 
 		//After date_parse is done, put the sign back

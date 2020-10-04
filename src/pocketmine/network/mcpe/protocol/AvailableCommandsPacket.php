@@ -23,19 +23,20 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\CommandData;
 use pocketmine\network\mcpe\protocol\types\CommandEnum;
+use pocketmine\network\mcpe\protocol\types\CommandEnumConstraint;
 use pocketmine\network\mcpe\protocol\types\CommandParameter;
 use pocketmine\utils\BinaryDataException;
+use function array_search;
 use function count;
 use function dechex;
 
 class AvailableCommandsPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::AVAILABLE_COMMANDS_PACKET;
-
 
 	/**
 	 * This flag is set on all types EXCEPT the POSTFIX type. Not completely sure what this is for, but it is required
@@ -56,17 +57,17 @@ class AvailableCommandsPacket extends DataPacket{
 
 	public const ARG_TYPE_FILEPATH = 0x0e;
 
-	public const ARG_TYPE_STRING   = 0x1b;
+	public const ARG_TYPE_STRING   = 0x1d;
 
-	public const ARG_TYPE_POSITION = 0x1d;
+	public const ARG_TYPE_POSITION = 0x25;
 
-	public const ARG_TYPE_MESSAGE  = 0x20;
+	public const ARG_TYPE_MESSAGE  = 0x29;
 
-	public const ARG_TYPE_RAWTEXT  = 0x22;
+	public const ARG_TYPE_RAWTEXT  = 0x2b;
 
-	public const ARG_TYPE_JSON     = 0x25;
+	public const ARG_TYPE_JSON     = 0x2f;
 
-	public const ARG_TYPE_COMMAND  = 0x2c;
+	public const ARG_TYPE_COMMAND  = 0x36;
 
 	/**
 	 * Enums are a little different: they are composed as follows:
@@ -74,10 +75,12 @@ class AvailableCommandsPacket extends DataPacket{
 	 */
 	public const ARG_FLAG_ENUM = 0x200000;
 
-	/**
-	 * This is used for /xp <level: int>L. It can only be applied to integer parameters.
-	 */
+	/** This is used for /xp <level: int>L. It can only be applied to integer parameters. */
 	public const ARG_FLAG_POSTFIX = 0x1000000;
+
+	public const HARDCODED_ENUM_NAMES = [
+		"CommandName" => true
+	];
 
 	/**
 	 * @var CommandData[]
@@ -87,10 +90,23 @@ class AvailableCommandsPacket extends DataPacket{
 
 	/**
 	 * @var CommandEnum[]
+	 * List of enums which aren't directly referenced by any vanilla command.
+	 * This is used for the `CommandName` enum, which is a magic enum used by the `command` argument type.
+	 */
+	public $hardcodedEnums = [];
+
+	/**
+	 * @var CommandEnum[]
 	 * List of dynamic command enums, also referred to as "soft" enums. These can by dynamically updated mid-game
 	 * without resending this packet.
 	 */
 	public $softEnums = [];
+
+	/**
+	 * @var CommandEnumConstraint[]
+	 * List of constraints for enum members. Used to constrain gamerules that can bechanged in nocheats mode and more.
+	 */
+	public $enumConstraints = [];
 
 	protected function decodePayload(){
 		/** @var string[] $enumValues */
@@ -108,7 +124,10 @@ class AvailableCommandsPacket extends DataPacket{
 		/** @var CommandEnum[] $enums */
 		$enums = [];
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$enums[] = $this->getEnum($enumValues);
+			$enums[] = $enum = $this->getEnum($enumValues);
+			if(isset(self::HARDCODED_ENUM_NAMES[$enum->enumName])){
+				$this->hardcodedEnums[] = $enum;
+			}
 		}
 
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
@@ -118,12 +137,15 @@ class AvailableCommandsPacket extends DataPacket{
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->softEnums[] = $this->getSoftEnum();
 		}
+
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->enumConstraints[] = $this->getEnumConstraint($enums, $enumValues);
+		}
 	}
 
 	/**
 	 * @param string[] $enumValueList
 	 *
-	 * @return CommandEnum
 	 * @throws \UnexpectedValueException
 	 * @throws BinaryDataException
 	 */
@@ -158,7 +180,6 @@ class AvailableCommandsPacket extends DataPacket{
 	}
 
 	/**
-	 * @param CommandEnum $enum
 	 * @param int[]       $enumValueMap string enum name -> int index
 	 */
 	protected function putEnum(CommandEnum $enum, array $enumValueMap) : void{
@@ -185,28 +206,66 @@ class AvailableCommandsPacket extends DataPacket{
 	}
 
 	/**
-	 * @param int $valueCount
-	 *
-	 * @return int
 	 * @throws BinaryDataException
 	 */
 	protected function getEnumValueIndex(int $valueCount) : int{
 		if($valueCount < 256){
-			return $this->getByte();
+			return (\ord($this->get(1)));
 		}elseif($valueCount < 65536){
-			return $this->getLShort();
+			return ((\unpack("v", $this->get(2))[1]));
 		}else{
-			return $this->getLInt();
+			return ((\unpack("V", $this->get(4))[1] << 32 >> 32));
 		}
 	}
 
 	protected function putEnumValueIndex(int $index, int $valueCount) : void{
 		if($valueCount < 256){
-			$this->putByte($index);
+			($this->buffer .= \chr($index));
 		}elseif($valueCount < 65536){
-			$this->putLShort($index);
+			($this->buffer .= (\pack("v", $index)));
 		}else{
-			$this->putLInt($index);
+			($this->buffer .= (\pack("V", $index)));
+		}
+	}
+
+	/**
+	 * @param CommandEnum[] $enums
+	 * @param string[]      $enumValues
+	 */
+	protected function getEnumConstraint(array $enums, array $enumValues) : CommandEnumConstraint{
+		//wtf, what was wrong with an offset inside the enum? :(
+		$valueIndex = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		if(!isset($enumValues[$valueIndex])){
+			throw new \UnexpectedValueException("Enum constraint refers to unknown enum value index $valueIndex");
+		}
+		$enumIndex = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		if(!isset($enums[$enumIndex])){
+			throw new \UnexpectedValueException("Enum constraint refers to unknown enum index $enumIndex");
+		}
+		$enum = $enums[$enumIndex];
+		$valueOffset = array_search($enumValues[$valueIndex], $enum->enumValues, true);
+		if($valueOffset === false){
+			throw new \UnexpectedValueException("Value \"" . $enumValues[$valueIndex] . "\" does not belong to enum \"$enum->enumName\"");
+		}
+
+		$constraintIds = [];
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$constraintIds[] = (\ord($this->get(1)));
+		}
+
+		return new CommandEnumConstraint($enum, $valueOffset, $constraintIds);
+	}
+
+	/**
+	 * @param int[]                 $enumIndexes string enum name -> int index
+	 * @param int[]                 $enumValueIndexes string value -> int index
+	 */
+	protected function putEnumConstraint(CommandEnumConstraint $constraint, array $enumIndexes, array $enumValueIndexes) : void{
+		($this->buffer .= (\pack("V", $enumValueIndexes[$constraint->getAffectedValue()])));
+		($this->buffer .= (\pack("V", $enumIndexes[$constraint->getEnum()->enumName])));
+		$this->putUnsignedVarInt(count($constraint->getConstraints()));
+		foreach($constraint->getConstraints() as $v){
+			($this->buffer .= \chr($v));
 		}
 	}
 
@@ -214,7 +273,6 @@ class AvailableCommandsPacket extends DataPacket{
 	 * @param CommandEnum[] $enums
 	 * @param string[]      $postfixes
 	 *
-	 * @return CommandData
 	 * @throws \UnexpectedValueException
 	 * @throws BinaryDataException
 	 */
@@ -222,25 +280,26 @@ class AvailableCommandsPacket extends DataPacket{
 		$retval = new CommandData();
 		$retval->commandName = $this->getString();
 		$retval->commandDescription = $this->getString();
-		$retval->flags = $this->getByte();
-		$retval->permission = $this->getByte();
-		$retval->aliases = $enums[$this->getLInt()] ?? null;
+		$retval->flags = (\ord($this->get(1)));
+		$retval->permission = (\ord($this->get(1)));
+		$retval->aliases = $enums[((\unpack("V", $this->get(4))[1] << 32 >> 32))] ?? null;
 
 		for($overloadIndex = 0, $overloadCount = $this->getUnsignedVarInt(); $overloadIndex < $overloadCount; ++$overloadIndex){
+			$retval->overloads[$overloadIndex] = [];
 			for($paramIndex = 0, $paramCount = $this->getUnsignedVarInt(); $paramIndex < $paramCount; ++$paramIndex){
 				$parameter = new CommandParameter();
 				$parameter->paramName = $this->getString();
-				$parameter->paramType = $this->getLInt();
-				$parameter->isOptional = $this->getBool();
-				$parameter->flags = $this->getByte();
+				$parameter->paramType = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+				$parameter->isOptional = (($this->get(1) !== "\x00"));
+				$parameter->flags = (\ord($this->get(1)));
 
-				if($parameter->paramType & self::ARG_FLAG_ENUM){
+				if(($parameter->paramType & self::ARG_FLAG_ENUM) !== 0){
 					$index = ($parameter->paramType & 0xffff);
 					$parameter->enum = $enums[$index] ?? null;
 					if($parameter->enum === null){
 						throw new \UnexpectedValueException("deserializing $retval->commandName parameter $parameter->paramName: expected enum at $index, but got none");
 					}
-				}elseif($parameter->paramType & self::ARG_FLAG_POSTFIX){
+				}elseif(($parameter->paramType & self::ARG_FLAG_POSTFIX) !== 0){
 					$index = ($parameter->paramType & 0xffff);
 					$parameter->postfix = $postfixes[$index] ?? null;
 					if($parameter->postfix === null){
@@ -258,20 +317,19 @@ class AvailableCommandsPacket extends DataPacket{
 	}
 
 	/**
-	 * @param CommandData $data
 	 * @param int[]       $enumIndexes string enum name -> int index
 	 * @param int[]       $postfixIndexes
 	 */
 	protected function putCommandData(CommandData $data, array $enumIndexes, array $postfixIndexes) : void{
 		$this->putString($data->commandName);
 		$this->putString($data->commandDescription);
-		$this->putByte($data->flags);
-		$this->putByte($data->permission);
+		($this->buffer .= \chr($data->flags));
+		($this->buffer .= \chr($data->permission));
 
 		if($data->aliases !== null){
-			$this->putLInt($enumIndexes[$data->aliases->enumName] ?? -1);
+			($this->buffer .= (\pack("V", $enumIndexes[$data->aliases->enumName] ?? -1)));
 		}else{
-			$this->putLInt(-1);
+			($this->buffer .= (\pack("V", -1)));
 		}
 
 		$this->putUnsignedVarInt(count($data->overloads));
@@ -293,16 +351,20 @@ class AvailableCommandsPacket extends DataPacket{
 					$type = $parameter->paramType;
 				}
 
-				$this->putLInt($type);
-				$this->putBool($parameter->isOptional);
-				$this->putByte($parameter->flags);
+				($this->buffer .= (\pack("V", $type)));
+				($this->buffer .= ($parameter->isOptional ? "\x01" : "\x00"));
+				($this->buffer .= \chr($parameter->flags));
 			}
 		}
 	}
 
+	/**
+	 * @param string[] $postfixes
+	 * @phpstan-param array<int, string> $postfixes
+	 */
 	private function argTypeToString(int $argtype, array $postfixes) : string{
-		if($argtype & self::ARG_FLAG_VALID){
-			if($argtype & self::ARG_FLAG_ENUM){
+		if(($argtype & self::ARG_FLAG_VALID) !== 0){
+			if(($argtype & self::ARG_FLAG_ENUM) !== 0){
 				return "stringenum (" . ($argtype & 0xffff) . ")";
 			}
 
@@ -328,7 +390,7 @@ class AvailableCommandsPacket extends DataPacket{
 				case self::ARG_TYPE_COMMAND:
 					return "command";
 			}
-		}elseif($argtype & self::ARG_FLAG_POSTFIX){
+		}elseif(($argtype & self::ARG_FLAG_POSTFIX) !== 0){
 			$postfix = $postfixes[$argtype & 0xffff];
 
 			return "int (postfix $postfix)";
@@ -348,30 +410,28 @@ class AvailableCommandsPacket extends DataPacket{
 		$enumIndexes = [];
 		/** @var CommandEnum[] $enums */
 		$enums = [];
+
+		$addEnumFn = static function(CommandEnum $enum) use (&$enums, &$enumIndexes, &$enumValueIndexes) : void{
+			if(!isset($enumIndexes[$enum->enumName])){
+				$enums[$enumIndexes[$enum->enumName] = count($enumIndexes)] = $enum;
+			}
+			foreach($enum->enumValues as $str){
+				$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes);
+			}
+		};
+		foreach($this->hardcodedEnums as $enum){
+			$addEnumFn($enum);
+		}
 		foreach($this->commandData as $commandData){
 			if($commandData->aliases !== null){
-				if(!isset($enumIndexes[$commandData->aliases->enumName])){
-					$enums[$enumIndexes[$commandData->aliases->enumName] = count($enumIndexes)] = $commandData->aliases;
-				}
-
-				foreach($commandData->aliases->enumValues as $str){
-					$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes); //latest index
-				}
+				$addEnumFn($commandData->aliases);
 			}
-
+			/** @var CommandParameter[] $overload */
 			foreach($commandData->overloads as $overload){
-				/**
-				 * @var CommandParameter[] $overload
-				 * @var CommandParameter   $parameter
-				 */
+				/** @var CommandParameter $parameter */
 				foreach($overload as $parameter){
 					if($parameter->enum !== null){
-						if(!isset($enumIndexes[$parameter->enum->enumName])){
-							$enums[$enumIndexes[$parameter->enum->enumName] = count($enumIndexes)] = $parameter->enum;
-						}
-						foreach($parameter->enum->enumValues as $str){
-							$enumValueIndexes[$str] = $enumValueIndexes[$str] ?? count($enumValueIndexes);
-						}
+						$addEnumFn($parameter->enum);
 					}
 
 					if($parameter->postfix !== null){
@@ -404,6 +464,11 @@ class AvailableCommandsPacket extends DataPacket{
 		$this->putUnsignedVarInt(count($this->softEnums));
 		foreach($this->softEnums as $enum){
 			$this->putSoftEnum($enum);
+		}
+
+		$this->putUnsignedVarInt(count($this->enumConstraints));
+		foreach($this->enumConstraints as $constraint){
+			$this->putEnumConstraint($constraint, $enumIndexes, $enumValueIndexes);
 		}
 	}
 

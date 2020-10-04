@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -39,9 +39,6 @@ class RemoveEntityPacket extends DataPacket/* implements ClientboundPacket*/{
 		return $result;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getUvarint1() : int{
 		return $this->uvarint1;
 	}

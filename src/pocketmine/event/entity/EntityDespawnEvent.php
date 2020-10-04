@@ -32,56 +32,54 @@ use pocketmine\entity\Vehicle;
 
 /**
  * Called when a entity is despawned
+ * @phpstan-extends EntityEvent<Entity>
  */
 class EntityDespawnEvent extends EntityEvent{
 	/** @var int */
 	private $entityType;
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function __construct(Entity $entity){
 		$this->entity = $entity;
 		$this->entityType = $entity::NETWORK_ID;
 	}
 
 	/**
-	 * @return int
+	 * @deprecated
 	 */
 	public function getType() : int{
 		return $this->entityType;
 	}
 
 	/**
-	 * @return bool
+	 * @deprecated
 	 */
 	public function isCreature() : bool{
 		return $this->entity instanceof Creature;
 	}
 
 	/**
-	 * @return bool
+	 * @deprecated
 	 */
 	public function isHuman() : bool{
 		return $this->entity instanceof Human;
 	}
 
 	/**
-	 * @return bool
+	 * @deprecated
 	 */
 	public function isProjectile() : bool{
 		return $this->entity instanceof Projectile;
 	}
 
 	/**
-	 * @return bool
+	 * @deprecated
 	 */
 	public function isVehicle() : bool{
 		return $this->entity instanceof Vehicle;
 	}
 
 	/**
-	 * @return bool
+	 * @deprecated
 	 */
 	public function isItem() : bool{
 		return $this->entity instanceof ItemEntity;

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -37,12 +37,12 @@ class ShowStoreOfferPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->offerId = $this->getString();
-		$this->showAll = $this->getBool();
+		$this->showAll = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->offerId);
-		$this->putBool($this->showAll);
+		($this->buffer .= ($this->showAll ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

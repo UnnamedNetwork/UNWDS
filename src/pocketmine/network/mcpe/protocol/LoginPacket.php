@@ -23,24 +23,17 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
-
-use pocketmine\entity\data\SkinAnimation;
-use pocketmine\entity\Skin;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\utils\BinaryStream;
 use pocketmine\utils\MainLogger;
-use pocketmine\utils\SerializedImage;
 use pocketmine\utils\Utils;
 use function get_class;
 use function json_decode;
-use const pocketmine\RESOURCE_PATH;
 
 class LoginPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::LOGIN_PACKET;
-
-	public const EDITION_POCKET = 0;
 
 	/** @var string */
 	public $username;
@@ -58,14 +51,18 @@ class LoginPacket extends DataPacket{
 	public $serverAddress;
 	/** @var string */
 	public $locale;
-	/** @var Skin $skin */
-	public $skin;
 
-	/** @var array (the "chain" index contains one or more JWTs) */
+	/**
+	 * @var string[][] (the "chain" index contains one or more JWTs)
+	 * @phpstan-var array{chain?: list<string>}
+	 */
 	public $chainData = [];
 	/** @var string */
 	public $clientDataJwt;
-	/** @var array decoded payload of the clientData JWT */
+	/**
+	 * @var mixed[] decoded payload of the clientData JWT
+	 * @phpstan-var array<string, mixed>
+	 */
 	public $clientData = [];
 
 	/**
@@ -81,22 +78,21 @@ class LoginPacket extends DataPacket{
 	}
 
 	public function mayHaveUnreadBytes() : bool{
-		return $this->protocol !== null and $this->protocol !== ProtocolInfo::CURRENT_PROTOCOL;
+		return $this->protocol !== ProtocolInfo::CURRENT_PROTOCOL;
 	}
 
 	protected function decodePayload(){
-		$this->protocol = $this->getInt();
+		$this->protocol = ((\unpack("N", $this->get(4))[1] << 32 >> 32));
 
 		try{
 			$this->decodeConnectionRequest();
-			$this->decodeSkin();
 		}catch(\Throwable $e){
 			if($this->protocol === ProtocolInfo::CURRENT_PROTOCOL){
 				throw $e;
 			}
 
 			$logger = MainLogger::getLogger();
-			$logger->debug(get_class($e) . " was thrown while decoding connection request in login (protocol version " . ($this->protocol ?? "unknown") . "): " . $e->getMessage());
+			$logger->debug(get_class($e) . " was thrown while decoding connection request in login (protocol version $this->protocol): " . $e->getMessage());
 			foreach(Utils::printableTrace($e->getTrace()) as $line){
 				$logger->debug($line);
 			}
@@ -140,113 +136,6 @@ class LoginPacket extends DataPacket{
 
 		$this->locale = $this->clientData["LanguageCode"] ?? null;
 	}
-
-	protected function decodeSkin() {
-        $skin = new Skin();
-
-        $skinToken = $this->clientData;
-
-        if(isset($skinToken["SkinId"])) {
-            $skin->setSkinId((string)$skinToken["SkinId"]);
-        }
-        if(isset($skinToken["CapeId"])) {
-            $skin->setCapeId((string)$skinToken["CapeId"]);
-        }
-
-        $skin->setSkinData($this->decodeImage($skinToken, "Skin"));
-        $skin->setCapeData($this->decodeImage($skinToken, "Cape"));
-
-        $premium = false;
-        $persona = false;
-        $capeOnClassic = false;
-
-        if(isset($skinToken["PremiumSkin"])) {
-            $premium = (bool)$skinToken["PremiumSkin"];
-        }
-
-        if(isset($skinToken["PersonaSkin"])) {
-            $persona = (bool)$skinToken["PersonaSkin"];
-        }
-
-        if(isset($skinToken["CapeOnClassicSkin"])) {
-            $capeOnClassic = (bool)$skinToken["CapeOnClassicSkin"];
-        }
-
-        $skin->setPremium($premium);
-        $skin->setPersona($persona);
-        $skin->setCapeOnClassic($capeOnClassic);
-
-        $skin->version = $this->protocol > ProtocolInfo::PROTOCOL_1_12 ? ProtocolInfo::PROTOCOL_1_13 : ProtocolInfo::PROTOCOL_1_12;
-
-        $skinResourcePatch = Skin::getGeometryCustomConstant();
-        $skinGeometryData = "";
-
-        // 1.13+
-        if(isset($skinToken["SkinResourcePatch"])) {
-            $skinResourcePatch = base64_decode($skinToken["SkinResourcePatch"]);
-        }
-
-        if(isset($skinToken["SkinGeometryData"])) {
-            $skinGeometryData = base64_decode($skinToken["SkinGeometryData"]);
-        }
-
-        // 1.12
-        /*if(isset($skinToken["SkinGeometryName"])) {
-            $skinResourcePatch = str_replace(Skin::DEFAULT_SKIN_GEOMETRY_NAME, $skinToken["SkinGeometryName"], Skin::DEFAULT_SKIN_RESOURCE_PATCH);
-        }
-
-        if(isset($skinToken["SkinGeometry"])) {
-            $skinGeometryData = base64_decode($skinToken["SkinGeometry"]);
-        }*/
-
-        $skin->setSkinResourcePatch($skinResourcePatch);
-        $skin->setGeometryData($skinGeometryData);
-
-        if(isset($skinToken["AnimationData"])) {
-            $skin->setAnimationData(base64_decode($skinToken["AnimationData"]));
-        }
-
-        if(isset($skinToken["AnimatedImageData"])) {
-            foreach ($skinToken["AnimatedImageData"] as $tokens) {
-                $skin->animations[] = $this->decodeAnimation($tokens);
-            }
-        }
-
-        $this->skin = $skin;
-        // TODO: Animated image data
-    }
-
-    /**
-     * @param array $data
-     * @return SkinAnimation
-     */
-    protected function decodeAnimation(array $data): SkinAnimation {
-        return new SkinAnimation(new SerializedImage($data["ImageWidth"], $data["ImageHeight"], (string)base64_decode($data["Image"])), (int)$data["Type"], (float)$data["Frames"]);
-    }
-
-    /**
-     * @param array $token
-     * @param string $name
-     *
-     * @return SerializedImage
-     */
-    protected function decodeImage(array $token, string $name) {
-        $index = $name . "Data";
-        if(isset($token[$index])) {
-            $skinImage = base64_decode($token[$index]);
-            if(!$skinImage) {
-                return SerializedImage::createEmpty();
-            }
-
-            if(isset($token[$name . "ImageHeight"]) && isset($token[$name . "ImageWidth"])) {
-                return new SerializedImage((int)$token[$name . "ImageWidth"], (int)$token[$name. "ImageHeight"], $skinImage);
-            }
-
-            return SerializedImage::fromLegacy($skinImage);
-        }
-
-        return SerializedImage::createEmpty();
-    }
 
 	protected function encodePayload(){
 		//TODO

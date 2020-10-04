@@ -27,27 +27,24 @@ use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\event\Cancellable;
 use pocketmine\level\Position;
+use pocketmine\utils\Utils;
 
 /**
  * Called when a entity explodes
+ * @phpstan-extends EntityEvent<Entity>
  */
 class EntityExplodeEvent extends EntityEvent implements Cancellable{
 	/** @var Position */
 	protected $position;
 
-	/**
-	 * @var Block[]
-	 */
+	/** @var Block[] */
 	protected $blocks;
 
 	/** @var float */
 	protected $yield;
 
 	/**
-	 * @param Entity   $entity
-	 * @param Position $position
 	 * @param Block[]  $blocks
-	 * @param float    $yield
 	 */
 	public function __construct(Entity $entity, Position $position, array $blocks, float $yield){
 		$this->entity = $entity;
@@ -56,9 +53,6 @@ class EntityExplodeEvent extends EntityEvent implements Cancellable{
 		$this->yield = $yield;
 	}
 
-	/**
-	 * @return Position
-	 */
 	public function getPosition() : Position{
 		return $this->position;
 	}
@@ -74,19 +68,14 @@ class EntityExplodeEvent extends EntityEvent implements Cancellable{
 	 * @param Block[] $blocks
 	 */
 	public function setBlockList(array $blocks) : void{
+		Utils::validateArrayValueType($blocks, function(Block $_) : void{});
 		$this->blocks = $blocks;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getYield() : float{
 		return $this->yield;
 	}
 
-	/**
-	 * @param float $yield
-	 */
 	public function setYield(float $yield) : void{
 		$this->yield = $yield;
 	}

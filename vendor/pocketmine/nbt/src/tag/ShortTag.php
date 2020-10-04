@@ -27,16 +27,12 @@ use pocketmine\nbt\NBT;
 use pocketmine\nbt\NBTStream;
 use pocketmine\nbt\ReaderTracker;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class ShortTag extends NamedTag{
 	/** @var int */
 	private $value;
 
-	/**
-	 * @param string $name
-	 * @param int    $value
-	 */
 	public function __construct(string $name = "", int $value = 0){
 		parent::__construct($name);
 		if($value < -0x8000 or $value > 0x7fff){
@@ -57,9 +53,6 @@ class ShortTag extends NamedTag{
 		$nbt->putShort($this->value);
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getValue() : int{
 		return $this->value;
 	}

@@ -23,306 +23,339 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\math\Vector3;
+use pocketmine\nbt\NetworkLittleEndianNBTStream;
+use pocketmine\nbt\tag\ListTag;
+use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\protocol\types\EducationEditionOffer;
+use pocketmine\network\mcpe\protocol\types\GameRuleType;
+use pocketmine\network\mcpe\protocol\types\GeneratorType;
+use pocketmine\network\mcpe\protocol\types\MultiplayerGameVisibility;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
-use pocketmine\network\mcpe\protocol\types\RuntimeBlockMapping;
+use pocketmine\network\mcpe\protocol\types\SpawnSettings;
 use function count;
 use function file_get_contents;
 use function json_decode;
 use const pocketmine\RESOURCE_PATH;
 
 class StartGamePacket extends DataPacket{
-    public const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
+	public const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
 
-    /** @var string[]|null */
-    private static $blockTableCache = [];
-    /** @var string|null */
-    private static $itemTableCache = null;
+	/** @var string|null */
+	private static $blockTableCache = null;
+	/** @var string|null */
+	private static $itemTableCache = null;
 
-    /** @var int $protocol */
-    public $protocol = ProtocolInfo::CURRENT_PROTOCOL;
+	/** @var int */
+	public $entityUniqueId;
+	/** @var int */
+	public $entityRuntimeId;
+	/** @var int */
+	public $playerGamemode;
 
-    /** @var int */
-    public $entityUniqueId;
-    /** @var int */
-    public $entityRuntimeId;
-    /** @var int */
-    public $playerGamemode;
+	/** @var Vector3 */
+	public $playerPosition;
 
-    /** @var Vector3 */
-    public $playerPosition;
+	/** @var float */
+	public $pitch;
+	/** @var float */
+	public $yaw;
 
-    /** @var float */
-    public $pitch;
-    /** @var float */
-    public $yaw;
+	/** @var int */
+	public $seed;
+	/** @var SpawnSettings */
+	public $spawnSettings;
+	/** @var int */
+	public $generator = GeneratorType::OVERWORLD;
+	/** @var int */
+	public $worldGamemode;
+	/** @var int */
+	public $difficulty;
+	/** @var int */
+	public $spawnX;
+	/** @var int */
+	public $spawnY;
+	/** @var int */
+	public $spawnZ;
+	/** @var bool */
+	public $hasAchievementsDisabled = true;
+	/** @var int */
+	public $time = -1;
+	/** @var int */
+	public $eduEditionOffer = EducationEditionOffer::NONE;
+	/** @var bool */
+	public $hasEduFeaturesEnabled = false;
+	/** @var string */
+	public $eduProductUUID = "";
+	/** @var float */
+	public $rainLevel;
+	/** @var float */
+	public $lightningLevel;
+	/** @var bool */
+	public $hasConfirmedPlatformLockedContent = false;
+	/** @var bool */
+	public $isMultiplayerGame = true;
+	/** @var bool */
+	public $hasLANBroadcast = true;
+	/** @var int */
+	public $xboxLiveBroadcastMode = MultiplayerGameVisibility::PUBLIC;
+	/** @var int */
+	public $platformBroadcastMode = MultiplayerGameVisibility::PUBLIC;
+	/** @var bool */
+	public $commandsEnabled;
+	/** @var bool */
+	public $isTexturePacksRequired = true;
+	/**
+	 * @var mixed[][]
+	 * @phpstan-var array<string, array{0: int, 1: bool|int|float}>
+	 */
+	public $gameRules = [ //TODO: implement this
+		"naturalregeneration" => [GameRuleType::BOOL, false] //Hack for client side regeneration
+	];
+	/** @var bool */
+	public $hasBonusChestEnabled = false;
+	/** @var bool */
+	public $hasStartWithMapEnabled = false;
+	/** @var int */
+	public $defaultPlayerPermission = PlayerPermissions::MEMBER; //TODO
 
-    /** @var int */
-    public $seed;
-    /** @var int */
-    public $dimension;
-    /** @var int */
-    public $generator = 1; //default infinite - 0 old, 1 infinite, 2 flat
-    /** @var int */
-    public $worldGamemode;
-    /** @var int */
-    public $difficulty;
-    /** @var int */
-    public $spawnX;
-    /** @var int */
-    public $spawnY;
-    /** @var int */
-    public $spawnZ;
-    /** @var bool */
-    public $hasAchievementsDisabled = true;
-    /** @var int */
-    public $time = -1;
-    /** @var bool */
-    public $eduMode = false;
-    /** @var bool */
-    public $hasEduFeaturesEnabled = false;
-    /** @var float */
-    public $rainLevel;
-    /** @var float */
-    public $lightningLevel;
-    /** @var bool */
-    public $hasConfirmedPlatformLockedContent = false;
-    /** @var bool */
-    public $isMultiplayerGame = true;
-    /** @var bool */
-    public $hasLANBroadcast = true;
-    /** @var int */
-    public $xboxLiveBroadcastMode = 0; //TODO: find values
-    /** @var int */
-    public $platformBroadcastMode = 0;
-    /** @var bool */
-    public $commandsEnabled;
-    /** @var bool */
-    public $isTexturePacksRequired = true;
-    /** @var array */
-    public $gameRules = [ //TODO: implement this
-        "naturalregeneration" => [1, false] //Hack for client side regeneration
-    ];
-    /** @var bool */
-    public $hasBonusChestEnabled = false;
-    /** @var bool */
-    public $hasStartWithMapEnabled = false;
-    /** @var int */
-    public $defaultPlayerPermission = PlayerPermissions::MEMBER; //TODO
+	/** @var int */
+	public $serverChunkTickRadius = 4; //TODO (leave as default for now)
 
-    /** @var int */
-    public $serverChunkTickRadius = 4; //TODO (leave as default for now)
+	/** @var bool */
+	public $hasLockedBehaviorPack = false;
+	/** @var bool */
+	public $hasLockedResourcePack = false;
+	/** @var bool */
+	public $isFromLockedWorldTemplate = false;
+	/** @var bool */
+	public $useMsaGamertagsOnly = false;
+	/** @var bool */
+	public $isFromWorldTemplate = false;
+	/** @var bool */
+	public $isWorldTemplateOptionLocked = false;
+	/** @var bool */
+	public $onlySpawnV1Villagers = false;
+	/** @var string */
+	public $vanillaVersion = ProtocolInfo::MINECRAFT_VERSION_NETWORK;
+	/** @var int */
+	public $limitedWorldWidth = 0;
+	/** @var int */
+	public $limitedWorldLength = 0;
+	/** @var bool */
+	public $isNewNether = true;
+	/** @var bool|null */
+	public $experimentalGameplayOverride = null;
 
-    /** @var bool */
-    public $hasLockedBehaviorPack = false;
-    /** @var bool */
-    public $hasLockedResourcePack = false;
-    /** @var bool */
-    public $isFromLockedWorldTemplate = false;
-    /** @var bool */
-    public $useMsaGamertagsOnly = false;
-    /** @var bool */
-    public $isFromWorldTemplate = false;
-    /** @var bool */
-    public $isWorldTemplateOptionLocked = false;
-    /** @var bool */
-    public $onlySpawnV1Villagers = false;
+	/** @var string */
+	public $levelId = ""; //base64 string, usually the same as world folder name in vanilla
+	/** @var string */
+	public $worldName;
+	/** @var string */
+	public $premiumWorldTemplateId = "";
+	/** @var bool */
+	public $isTrial = false;
+	/** @var bool */
+	public $isMovementServerAuthoritative = false;
+	/** @var int */
+	public $currentTick = 0; //only used if isTrial is true
+	/** @var int */
+	public $enchantmentSeed = 0;
+	/** @var string */
+	public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
 
-    /** @var string */
-    public $levelId = ""; //base64 string, usually the same as world folder name in vanilla
-    /** @var string */
-    public $worldName;
-    /** @var string */
-    public $premiumWorldTemplateId = "";
-    /** @var bool */
-    public $isTrial = false;
-    /** @var int */
-    public $currentTick = 0; //only used if isTrial is true
-    /** @var int */
-    public $enchantmentSeed = 0;
-    /** @var string */
-    public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
+	/** @var ListTag|null */
+	public $blockTable = null;
+	/**
+	 * @var int[]|null string (name) => int16 (legacyID)
+	 * @phpstan-var array<string, int>|null
+	 */
+	public $itemTable = null;
+	/** @var bool */
+	public $enableNewInventorySystem = false; //TODO
 
-    /** @var array|null ["name" (string), "data" (int16), "legacy_id" (int16)] */
-    public $blockTable = null;
-    /** @var array|null string (name) => int16 (legacyID) */
-    public $itemTable = null;
+	protected function decodePayload(){
+		$this->entityUniqueId = $this->getEntityUniqueId();
+		$this->entityRuntimeId = $this->getEntityRuntimeId();
+		$this->playerGamemode = $this->getVarInt();
 
-    protected function decodePayload(){
-        $this->entityUniqueId = $this->getEntityUniqueId();
-        $this->entityRuntimeId = $this->getEntityRuntimeId();
-        $this->playerGamemode = $this->getVarInt();
+		$this->playerPosition = $this->getVector3();
 
-        $this->playerPosition = $this->getVector3();
+		$this->pitch = ((\unpack("g", $this->get(4))[1]));
+		$this->yaw = ((\unpack("g", $this->get(4))[1]));
 
-        $this->pitch = $this->getLFloat();
-        $this->yaw = $this->getLFloat();
+		//Level settings
+		$this->seed = $this->getVarInt();
+		$this->spawnSettings = SpawnSettings::read($this);
+		$this->generator = $this->getVarInt();
+		$this->worldGamemode = $this->getVarInt();
+		$this->difficulty = $this->getVarInt();
+		$this->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		$this->hasAchievementsDisabled = (($this->get(1) !== "\x00"));
+		$this->time = $this->getVarInt();
+		$this->eduEditionOffer = $this->getVarInt();
+		$this->hasEduFeaturesEnabled = (($this->get(1) !== "\x00"));
+		$this->eduProductUUID = $this->getString();
+		$this->rainLevel = ((\unpack("g", $this->get(4))[1]));
+		$this->lightningLevel = ((\unpack("g", $this->get(4))[1]));
+		$this->hasConfirmedPlatformLockedContent = (($this->get(1) !== "\x00"));
+		$this->isMultiplayerGame = (($this->get(1) !== "\x00"));
+		$this->hasLANBroadcast = (($this->get(1) !== "\x00"));
+		$this->xboxLiveBroadcastMode = $this->getVarInt();
+		$this->platformBroadcastMode = $this->getVarInt();
+		$this->commandsEnabled = (($this->get(1) !== "\x00"));
+		$this->isTexturePacksRequired = (($this->get(1) !== "\x00"));
+		$this->gameRules = $this->getGameRules();
+		$this->hasBonusChestEnabled = (($this->get(1) !== "\x00"));
+		$this->hasStartWithMapEnabled = (($this->get(1) !== "\x00"));
+		$this->defaultPlayerPermission = $this->getVarInt();
+		$this->serverChunkTickRadius = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		$this->hasLockedBehaviorPack = (($this->get(1) !== "\x00"));
+		$this->hasLockedResourcePack = (($this->get(1) !== "\x00"));
+		$this->isFromLockedWorldTemplate = (($this->get(1) !== "\x00"));
+		$this->useMsaGamertagsOnly = (($this->get(1) !== "\x00"));
+		$this->isFromWorldTemplate = (($this->get(1) !== "\x00"));
+		$this->isWorldTemplateOptionLocked = (($this->get(1) !== "\x00"));
+		$this->onlySpawnV1Villagers = (($this->get(1) !== "\x00"));
+		$this->vanillaVersion = $this->getString();
+		$this->limitedWorldWidth = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		$this->limitedWorldLength = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		$this->isNewNether = (($this->get(1) !== "\x00"));
+		if((($this->get(1) !== "\x00"))){
+			$this->experimentalGameplayOverride = (($this->get(1) !== "\x00"));
+		}else{
+			$this->experimentalGameplayOverride = null;
+		}
 
-        //Level settings
-        $this->seed = $this->getVarInt();
-        $this->dimension = $this->getVarInt();
-        $this->generator = $this->getVarInt();
-        $this->worldGamemode = $this->getVarInt();
-        $this->difficulty = $this->getVarInt();
-        $this->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-        $this->hasAchievementsDisabled = $this->getBool();
-        $this->time = $this->getVarInt();
-        $this->eduMode = $this->getBool();
-        $this->hasEduFeaturesEnabled = $this->getBool();
-        $this->rainLevel = $this->getLFloat();
-        $this->lightningLevel = $this->getLFloat();
-        $this->hasConfirmedPlatformLockedContent = $this->getBool();
-        $this->isMultiplayerGame = $this->getBool();
-        $this->hasLANBroadcast = $this->getBool();
-        $this->xboxLiveBroadcastMode = $this->getVarInt();
-        $this->platformBroadcastMode = $this->getVarInt();
-        $this->commandsEnabled = $this->getBool();
-        $this->isTexturePacksRequired = $this->getBool();
-        $this->gameRules = $this->getGameRules();
-        $this->hasBonusChestEnabled = $this->getBool();
-        $this->hasStartWithMapEnabled = $this->getBool();
-        $this->defaultPlayerPermission = $this->getVarInt();
-        $this->serverChunkTickRadius = $this->getLInt();
-        $this->hasLockedBehaviorPack = $this->getBool();
-        $this->hasLockedResourcePack = $this->getBool();
-        $this->isFromLockedWorldTemplate = $this->getBool();
-        $this->useMsaGamertagsOnly = $this->getBool();
-        $this->isFromWorldTemplate = $this->getBool();
-        $this->isWorldTemplateOptionLocked = $this->getBool();
-        $this->onlySpawnV1Villagers = $this->getBool();
+		$this->levelId = $this->getString();
+		$this->worldName = $this->getString();
+		$this->premiumWorldTemplateId = $this->getString();
+		$this->isTrial = (($this->get(1) !== "\x00"));
+		$this->isMovementServerAuthoritative = (($this->get(1) !== "\x00"));
+		$this->currentTick = (Binary::readLLong($this->get(8)));
 
-        $this->levelId = $this->getString();
-        $this->worldName = $this->getString();
-        $this->premiumWorldTemplateId = $this->getString();
-        $this->isTrial = $this->getBool();
-        $this->currentTick = $this->getLLong();
+		$this->enchantmentSeed = $this->getVarInt();
 
-        $this->enchantmentSeed = $this->getVarInt();
+		$blockTable = (new NetworkLittleEndianNBTStream())->read($this->buffer, false, $this->offset, 512);
+		if(!($blockTable instanceof ListTag)){
+			throw new \UnexpectedValueException("Wrong block table root NBT tag type");
+		}
+		$this->blockTable = $blockTable;
 
-        $this->blockTable = [];
-        for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-            $id = $this->getString();
-            $data = $this->getSignedLShort();
-            $unknown = $this->getSignedLShort();
+		$this->itemTable = [];
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$id = $this->getString();
+			$legacyId = ((\unpack("v", $this->get(2))[1] << 48 >> 48));
 
-            $this->blockTable[$i] = ["name" => $id, "data" => $data, "legacy_id" => $unknown];
-        }
-        $this->itemTable = [];
-        for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-            $id = $this->getString();
-            $legacyId = $this->getSignedLShort();
+			$this->itemTable[$id] = $legacyId;
+		}
 
-            $this->itemTable[$id] = $legacyId;
-        }
+		$this->multiplayerCorrelationId = $this->getString();
+		$this->enableNewInventorySystem = (($this->get(1) !== "\x00"));
+	}
 
-        $this->multiplayerCorrelationId = $this->getString();
-    }
+	protected function encodePayload(){
+		$this->putEntityUniqueId($this->entityUniqueId);
+		$this->putEntityRuntimeId($this->entityRuntimeId);
+		$this->putVarInt($this->playerGamemode);
 
-    protected function encodePayload(){
-        $this->putEntityUniqueId($this->entityUniqueId);
-        $this->putEntityRuntimeId($this->entityRuntimeId);
-        $this->putVarInt($this->playerGamemode);
+		$this->putVector3($this->playerPosition);
 
-        $this->putVector3($this->playerPosition);
+		($this->buffer .= (\pack("g", $this->pitch)));
+		($this->buffer .= (\pack("g", $this->yaw)));
 
-        $this->putLFloat($this->pitch);
-        $this->putLFloat($this->yaw);
+		//Level settings
+		$this->putVarInt($this->seed);
+		$this->spawnSettings->write($this);
+		$this->putVarInt($this->generator);
+		$this->putVarInt($this->worldGamemode);
+		$this->putVarInt($this->difficulty);
+		$this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
+		($this->buffer .= ($this->hasAchievementsDisabled ? "\x01" : "\x00"));
+		$this->putVarInt($this->time);
+		$this->putVarInt($this->eduEditionOffer);
+		($this->buffer .= ($this->hasEduFeaturesEnabled ? "\x01" : "\x00"));
+		$this->putString($this->eduProductUUID);
+		($this->buffer .= (\pack("g", $this->rainLevel)));
+		($this->buffer .= (\pack("g", $this->lightningLevel)));
+		($this->buffer .= ($this->hasConfirmedPlatformLockedContent ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isMultiplayerGame ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasLANBroadcast ? "\x01" : "\x00"));
+		$this->putVarInt($this->xboxLiveBroadcastMode);
+		$this->putVarInt($this->platformBroadcastMode);
+		($this->buffer .= ($this->commandsEnabled ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isTexturePacksRequired ? "\x01" : "\x00"));
+		$this->putGameRules($this->gameRules);
+		($this->buffer .= ($this->hasBonusChestEnabled ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasStartWithMapEnabled ? "\x01" : "\x00"));
+		$this->putVarInt($this->defaultPlayerPermission);
+		($this->buffer .= (\pack("V", $this->serverChunkTickRadius)));
+		($this->buffer .= ($this->hasLockedBehaviorPack ? "\x01" : "\x00"));
+		($this->buffer .= ($this->hasLockedResourcePack ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isFromLockedWorldTemplate ? "\x01" : "\x00"));
+		($this->buffer .= ($this->useMsaGamertagsOnly ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isFromWorldTemplate ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isWorldTemplateOptionLocked ? "\x01" : "\x00"));
+		($this->buffer .= ($this->onlySpawnV1Villagers ? "\x01" : "\x00"));
+		$this->putString($this->vanillaVersion);
+		($this->buffer .= (\pack("V", $this->limitedWorldWidth)));
+		($this->buffer .= (\pack("V", $this->limitedWorldLength)));
+		($this->buffer .= ($this->isNewNether ? "\x01" : "\x00"));
+		($this->buffer .= ($this->experimentalGameplayOverride !== null ? "\x01" : "\x00"));
+		if($this->experimentalGameplayOverride !== null){
+			($this->buffer .= ($this->experimentalGameplayOverride ? "\x01" : "\x00"));
+		}
 
-        //Level settings
-        $this->putVarInt($this->seed);
-        $this->putVarInt($this->dimension);
-        $this->putVarInt($this->generator);
-        $this->putVarInt($this->worldGamemode);
-        $this->putVarInt($this->difficulty);
-        $this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-        $this->putBool($this->hasAchievementsDisabled);
-        $this->putVarInt($this->time);
-        $this->putBool($this->eduMode);
-        $this->putBool($this->hasEduFeaturesEnabled);
-        $this->putLFloat($this->rainLevel);
-        $this->putLFloat($this->lightningLevel);
-        $this->putBool($this->hasConfirmedPlatformLockedContent);
-        $this->putBool($this->isMultiplayerGame);
-        $this->putBool($this->hasLANBroadcast);
-        $this->putVarInt($this->xboxLiveBroadcastMode);
-        $this->putVarInt($this->platformBroadcastMode);
-        $this->putBool($this->commandsEnabled);
-        $this->putBool($this->isTexturePacksRequired);
-        $this->putGameRules($this->gameRules);
-        $this->putBool($this->hasBonusChestEnabled);
-        $this->putBool($this->hasStartWithMapEnabled);
-        $this->putVarInt($this->defaultPlayerPermission);
-        $this->putLInt($this->serverChunkTickRadius);
-        $this->putBool($this->hasLockedBehaviorPack);
-        $this->putBool($this->hasLockedResourcePack);
-        $this->putBool($this->isFromLockedWorldTemplate);
-        $this->putBool($this->useMsaGamertagsOnly);
-        $this->putBool($this->isFromWorldTemplate);
-        $this->putBool($this->isWorldTemplateOptionLocked);
-        $this->putBool($this->onlySpawnV1Villagers);
-        if($this->protocol >= ProtocolInfo::PROTOCOL_1_13)
-            $this->putString(ProtocolInfo::MINECRAFT_VERSION);
+		$this->putString($this->levelId);
+		$this->putString($this->worldName);
+		$this->putString($this->premiumWorldTemplateId);
+		($this->buffer .= ($this->isTrial ? "\x01" : "\x00"));
+		($this->buffer .= ($this->isMovementServerAuthoritative ? "\x01" : "\x00"));
+		($this->buffer .= (\pack("VV", $this->currentTick & 0xFFFFFFFF, $this->currentTick >> 32)));
 
-        $this->putString($this->levelId);
-        $this->putString($this->worldName);
-        $this->putString($this->premiumWorldTemplateId);
-        $this->putBool($this->isTrial);
-        if($this->protocol >= ProtocolInfo::PROTOCOL_1_13)
-            $this->putBool(false); // 1.13
-        $this->putLLong($this->currentTick);
+		$this->putVarInt($this->enchantmentSeed);
 
-        $this->putVarInt($this->enchantmentSeed);
+		if($this->blockTable === null){
+			if(self::$blockTableCache === null){
+				//this is a really nasty hack, but it'll do for now
+				self::$blockTableCache = (new NetworkLittleEndianNBTStream())->write(new ListTag("", RuntimeBlockMapping::getBedrockKnownStates()));
+			}
+			($this->buffer .= self::$blockTableCache);
+		}else{
+			($this->buffer .= (new NetworkLittleEndianNBTStream())->write($this->blockTable));
+		}
+		if($this->itemTable === null){
+			if(self::$itemTableCache === null){
+				self::$itemTableCache = self::serializeItemTable(json_decode(file_get_contents(RESOURCE_PATH . '/vanilla/item_id_map.json'), true));
+			}
+			($this->buffer .= self::$itemTableCache);
+		}else{
+			($this->buffer .= self::serializeItemTable($this->itemTable));
+		}
 
-        if($this->blockTable === null){
-            if(!isset(self::$blockTableCache[$this->protocol])) {
-                self::$blockTableCache[$this->protocol] = self::serializeBlockTable(RuntimeBlockMapping::getBedrockKnownStates($this->protocol));
-            }
-            $this->put(self::$blockTableCache[$this->protocol]);
-        }else{
-            $this->put(self::serializeBlockTable($this->blockTable));
-        }
-        if($this->itemTable === null){
-            if(self::$itemTableCache === null){
-                self::$itemTableCache = self::serializeItemTable(json_decode(file_get_contents(RESOURCE_PATH . '/vanilla/item_id_map.json'), true));
-            }
-            $this->put(self::$itemTableCache);
-        }else{
-            $this->put(self::serializeItemTable($this->itemTable));
-        }
+		$this->putString($this->multiplayerCorrelationId);
+		($this->buffer .= ($this->enableNewInventorySystem ? "\x01" : "\x00"));
+	}
 
-        $this->putString($this->multiplayerCorrelationId);
-    }
+	/**
+	 * @param int[] $table
+	 * @phpstan-param array<string, int> $table
+	 */
+	private static function serializeItemTable(array $table) : string{
+		$stream = new NetworkBinaryStream();
+		$stream->putUnsignedVarInt(count($table));
+		foreach($table as $name => $legacyId){
+			$stream->putString($name);
+			$stream->putLShort($legacyId);
+		}
+		return $stream->getBuffer();
+	}
 
-    public static function serializeBlockTable($table) : string{
-        if(is_string($table)) {
-            return $table;
-        }
-        $stream = new NetworkBinaryStream();
-        $stream->putUnsignedVarInt(count($table));
-        foreach($table as $v){
-            $stream->putString($v["name"]);
-            $stream->putLShort($v["data"]);
-            $stream->putLShort($v["legacy_id"]);
-        }
-        return $stream->getBuffer();
-    }
-
-    private static function serializeItemTable(array $table) : string{
-        $stream = new NetworkBinaryStream();
-        $stream->putUnsignedVarInt(count($table));
-        foreach($table as $name => $legacyId){
-            $stream->putString($name);
-            $stream->putLShort($legacyId);
-        }
-        return $stream->getBuffer();
-    }
-
-    public function handle(NetworkSession $session) : bool{
-        return $session->handleStartGame($this);
-    }
+	public function handle(NetworkSession $session) : bool{
+		return $session->handleStartGame($this);
+	}
 }

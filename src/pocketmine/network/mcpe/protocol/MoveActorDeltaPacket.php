@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -36,6 +36,9 @@ class MoveActorDeltaPacket extends DataPacket{
 	public const FLAG_HAS_ROT_X = 0x08;
 	public const FLAG_HAS_ROT_Y = 0x10;
 	public const FLAG_HAS_ROT_Z = 0x20;
+	public const FLAG_GROUND = 0x40;
+	public const FLAG_TELEPORT = 0x80;
+	public const FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100;
 
 	/** @var int */
 	public $entityRuntimeId;
@@ -55,14 +58,14 @@ class MoveActorDeltaPacket extends DataPacket{
 	public $zRot = 0.0;
 
 	private function maybeReadCoord(int $flag) : int{
-		if($this->flags & $flag){
+		if(($this->flags & $flag) !== 0){
 			return $this->getVarInt();
 		}
 		return 0;
 	}
 
 	private function maybeReadRotation(int $flag) : float{
-		if($this->flags & $flag){
+		if(($this->flags & $flag) !== 0){
 			return $this->getByteRotation();
 		}
 		return 0.0;
@@ -70,7 +73,7 @@ class MoveActorDeltaPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->flags = $this->getByte();
+		$this->flags = ((\unpack("v", $this->get(2))[1]));
 		$this->xDiff = $this->maybeReadCoord(self::FLAG_HAS_X);
 		$this->yDiff = $this->maybeReadCoord(self::FLAG_HAS_Y);
 		$this->zDiff = $this->maybeReadCoord(self::FLAG_HAS_Z);
@@ -80,20 +83,20 @@ class MoveActorDeltaPacket extends DataPacket{
 	}
 
 	private function maybeWriteCoord(int $flag, int $val) : void{
-		if($this->flags & $flag){
+		if(($this->flags & $flag) !== 0){
 			$this->putVarInt($val);
 		}
 	}
 
 	private function maybeWriteRotation(int $flag, float $val) : void{
-		if($this->flags & $flag){
+		if(($this->flags & $flag) !== 0){
 			$this->putByteRotation($val);
 		}
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		$this->putByte($this->flags);
+		($this->buffer .= (\pack("v", $this->flags)));
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xDiff);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yDiff);
 		$this->maybeWriteCoord(self::FLAG_HAS_Z, $this->zDiff);

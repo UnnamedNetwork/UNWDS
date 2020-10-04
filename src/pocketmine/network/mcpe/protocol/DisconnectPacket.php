@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -41,14 +40,14 @@ class DisconnectPacket extends DataPacket{
 	}
 
 	protected function decodePayload(){
-		$this->hideDisconnectionScreen = $this->getBool();
+		$this->hideDisconnectionScreen = (($this->get(1) !== "\x00"));
 		if(!$this->hideDisconnectionScreen){
 			$this->message = $this->getString();
 		}
 	}
 
 	protected function encodePayload(){
-		$this->putBool($this->hideDisconnectionScreen);
+		($this->buffer .= ($this->hideDisconnectionScreen ? "\x01" : "\x00"));
 		if(!$this->hideDisconnectionScreen){
 			$this->putString($this->message);
 		}

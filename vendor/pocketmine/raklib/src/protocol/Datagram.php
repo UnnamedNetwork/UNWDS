@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 use function strlen;
 use function substr;
@@ -38,23 +38,26 @@ class Datagram extends Packet{
 	/** @var int */
 	public $headerFlags = 0;
 
-	/** @var EncapsulatedPacket[] */
+	/** @var (EncapsulatedPacket|string)[] */
 	public $packets = [];
 
-	/** @var int */
-	public $seqNumber;
+	/** @var int|null */
+	public $seqNumber = null;
 
 	protected function encodeHeader() : void{
-		$this->putByte(self::BITFLAG_VALID | $this->headerFlags);
+		($this->buffer .= \chr(self::BITFLAG_VALID | $this->headerFlags));
 	}
 
 	protected function encodePayload() : void{
-		$this->putLTriad($this->seqNumber);
+		($this->buffer .= (\substr(\pack("V", $this->seqNumber), 0, -1)));
 		foreach($this->packets as $packet){
-			$this->put($packet instanceof EncapsulatedPacket ? $packet->toBinary() : (string) $packet);
+			($this->buffer .= $packet instanceof EncapsulatedPacket ? $packet->toBinary() : $packet);
 		}
 	}
 
+	/**
+	 * @return int
+	 */
 	public function length(){
 		$length = 4;
 		foreach($this->packets as $packet){
@@ -65,11 +68,11 @@ class Datagram extends Packet{
 	}
 
 	protected function decodeHeader() : void{
-		$this->headerFlags = $this->getByte();
+		$this->headerFlags = (\ord($this->get(1)));
 	}
 
 	protected function decodePayload() : void{
-		$this->seqNumber = $this->getLTriad();
+		$this->seqNumber = ((\unpack("V", $this->get(3) . "\x00")[1]));
 
 		while(!$this->feof()){
 			$offset = 0;

@@ -1,4 +1,4 @@
-# Main configuration file for PocketMine-MP
+# Main configuration file for UNWDS
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
@@ -9,8 +9,6 @@ settings:
   shutdown-message: "Server closed"
   #Allow listing plugins via Query
   query-plugins: true
-  #Show a console message when a plugin uses deprecated API methods
-  deprecated-verbose: true
   #Enable plugin and core profiling by default
   enable-profiling: false
   #Will only add results when tick measurement is below or equal to given value (default 20)
@@ -130,24 +128,10 @@ chunk-ticking:
 
 chunk-generation:
   #Max. amount of chunks in the waiting queue to be populated
-  population-queue-size: 8
+  population-queue-size: 32
 
 ticks-per:
   autosave: 6000
-
-auto-report:
-  #Send crash reports for processing
-  enabled: true
-  send-code: true
-  send-settings: true
-  send-phpinfo: false
-  use-https: true
-  host: crash.pmmp.io
-
-anonymous-statistics:
-  #Sends anonymous statistics for data aggregation, plugin usage tracking
-  enabled: false #TODO: re-enable this when we have a new stats host
-  host: stats.pocketmine.net
 
 timings:
   #Choose the host to use for viewing your timings results.

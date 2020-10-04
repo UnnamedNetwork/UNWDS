@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -61,30 +60,30 @@ class MovePlayerPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		$this->position = $this->getVector3();
-		$this->pitch = $this->getLFloat();
-		$this->yaw = $this->getLFloat();
-		$this->headYaw = $this->getLFloat();
-		$this->mode = $this->getByte();
-		$this->onGround = $this->getBool();
+		$this->pitch = ((\unpack("g", $this->get(4))[1]));
+		$this->yaw = ((\unpack("g", $this->get(4))[1]));
+		$this->headYaw = ((\unpack("g", $this->get(4))[1]));
+		$this->mode = (\ord($this->get(1)));
+		$this->onGround = (($this->get(1) !== "\x00"));
 		$this->ridingEid = $this->getEntityRuntimeId();
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
-			$this->teleportCause = $this->getLInt();
-			$this->teleportItem = $this->getLInt();
+			$this->teleportCause = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+			$this->teleportItem = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
 		}
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
 		$this->putVector3($this->position);
-		$this->putLFloat($this->pitch);
-		$this->putLFloat($this->yaw);
-		$this->putLFloat($this->headYaw); //TODO
-		$this->putByte($this->mode);
-		$this->putBool($this->onGround);
+		($this->buffer .= (\pack("g", $this->pitch)));
+		($this->buffer .= (\pack("g", $this->yaw)));
+		($this->buffer .= (\pack("g", $this->headYaw))); //TODO
+		($this->buffer .= \chr($this->mode));
+		($this->buffer .= ($this->onGround ? "\x01" : "\x00"));
 		$this->putEntityRuntimeId($this->ridingEid);
 		if($this->mode === MovePlayerPacket::MODE_TELEPORT){
-			$this->putLInt($this->teleportCause);
-			$this->putLInt($this->teleportItem);
+			($this->buffer .= (\pack("V", $this->teleportCause)));
+			($this->buffer .= (\pack("V", $this->teleportItem)));
 		}
 	}
 

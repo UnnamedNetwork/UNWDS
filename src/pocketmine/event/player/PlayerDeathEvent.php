@@ -40,15 +40,15 @@ class PlayerDeathEvent extends EntityDeathEvent{
 
 	/** @var TextContainer|string */
 	private $deathMessage;
+	/** @var bool */
 	private $keepInventory = false;
 
 	/**
-	 * @param Player                    $entity
 	 * @param Item[]                    $drops
 	 * @param string|TextContainer|null $deathMessage Null will cause the default vanilla message to be used
 	 */
-	public function __construct(Player $entity, array $drops, $deathMessage = null){
-		parent::__construct($entity, $drops);
+	public function __construct(Player $entity, array $drops, $deathMessage = null, int $xp = 0){
+		parent::__construct($entity, $drops, $xp);
 		$this->deathMessage = $deathMessage ?? self::deriveMessage($entity->getDisplayName(), $entity->getLastDamageCause());
 	}
 
@@ -59,9 +59,6 @@ class PlayerDeathEvent extends EntityDeathEvent{
 		return $this->entity;
 	}
 
-	/**
-	 * @return Player
-	 */
 	public function getPlayer() : Player{
 		return $this->entity;
 	}
@@ -90,11 +87,6 @@ class PlayerDeathEvent extends EntityDeathEvent{
 
 	/**
 	 * Returns the vanilla death message for the given death cause.
-	 *
-	 * @param string                 $name
-	 * @param null|EntityDamageEvent $deathCause
-	 *
-	 * @return TranslationContainer
 	 */
 	public static function deriveMessage(string $name, ?EntityDamageEvent $deathCause) : TranslationContainer{
 		$message = "death.attack.generic";

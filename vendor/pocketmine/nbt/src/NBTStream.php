@@ -42,26 +42,42 @@ use function strlen;
 use function substr;
 use function zlib_decode;
 use function zlib_encode;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
+use pocketmine\utils\BinaryDataException;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 /**
  * Base Named Binary Tag encoder/decoder
  */
 abstract class NBTStream{
-
+	/** @var string */
 	public $buffer = "";
+	/** @var int */
 	public $offset = 0;
 
+	/**
+	 * @param int|true $len
+	 *
+	 * @throws BinaryDataException if there are not enough bytes left in the buffer
+	 */
 	public function get($len) : string{
-		if($len < 0){
-			$this->offset = strlen($this->buffer) - 1;
+		if($len === 0){
 			return "";
-		}elseif($len === true){
-			return substr($this->buffer, $this->offset);
+		}
+
+		$buflen = strlen($this->buffer);
+		if($len === true){
+			$str = substr($this->buffer, $this->offset);
+			$this->offset = $buflen;
+			return $str;
+		}
+		if($len < 0){
+			$this->offset = $buflen - 1;
+			return "";
+		}
+		$remaining = $buflen - $this->offset;
+		if($remaining < $len){
+			throw new BinaryDataException("Not enough bytes left in buffer: need $len, have $remaining");
 		}
 
 		return $len === 1 ? $this->buffer[$this->offset++] : substr($this->buffer, ($this->offset += $len) - $len, $len);
@@ -78,10 +94,8 @@ abstract class NBTStream{
 	/**
 	 * Decodes NBT from the given binary string and returns it.
 	 *
-	 * @param string $buffer
 	 * @param bool   $doMultiple Whether to keep reading after the first tag if there are more bytes in the buffer
-	 * @param int    &$offset
-	 * @param int    $maxDepth
+	 * @param int    $offset reference parameter
 	 *
 	 * @return NamedTag|NamedTag[]
 	 */
@@ -91,7 +105,7 @@ abstract class NBTStream{
 		$data = $this->readTag(new ReaderTracker($maxDepth));
 
 		if($data === null){
-			throw new \InvalidArgumentException("Found TAG_End at the start of buffer");
+			throw new \UnexpectedValueException("Found TAG_End at the start of buffer");
 		}
 
 		if($doMultiple and !$this->feof()){
@@ -112,24 +126,26 @@ abstract class NBTStream{
 	 * Decodes NBT from the given compressed binary string and returns it. Anything decodable by zlib_decode() can be
 	 * processed.
 	 *
-	 * @param string $buffer
-	 *
 	 * @return NamedTag|NamedTag[]
 	 */
 	public function readCompressed(string $buffer){
-		return $this->read(zlib_decode($buffer));
+		$decompressed = zlib_decode($buffer);
+		if($decompressed === false){
+			throw new \UnexpectedValueException("Failed to decompress data");
+		}
+		return $this->read($decompressed);
 	}
 
 	/**
 	 * @param NamedTag|NamedTag[] $data
 	 *
-	 * @return bool|string
+	 * @return false|string
 	 */
 	public function write($data){
 		$this->offset = 0;
 		$this->buffer = "";
 
-		if($data instanceof CompoundTag){
+		if($data instanceof NamedTag){
 			$this->writeTag($data);
 
 			return $this->buffer;
@@ -145,10 +161,8 @@ abstract class NBTStream{
 
 	/**
 	 * @param NamedTag|NamedTag[] $data
-	 * @param int                 $compression
-	 * @param int                 $level
 	 *
-	 * @return bool|string
+	 * @return false|string
 	 */
 	public function writeCompressed($data, int $compression = ZLIB_ENCODING_GZIP, int $level = 7){
 		if(($write = $this->write($data)) !== false){
@@ -159,7 +173,7 @@ abstract class NBTStream{
 	}
 
 	public function readTag(ReaderTracker $tracker) : ?NamedTag{
-		$tagType = $this->getByte();
+		$tagType = (\ord($this->get(1)));
 		if($tagType === NBT::TAG_End){
 			return null;
 		}
@@ -172,25 +186,25 @@ abstract class NBTStream{
 	}
 
 	public function writeTag(NamedTag $tag) : void{
-		$this->putByte($tag->getType());
+		($this->buffer .= \chr($tag->getType()));
 		$this->putString($tag->getName());
 		$tag->write($this);
 	}
 
 	public function writeEnd() : void{
-		$this->putByte(NBT::TAG_End);
+		($this->buffer .= \chr(NBT::TAG_End));
 	}
 
 	public function getByte() : int{
-		return Binary::readByte($this->get(1));
+		return (\ord($this->get(1)));
 	}
 
 	public function getSignedByte() : int{
-		return Binary::readSignedByte($this->get(1));
+		return (\ord($this->get(1)) << 56 >> 56);
 	}
 
 	public function putByte(int $v) : void{
-		$this->buffer .= Binary::writeByte($v);
+		$this->buffer .= (\chr($v));
 	}
 
 	abstract public function getShort() : int;
@@ -198,7 +212,6 @@ abstract class NBTStream{
 	abstract public function getSignedShort() : int;
 
 	abstract public function putShort(int $v) : void;
-
 
 	abstract public function getInt() : int;
 
@@ -208,18 +221,15 @@ abstract class NBTStream{
 
 	abstract public function putLong(int $v) : void;
 
-
 	abstract public function getFloat() : float;
 
 	abstract public function putFloat(float $v) : void;
-
 
 	abstract public function getDouble() : float;
 
 	abstract public function putDouble(float $v) : void;
 
 	/**
-	 * @return string
 	 * @throws \UnexpectedValueException if a too-large string is found (length may be invalid)
 	 */
 	public function getString() : string{
@@ -227,17 +237,14 @@ abstract class NBTStream{
 	}
 
 	/**
-	 * @param string $v
 	 * @throws \InvalidArgumentException if the string is too long
 	 */
 	public function putString(string $v) : void{
 		$this->putShort(self::checkWriteStringLength(strlen($v)));
-		$this->put($v);
+		($this->buffer .= $v);
 	}
 
 	/**
-	 * @param int $len
-	 * @return int
 	 * @throws \UnexpectedValueException
 	 */
 	protected static function checkReadStringLength(int $len) : int{
@@ -248,8 +255,6 @@ abstract class NBTStream{
 	}
 
 	/**
-	 * @param int $len
-	 * @return int
 	 * @throws \InvalidArgumentException
 	 */
 	protected static function checkWriteStringLength(int $len) : int{
@@ -269,11 +274,9 @@ abstract class NBTStream{
 	 */
 	abstract public function putIntArray(array $array) : void;
 
-
 	/**
-	 * @param CompoundTag $data
-	 *
-	 * @return array
+	 * @return mixed[]
+	 * @phpstan-return array<string, mixed>
 	 */
 	public static function toArray(CompoundTag $data) : array{
 		$array = [];
@@ -281,10 +284,13 @@ abstract class NBTStream{
 		return $array;
 	}
 
+	/**
+	 * @param mixed[]                         $data
+	 * @param CompoundTag|ListTag $tag
+	 */
 	private static function tagToArray(array &$data, NamedTag $tag) : void{
-		/** @var CompoundTag[]|ListTag[]|IntArrayTag[] $tag */
 		foreach($tag as $key => $value){
-			if($value instanceof CompoundTag or $value instanceof ListTag or $value instanceof IntArrayTag){
+			if($value instanceof CompoundTag or $value instanceof ListTag){
 				$data[$key] = [];
 				self::tagToArray($data[$key], $value);
 			}else{
@@ -293,6 +299,9 @@ abstract class NBTStream{
 		}
 	}
 
+	/**
+	 * @param mixed $value
+	 */
 	public static function fromArrayGuesser(string $key, $value) : ?NamedTag{
 		if(is_int($value)){
 			return new IntTag($key, $value);
@@ -307,39 +316,62 @@ abstract class NBTStream{
 		return null;
 	}
 
-	private static function tagFromArray(NamedTag $tag, array $data, callable $guesser) : void{
-		foreach($data as $key => $value){
-			if(is_array($value)){
-				$isNumeric = true;
-				$isIntArray = true;
-				foreach($value as $k => $v){
-					if(!is_numeric($k)){
-						$isNumeric = false;
-						break;
-					}elseif(!is_int($v)){
-						$isIntArray = false;
-					}
-				}
-				$tag[$key] = $isNumeric ? ($isIntArray ? new IntArrayTag($key, []) : new ListTag($key, [])) : new CompoundTag($key, []);
-				self::tagFromArray($tag->{$key}, $value, $guesser);
-			}else{
-				$v = call_user_func($guesser, $key, $value);
-				if($v instanceof NamedTag){
-					$tag[$key] = $v;
+	/**
+	 * @param mixed $value
+	 * @phpstan-param callable(string $key, mixed $value) : ?NamedTag $guesser
+	 */
+	private static function parseArrayValue(string $name, $value, callable $guesser) : ?NamedTag{
+		if(is_array($value)){
+			$isNumeric = true;
+			$isIntArray = true;
+			foreach($value as $k => $v){
+				if(!is_numeric($k)){
+					$isNumeric = false;
+					break;
+				}elseif(!is_int($v)){
+					$isIntArray = false;
 				}
 			}
+
+			if($isNumeric && $isIntArray){
+				return new IntArrayTag($name, $value);
+			}elseif($isNumeric){
+				$node = new ListTag($name, []);
+				foreach($value as $v){
+					$vtag = self::parseArrayValue("", $v, $guesser);
+					//TODO: this will throw a TypeError if wrong tags are encountered after the first one
+					if($vtag !== null){
+						$node->push($vtag);
+					}
+				}
+				return $node;
+			}else{
+				$node = new CompoundTag($name, []);
+				foreach($value as $k => $v){
+					$vtag = self::parseArrayValue((string) $k, $value, $guesser);
+					if($vtag !== null){
+						$node->setTag($vtag);
+					}
+				}
+				return $node;
+			}
+		}else{
+			return call_user_func($guesser, $name, $value);
 		}
 	}
 
 	/**
-	 * @param array         $data
-	 * @param callable|null $guesser
-	 *
-	 * @return CompoundTag
+	 * @param mixed[] $data
+	 * @phpstan-param (callable(string $key, mixed $value) : ?NamedTag)|null $guesser
 	 */
 	public static function fromArray(array $data, callable $guesser = null) : CompoundTag{
 		$tag = new CompoundTag("", []);
-		self::tagFromArray($tag, $data, $guesser ?? [self::class, "fromArrayGuesser"]);
+		foreach($data as $k => $v){
+			$vtag = self::parseArrayValue($k, $v, $guesser ?? [self::class, "fromArrayGuesser"]);
+			if($vtag !== null){
+				$tag->setTag($vtag);
+			}
+		}
 		return $tag;
 	}
 }

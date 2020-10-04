@@ -17,8 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
-
+use pocketmine\utils\Binary;
 
 class UnconnectedPingOpenConnections extends UnconnectedPing{
 	public static $ID = MessageIdentifiers::ID_UNCONNECTED_PING_OPEN_CONNECTIONS;

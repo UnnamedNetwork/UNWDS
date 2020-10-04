@@ -28,6 +28,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Config;
 use function dirname;
 use function fclose;
@@ -78,16 +79,13 @@ abstract class PluginBase implements Plugin{
 		$this->loader = $loader;
 		$this->server = $server;
 		$this->description = $description;
-		$this->dataFolder = rtrim($dataFolder, "\\/") . "/";
-		$this->file = rtrim($file, "\\/") . "/";
+		$this->dataFolder = rtrim($dataFolder, "/" . DIRECTORY_SEPARATOR) . "/";
+		$this->file = rtrim($file, "/" . DIRECTORY_SEPARATOR) . "/";
 		$this->configFile = $this->dataFolder . "config.yml";
 		$this->logger = new PluginLogger($this);
 		$this->scheduler = new TaskScheduler($this->logger, $this->getFullName());
 	}
 
-	/**
-	 * Called when the plugin is loaded, before calling onEnable()
-	 */
 	public function onLoad(){
 
 	}
@@ -100,9 +98,6 @@ abstract class PluginBase implements Plugin{
 
 	}
 
-	/**
-	 * @return bool
-	 */
 	final public function isEnabled() : bool{
 		return $this->isEnabled;
 	}
@@ -113,8 +108,6 @@ abstract class PluginBase implements Plugin{
 	 * @internal This is intended for core use only and should not be used by plugins
 	 * @see PluginManager::enablePlugin()
 	 * @see PluginManager::disablePlugin()
-	 *
-	 * @param bool $enabled
 	 */
 	final public function setEnabled(bool $enabled = true) : void{
 		if($this->isEnabled !== $enabled){
@@ -127,9 +120,6 @@ abstract class PluginBase implements Plugin{
 		}
 	}
 
-	/**
-	 * @return bool
-	 */
 	final public function isDisabled() : bool{
 		return !$this->isEnabled;
 	}
@@ -142,16 +132,11 @@ abstract class PluginBase implements Plugin{
 		return $this->description;
 	}
 
-	/**
-	 * @return PluginLogger
-	 */
 	public function getLogger() : PluginLogger{
 		return $this->logger;
 	}
 
 	/**
-	 * @param string $name
-	 *
 	 * @return Command|PluginIdentifiableCommand|null
 	 */
 	public function getCommand(string $name){
@@ -168,20 +153,12 @@ abstract class PluginBase implements Plugin{
 	}
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
-	 * @param string        $label
 	 * @param string[]      $args
-	 *
-	 * @return bool
 	 */
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 		return false;
 	}
 
-	/**
-	 * @return bool
-	 */
 	protected function isPhar() : bool{
 		return strpos($this->file, "phar://") === 0;
 	}
@@ -190,25 +167,19 @@ abstract class PluginBase implements Plugin{
 	 * Gets an embedded resource on the plugin file.
 	 * WARNING: You must close the resource given using fclose()
 	 *
-	 * @param string $filename
-	 *
 	 * @return null|resource Resource data, or null
 	 */
 	public function getResource(string $filename){
-		$filename = rtrim(str_replace("\\", "/", $filename), "/");
+		$filename = rtrim(str_replace(DIRECTORY_SEPARATOR, "/", $filename), "/");
 		if(file_exists($this->file . "resources/" . $filename)){
-			return fopen($this->file . "resources/" . $filename, "rb");
+			$resource = fopen($this->file . "resources/" . $filename, "rb");
+			if($resource === false) throw new AssumptionFailedError("fopen() should not fail on a file which exists");
+			return $resource;
 		}
 
 		return null;
 	}
 
-	/**
-	 * @param string $filename
-	 * @param bool   $replace
-	 *
-	 * @return bool
-	 */
 	public function saveResource(string $filename, bool $replace = false) : bool{
 		if(trim($filename) === ""){
 			return false;
@@ -227,7 +198,10 @@ abstract class PluginBase implements Plugin{
 			return false;
 		}
 
-		$ret = stream_copy_to_stream($resource, $fp = fopen($out, "wb")) > 0;
+		$fp = fopen($out, "wb");
+		if($fp === false) throw new AssumptionFailedError("fopen() should not fail with wb flags");
+
+		$ret = stream_copy_to_stream($resource, $fp) > 0;
 		fclose($fp);
 		fclose($resource);
 		return $ret;
@@ -252,9 +226,6 @@ abstract class PluginBase implements Plugin{
 		return $resources;
 	}
 
-	/**
-	 * @return Config
-	 */
 	public function getConfig() : Config{
 		if($this->config === null){
 			$this->reloadConfig();
@@ -281,30 +252,18 @@ abstract class PluginBase implements Plugin{
 		$this->config = new Config($this->configFile);
 	}
 
-	/**
-	 * @return Server
-	 */
 	final public function getServer() : Server{
 		return $this->server;
 	}
 
-	/**
-	 * @return string
-	 */
 	final public function getName() : string{
 		return $this->description->getName();
 	}
 
-	/**
-	 * @return string
-	 */
 	final public function getFullName() : string{
 		return $this->description->getFullName();
 	}
 
-	/**
-	 * @return string
-	 */
 	protected function getFile() : string{
 		return $this->file;
 	}
@@ -316,9 +275,6 @@ abstract class PluginBase implements Plugin{
 		return $this->loader;
 	}
 
-	/**
-	 * @return TaskScheduler
-	 */
 	public function getScheduler() : TaskScheduler{
 		return $this->scheduler;
 	}

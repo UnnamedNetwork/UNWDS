@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -33,7 +32,7 @@ class InteractPacket extends DataPacket{
 
 	public const ACTION_LEAVE_VEHICLE = 3;
 	public const ACTION_MOUSEOVER = 4;
-
+	public const ACTION_OPEN_NPC = 5;
 	public const ACTION_OPEN_INVENTORY = 6;
 
 	/** @var int */
@@ -49,25 +48,25 @@ class InteractPacket extends DataPacket{
 	public $z;
 
 	protected function decodePayload(){
-		$this->action = $this->getByte();
+		$this->action = (\ord($this->get(1)));
 		$this->target = $this->getEntityRuntimeId();
 
 		if($this->action === self::ACTION_MOUSEOVER){
 			//TODO: should this be a vector3?
-			$this->x = $this->getLFloat();
-			$this->y = $this->getLFloat();
-			$this->z = $this->getLFloat();
+			$this->x = ((\unpack("g", $this->get(4))[1]));
+			$this->y = ((\unpack("g", $this->get(4))[1]));
+			$this->z = ((\unpack("g", $this->get(4))[1]));
 		}
 	}
 
 	protected function encodePayload(){
-		$this->putByte($this->action);
+		($this->buffer .= \chr($this->action));
 		$this->putEntityRuntimeId($this->target);
 
 		if($this->action === self::ACTION_MOUSEOVER){
-			$this->putLFloat($this->x);
-			$this->putLFloat($this->y);
-			$this->putLFloat($this->z);
+			($this->buffer .= (\pack("g", $this->x)));
+			($this->buffer .= (\pack("g", $this->y)));
+			($this->buffer .= (\pack("g", $this->z)));
 		}
 	}
 

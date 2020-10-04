@@ -26,6 +26,7 @@ namespace pocketmine\event\block;
 use pocketmine\block\Block;
 use pocketmine\event\Cancellable;
 use pocketmine\Player;
+use pocketmine\utils\Utils;
 use function count;
 
 /**
@@ -38,8 +39,6 @@ class SignChangeEvent extends BlockEvent implements Cancellable{
 	private $lines = [];
 
 	/**
-	 * @param Block    $theBlock
-	 * @param Player   $thePlayer
 	 * @param string[] $theLines
 	 */
 	public function __construct(Block $theBlock, Player $thePlayer, array $theLines){
@@ -48,9 +47,6 @@ class SignChangeEvent extends BlockEvent implements Cancellable{
 		$this->setLines($theLines);
 	}
 
-	/**
-	 * @return Player
-	 */
 	public function getPlayer() : Player{
 		return $this->player;
 	}
@@ -64,8 +60,6 @@ class SignChangeEvent extends BlockEvent implements Cancellable{
 
 	/**
 	 * @param int $index 0-3
-	 *
-	 * @return string
 	 *
 	 * @throws \InvalidArgumentException if the index is out of bounds
 	 */
@@ -86,12 +80,12 @@ class SignChangeEvent extends BlockEvent implements Cancellable{
 		if(count($lines) !== 4){
 			throw new \InvalidArgumentException("Array size must be 4!");
 		}
+		Utils::validateArrayValueType($lines, function(string $_) : void{});
 		$this->lines = $lines;
 	}
 
 	/**
 	 * @param int    $index 0-3
-	 * @param string $line
 	 *
 	 * @throws \InvalidArgumentException if the index is out of bounds
 	 */

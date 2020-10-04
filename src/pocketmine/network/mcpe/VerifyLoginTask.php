@@ -27,17 +27,20 @@ use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\Player;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
-use function assert;
 use function base64_decode;
 use function chr;
+use function count;
 use function explode;
 use function json_decode;
 use function ltrim;
 use function openssl_verify;
 use function ord;
+use function serialize;
 use function str_split;
 use function strlen;
+use function strtr;
 use function time;
+use function unserialize;
 use function wordwrap;
 use const OPENSSL_ALGO_SHA384;
 
@@ -47,8 +50,10 @@ class VerifyLoginTask extends AsyncTask{
 
 	private const CLOCK_DRIFT_MAX = 60;
 
-	/** @var LoginPacket */
-	private $packet;
+	/** @var string */
+	private $chainJwts;
+	/** @var string */
+	private $clientDataJwt;
 
 	/**
 	 * @var string|null
@@ -64,25 +69,26 @@ class VerifyLoginTask extends AsyncTask{
 	 */
 	private $authenticated = false;
 
-
 	public function __construct(Player $player, LoginPacket $packet){
-		$this->storeLocal($player);
-		$this->packet = $packet;
+		$this->storeLocal([$player, $packet]);
+		$this->chainJwts = serialize($packet->chainData["chain"]);
+		$this->clientDataJwt = $packet->clientDataJwt;
 	}
 
 	public function onRun(){
-		$packet = $this->packet; //Get it in a local variable to make sure it stays unserialized
+		/** @var string[] $chainJwts */
+		$chainJwts = unserialize($this->chainJwts); //Get it in a local variable to make sure it stays unserialized
 
 		try{
 			$currentKey = null;
 			$first = true;
 
-			foreach($packet->chainData["chain"] as $jwt){
+			foreach($chainJwts as $jwt){
 				$this->validateToken($jwt, $currentKey, $first);
 				$first = false;
 			}
 
-			$this->validateToken($packet->clientDataJwt, $currentKey);
+			$this->validateToken($this->clientDataJwt, $currentKey);
 
 			$this->error = null;
 		}catch(VerifyLoginException $e){
@@ -91,14 +97,14 @@ class VerifyLoginTask extends AsyncTask{
 	}
 
 	/**
-	 * @param string      $jwt
-	 * @param null|string $currentPublicKey
-	 * @param bool        $first
-	 *
 	 * @throws VerifyLoginException if errors are encountered
 	 */
 	private function validateToken(string $jwt, ?string &$currentPublicKey, bool $first = false) : void{
-		[$headB64, $payloadB64, $sigB64] = explode('.', $jwt);
+		$rawParts = explode('.', $jwt);
+		if(count($rawParts) !== 3){
+			throw new VerifyLoginException("Wrong number of JWT parts, expected 3, got " . count($rawParts));
+		}
+		[$headB64, $payloadB64, $sigB64] = $rawParts;
 
 		$headers = json_decode(base64_decode(strtr($headB64, '-_', '+/'), true), true);
 
@@ -109,13 +115,18 @@ class VerifyLoginTask extends AsyncTask{
 
 			//First link, check that it is self-signed
 			$currentPublicKey = $headers["x5u"];
+		}elseif($headers["x5u"] !== $currentPublicKey){
+			//Fast path: if the header key doesn't match what we expected, the signature isn't going to validate anyway
+			throw new VerifyLoginException("%pocketmine.disconnect.invalidSession.badSignature");
 		}
 
 		$plainSignature = base64_decode(strtr($sigB64, '-_', '+/'), true);
 
 		//OpenSSL wants a DER-encoded signature, so we extract R and S from the plain signature and crudely serialize it.
 
-		assert(strlen($plainSignature) === 96);
+		if(strlen($plainSignature) !== 96){
+			throw new VerifyLoginException("Wrong signature length, expected 96, got " . strlen($plainSignature));
+		}
 
 		[$rString, $sString] = str_split($plainSignature, 48);
 
@@ -158,12 +169,15 @@ class VerifyLoginTask extends AsyncTask{
 	}
 
 	public function onCompletion(Server $server){
-		/** @var Player $player */
-		$player = $this->fetchLocal();
+		/**
+		 * @var Player $player
+		 * @var LoginPacket $packet
+		 */
+		[$player, $packet] = $this->fetchLocal();
 		if(!$player->isConnected()){
 			$server->getLogger()->error("Player " . $player->getName() . " was disconnected before their login could be verified");
 		}else{
-			$player->onVerifyCompleted($this->packet, $this->error, $this->authenticated);
+			$player->onVerifyCompleted($packet, $this->error, $this->authenticated);
 		}
 	}
 }

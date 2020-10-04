@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -58,22 +58,22 @@ class BookEditPacket extends DataPacket{
 	public $xuid;
 
 	protected function decodePayload(){
-		$this->type = $this->getByte();
-		$this->inventorySlot = $this->getByte();
+		$this->type = (\ord($this->get(1)));
+		$this->inventorySlot = (\ord($this->get(1)));
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				$this->pageNumber = $this->getByte();
+				$this->pageNumber = (\ord($this->get(1)));
 				$this->text = $this->getString();
 				$this->photoName = $this->getString();
 				break;
 			case self::TYPE_DELETE_PAGE:
-				$this->pageNumber = $this->getByte();
+				$this->pageNumber = (\ord($this->get(1)));
 				break;
 			case self::TYPE_SWAP_PAGES:
-				$this->pageNumber = $this->getByte();
-				$this->secondaryPageNumber = $this->getByte();
+				$this->pageNumber = (\ord($this->get(1)));
+				$this->secondaryPageNumber = (\ord($this->get(1)));
 				break;
 			case self::TYPE_SIGN_BOOK:
 				$this->title = $this->getString();
@@ -86,22 +86,22 @@ class BookEditPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		$this->putByte($this->type);
-		$this->putByte($this->inventorySlot);
+		($this->buffer .= \chr($this->type));
+		($this->buffer .= \chr($this->inventorySlot));
 
 		switch($this->type){
 			case self::TYPE_REPLACE_PAGE:
 			case self::TYPE_ADD_PAGE:
-				$this->putByte($this->pageNumber);
+				($this->buffer .= \chr($this->pageNumber));
 				$this->putString($this->text);
 				$this->putString($this->photoName);
 				break;
 			case self::TYPE_DELETE_PAGE:
-				$this->putByte($this->pageNumber);
+				($this->buffer .= \chr($this->pageNumber));
 				break;
 			case self::TYPE_SWAP_PAGES:
-				$this->putByte($this->pageNumber);
-				$this->putByte($this->secondaryPageNumber);
+				($this->buffer .= \chr($this->pageNumber));
+				($this->buffer .= \chr($this->secondaryPageNumber));
 				break;
 			case self::TYPE_SIGN_BOOK:
 				$this->putString($this->title);

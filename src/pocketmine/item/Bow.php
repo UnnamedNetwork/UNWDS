@@ -59,14 +59,12 @@ class Bow extends Tool{
 			($player->yaw > 180 ? 360 : 0) - $player->yaw,
 			-$player->pitch
 		);
-		$nbt->setShort("Fire", $player->isOnFire() ? 45 * 60 : 0);
 
 		$diff = $player->getItemUseDuration();
 		$p = $diff / 20;
 		$baseForce = min((($p ** 2) + $p * 2) / 3, 1);
 
-
-		$entity = Entity::createEntity("Arrow", $player->getLevel(), $nbt, $player, $baseForce >= 1);
+		$entity = Entity::createEntity("Arrow", $player->getLevelNonNull(), $nbt, $player, $baseForce >= 1);
 		if($entity instanceof Projectile){
 			$infinity = $this->hasEnchantment(Enchantment::INFINITY);
 			if($entity instanceof ArrowEntity){
@@ -85,7 +83,7 @@ class Bow extends Tool{
 			}
 			$ev = new EntityShootBowEvent($player, $this, $entity, $baseForce * 3);
 
-			if($baseForce < 0.1 or $diff < 5){
+			if($baseForce < 0.1 or $diff < 5 or $player->isSpectator()){
 				$ev->setCancelled();
 			}
 
@@ -112,7 +110,7 @@ class Bow extends Tool{
 						$ev->getProjectile()->flagForDespawn();
 					}else{
 						$ev->getProjectile()->spawnToAll();
-						$player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_BOW);
+						$player->getLevelNonNull()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_BOW);
 					}
 				}else{
 					$entity->spawnToAll();

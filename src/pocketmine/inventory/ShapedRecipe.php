@@ -110,18 +110,13 @@ class ShapedRecipe implements CraftingRecipe{
 	}
 
 	/**
-	 * @param CraftingGrid $grid
-	 *
 	 * @return Item[]
 	 */
-	public function getResultsFor(CraftingGridInterface $grid) : array{
+	public function getResultsFor(CraftingGrid $grid) : array{
 		return $this->getResults();
 	}
 
 	/**
-	 * @param string $key
-	 * @param Item   $item
-	 *
 	 * @return $this
 	 * @throws \InvalidArgumentException
 	 */
@@ -168,14 +163,8 @@ class ShapedRecipe implements CraftingRecipe{
 		return $ingredients;
 	}
 
-	/**
-	 * @param int $x
-	 * @param int $y
-	 *
-	 * @return Item
-	 */
 	public function getIngredient(int $x, int $y) : Item{
-		$exists = $this->ingredientList[$this->shape[$y]{$x}] ?? null;
+		$exists = $this->ingredientList[$this->shape[$y][$x]] ?? null;
 		return $exists !== null ? clone $exists : ItemFactory::get(Item::AIR, 0, 0);
 	}
 
@@ -187,17 +176,14 @@ class ShapedRecipe implements CraftingRecipe{
 		return $this->shape;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function registerToCraftingManager(CraftingManager $manager) : void{
 		$manager->registerShapedRecipe($this);
 	}
 
-	/**
-	 * @param CraftingGridInterface $grid
-	 * @param bool         $reverse
-	 *
-	 * @return bool
-	 */
-	private function matchInputMap(CraftingGridInterface $grid, bool $reverse) : bool{
+	private function matchInputMap(CraftingGrid $grid, bool $reverse) : bool{
 		for($y = 0; $y < $this->height; ++$y){
 			for($x = 0; $x < $this->width; ++$x){
 
@@ -212,12 +198,7 @@ class ShapedRecipe implements CraftingRecipe{
 		return true;
 	}
 
-	/**
-	 * @param CraftingGrid $grid
-	 *
-	 * @return bool
-	 */
-	public function matchesCraftingGrid(CraftingGridInterface $grid) : bool{
+	public function matchesCraftingGrid(CraftingGrid $grid) : bool{
 		if($this->width !== $grid->getRecipeWidth() or $this->height !== $grid->getRecipeHeight()){
 			return false;
 		}

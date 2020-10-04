@@ -54,7 +54,9 @@ class CommandReader extends Thread{
 
 	/** @var \Threaded */
 	protected $buffer;
+	/** @var bool */
 	private $shutdown = false;
+	/** @var int */
 	private $type = self::TYPE_STREAM;
 
 	/** @var SleeperNotifier|null */
@@ -66,11 +68,14 @@ class CommandReader extends Thread{
 
 		$opts = getopt("", ["disable-readline", "enable-readline"]);
 
-		if(extension_loaded("readline") and (Utils::getOS() === "win" ? isset($opts["enable-readline"]) : !isset($opts["disable-readline"])) and !$this->isPipe(STDIN)){
+		if(extension_loaded("readline") and (Utils::getOS() === Utils::OS_WINDOWS ? isset($opts["enable-readline"]) : !isset($opts["disable-readline"])) and !$this->isPipe(STDIN)){
 			$this->type = self::TYPE_READLINE;
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	public function shutdown(){
 		$this->shutdown = true;
 	}
@@ -94,7 +99,7 @@ class CommandReader extends Thread{
 		throw new \ThreadException($message);
 	}
 
-	private function initStdin(){
+	private function initStdin() : void{
 		if(is_resource(self::$stdin)){
 			fclose(self::$stdin);
 		}
@@ -111,8 +116,6 @@ class CommandReader extends Thread{
 	 * Checks if the specified stream is a FIFO pipe.
 	 *
 	 * @param resource $stream
-	 *
-	 * @return bool
 	 */
 	private function isPipe($stream) : bool{
 		return is_resource($stream) and (!stream_isatty($stream) or ((fstat($stream)["mode"] & 0170000) === 0010000));
@@ -151,7 +154,7 @@ class CommandReader extends Thread{
 				case self::TYPE_PIPED:
 					if(($raw = fgets(self::$stdin)) === false){ //broken pipe or EOF
 						$this->initStdin();
-						$this->synchronized(function(){
+						$this->synchronized(function() : void{
 							$this->wait(200000);
 						}); //prevent CPU waste if it's end of pipe
 						return true; //loop back round
@@ -185,6 +188,9 @@ class CommandReader extends Thread{
 		return null;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(){
 		$this->registerClassLoader();
 

@@ -29,6 +29,7 @@ use pocketmine\event\entity\EntityEvent;
 
 /**
  * Called when a player gains or loses XP levels and/or progress.
+ * @phpstan-extends EntityEvent<Human>
  */
 class PlayerExperienceChangeEvent extends EntityEvent implements Cancellable{
 	/** @var Human */
@@ -51,16 +52,10 @@ class PlayerExperienceChangeEvent extends EntityEvent implements Cancellable{
 		$this->newProgress = $newProgress;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getOldLevel() : int{
 		return $this->oldLevel;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getOldProgress() : float{
 		return $this->oldProgress;
 	}
@@ -79,16 +74,10 @@ class PlayerExperienceChangeEvent extends EntityEvent implements Cancellable{
 		return $this->newProgress;
 	}
 
-	/**
-	 * @param int|null $newLevel
-	 */
 	public function setNewLevel(?int $newLevel) : void{
 		$this->newLevel = $newLevel;
 	}
 
-	/**
-	 * @param float|null $newProgress
-	 */
 	public function setNewProgress(?float $newProgress) : void{
 		$this->newProgress = $newProgress;
 	}

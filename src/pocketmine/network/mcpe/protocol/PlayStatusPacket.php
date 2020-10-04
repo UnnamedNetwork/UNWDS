@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -44,7 +43,7 @@ class PlayStatusPacket extends DataPacket{
 	public $status;
 
 	protected function decodePayload(){
-		$this->status = $this->getInt();
+		$this->status = ((\unpack("N", $this->get(4))[1] << 32 >> 32));
 	}
 
 	public function canBeSentBeforeLogin() : bool{
@@ -52,7 +51,7 @@ class PlayStatusPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		$this->putInt($this->status);
+		($this->buffer .= (\pack("N", $this->status)));
 	}
 
 	public function handle(NetworkSession $session) : bool{

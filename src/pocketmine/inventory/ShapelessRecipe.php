@@ -46,19 +46,18 @@ class ShapelessRecipe implements CraftingRecipe{
 		$this->results = array_map(function(Item $item) : Item{ return clone $item; }, $results);
 	}
 
+	/**
+	 * @return Item[]
+	 */
 	public function getResults() : array{
 		return array_map(function(Item $item) : Item{ return clone $item; }, $this->results);
 	}
 
-	public function getResultsFor(CraftingGridInterface $grid) : array{
+	public function getResultsFor(CraftingGrid $grid) : array{
 		return $this->getResults();
 	}
 
 	/**
-	 * @param Item $item
-	 *
-	 * @return ShapelessRecipe
-	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function addIngredient(Item $item) : ShapelessRecipe{
@@ -74,8 +73,6 @@ class ShapelessRecipe implements CraftingRecipe{
 	}
 
 	/**
-	 * @param Item $item
-	 *
 	 * @return $this
 	 */
 	public function removeIngredient(Item $item){
@@ -99,9 +96,6 @@ class ShapelessRecipe implements CraftingRecipe{
 		return array_map(function(Item $item) : Item{ return clone $item; }, $this->ingredients);
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getIngredientCount() : int{
 		$count = 0;
 		foreach($this->ingredients as $ingredient){
@@ -111,16 +105,14 @@ class ShapelessRecipe implements CraftingRecipe{
 		return $count;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public function registerToCraftingManager(CraftingManager $manager) : void{
 		$manager->registerShapelessRecipe($this);
 	}
 
-	/**
-	 * @param CraftingGrid $grid
-	 *
-	 * @return bool
-	 */
-	public function matchesCraftingGrid(CraftingGridInterface $grid) : bool{
+	public function matchesCraftingGrid(CraftingGrid $grid) : bool{
 		//don't pack the ingredients - shapeless recipes require that each ingredient be in a separate slot
 		$input = $grid->getContents();
 
@@ -135,6 +127,6 @@ class ShapelessRecipe implements CraftingRecipe{
 			return false; //failed to match the needed item to a given item
 		}
 
-		return empty($input); //crafting grid should be empty apart from the given ingredient stacks
+		return count($input) === 0; //crafting grid should be empty apart from the given ingredient stacks
 	}
 }
