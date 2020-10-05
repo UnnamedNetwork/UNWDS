@@ -1322,7 +1322,7 @@ class Server{
 
 			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
-				"motd" => \pocketmine\NAME . " Server",
+				"motd" => \pocketmine\NAME . "-based server",
 				"server-port" => 19132,
 				"white-list" => false,
 				"announce-player-achievements" => true,
