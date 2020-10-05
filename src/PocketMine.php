@@ -137,7 +137,9 @@ namespace pocketmine {
 			$logger->warning("Debugging assertions are enabled. This may degrade performance. To disable them, set `zend.assertions = -1` in php.ini.");
 		}
 		if(\Phar::running(true) === ""){
-			$logger->warning("Non-packaged installation detected. This will degrade autoloading speed and make startup times longer.");
+			$logger->warning("Non-packaged UNWDS installation detected. This will degrade autoloading speed and make startup times longer.");
+			$logger->warning("Download the stable pre-packaged version at: https://github.com/dtcu0ng/UNWDS/releases");
+		
 		}
 	}
 
