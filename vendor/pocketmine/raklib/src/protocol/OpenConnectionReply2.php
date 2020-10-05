@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 use raklib\utils\InternetAddress;
 
@@ -35,17 +35,17 @@ class OpenConnectionReply2 extends OfflineMessage{
 
 	protected function encodePayload() : void{
 		$this->writeMagic();
-		$this->putLong($this->serverID);
+		($this->buffer .= (\pack("NN", $this->serverID >> 32, $this->serverID & 0xFFFFFFFF)));
 		$this->putAddress($this->clientAddress);
-		$this->putShort($this->mtuSize);
-		$this->putByte($this->serverSecurity ? 1 : 0);
+		($this->buffer .= (\pack("n", $this->mtuSize)));
+		($this->buffer .= \chr($this->serverSecurity ? 1 : 0));
 	}
 
 	protected function decodePayload() : void{
 		$this->readMagic();
-		$this->serverID = $this->getLong();
+		$this->serverID = (Binary::readLong($this->get(8)));
 		$this->clientAddress = $this->getAddress();
-		$this->mtuSize = $this->getShort();
-		$this->serverSecurity = $this->getByte() !== 0;
+		$this->mtuSize = ((\unpack("n", $this->get(2))[1]));
+		$this->serverSecurity = (\ord($this->get(1))) !== 0;
 	}
 }

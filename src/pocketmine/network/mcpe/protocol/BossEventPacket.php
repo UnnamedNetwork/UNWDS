@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -77,16 +76,16 @@ class BossEventPacket extends DataPacket{
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				$this->title = $this->getString();
-				$this->healthPercent = $this->getLFloat();
+				$this->healthPercent = ((\unpack("g", $this->get(4))[1]));
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_UNKNOWN_6:
-				$this->unknownShort = $this->getLShort();
+				$this->unknownShort = ((\unpack("v", $this->get(2))[1]));
 			case self::TYPE_TEXTURE:
 				$this->color = $this->getUnsignedVarInt();
 				$this->overlay = $this->getUnsignedVarInt();
 				break;
 			case self::TYPE_HEALTH_PERCENT:
-				$this->healthPercent = $this->getLFloat();
+				$this->healthPercent = ((\unpack("g", $this->get(4))[1]));
 				break;
 			case self::TYPE_TITLE:
 				$this->title = $this->getString();
@@ -107,16 +106,16 @@ class BossEventPacket extends DataPacket{
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_SHOW:
 				$this->putString($this->title);
-				$this->putLFloat($this->healthPercent);
+				($this->buffer .= (\pack("g", $this->healthPercent)));
 			/** @noinspection PhpMissingBreakStatementInspection */
 			case self::TYPE_UNKNOWN_6:
-				$this->putLShort($this->unknownShort);
+				($this->buffer .= (\pack("v", $this->unknownShort)));
 			case self::TYPE_TEXTURE:
 				$this->putUnsignedVarInt($this->color);
 				$this->putUnsignedVarInt($this->overlay);
 				break;
 			case self::TYPE_HEALTH_PERCENT:
-				$this->putLFloat($this->healthPercent);
+				($this->buffer .= (\pack("g", $this->healthPercent)));
 				break;
 			case self::TYPE_TITLE:
 				$this->putString($this->title);

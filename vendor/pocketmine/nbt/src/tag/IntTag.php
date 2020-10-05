@@ -27,16 +27,12 @@ use pocketmine\nbt\NBT;
 use pocketmine\nbt\NBTStream;
 use pocketmine\nbt\ReaderTracker;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class IntTag extends NamedTag{
 	/** @var int */
 	private $value;
 
-	/**
-	 * @param string $name
-	 * @param int    $value
-	 */
 	public function __construct(string $name = "", int $value = 0){
 		parent::__construct($name);
 		if($value < -0x80000000 or $value > 0x7fffffff){
@@ -57,9 +53,6 @@ class IntTag extends NamedTag{
 		$nbt->putInt($this->value);
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getValue() : int{
 		return $this->value;
 	}

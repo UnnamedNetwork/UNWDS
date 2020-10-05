@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -45,15 +44,15 @@ class ContainerOpenPacket extends DataPacket{
 	public $entityUniqueId = -1;
 
 	protected function decodePayload(){
-		$this->windowId = $this->getByte();
-		$this->type = $this->getByte();
+		$this->windowId = (\ord($this->get(1)));
+		$this->type = (\ord($this->get(1)));
 		$this->getBlockPosition($this->x, $this->y, $this->z);
 		$this->entityUniqueId = $this->getEntityUniqueId();
 	}
 
 	protected function encodePayload(){
-		$this->putByte($this->windowId);
-		$this->putByte($this->type);
+		($this->buffer .= \chr($this->windowId));
+		($this->buffer .= \chr($this->type));
 		$this->putBlockPosition($this->x, $this->y, $this->z);
 		$this->putEntityUniqueId($this->entityUniqueId);
 	}

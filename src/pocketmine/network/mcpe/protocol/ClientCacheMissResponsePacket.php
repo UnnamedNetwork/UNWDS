@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\ChunkCacheBlob;
@@ -37,12 +37,10 @@ class ClientCacheMissResponsePacket extends DataPacket/* implements ClientboundP
 
 	/**
 	 * @param ChunkCacheBlob[] $blobs
-	 *
-	 * @return self
 	 */
 	public static function create(array $blobs) : self{
 		//type check
-		(static function(ChunkCacheBlob ...$blobs){})(...$blobs);
+		(static function(ChunkCacheBlob ...$blobs) : void{})(...$blobs);
 
 		$result = new self;
 		$result->blobs = $blobs;
@@ -58,7 +56,7 @@ class ClientCacheMissResponsePacket extends DataPacket/* implements ClientboundP
 
 	protected function decodePayload() : void{
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$hash = $this->getLLong();
+			$hash = (Binary::readLLong($this->get(8)));
 			$payload = $this->getString();
 			$this->blobs[] = new ChunkCacheBlob($hash, $payload);
 		}
@@ -67,7 +65,7 @@ class ClientCacheMissResponsePacket extends DataPacket/* implements ClientboundP
 	protected function encodePayload() : void{
 		$this->putUnsignedVarInt(count($this->blobs));
 		foreach($this->blobs as $blob){
-			$this->putLLong($blob->getHash());
+			($this->buffer .= (\pack("VV", $blob->getHash() & 0xFFFFFFFF, $blob->getHash() >> 32)));
 			$this->putString($blob->getPayload());
 		}
 	}

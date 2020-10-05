@@ -34,30 +34,21 @@ class InternetAddress{
 
 	public function __construct(string $address, int $port, int $version){
 		$this->ip = $address;
-		if($port < 0 or $port > 65536){
+		if($port < 0 or $port > 65535){
 			throw new \InvalidArgumentException("Invalid port range");
 		}
 		$this->port = $port;
 		$this->version = $version;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getIp() : string{
 		return $this->ip;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getPort() : int{
 		return $this->port;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getVersion() : int{
 		return $this->version;
 	}

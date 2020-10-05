@@ -30,6 +30,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\BlockActorDataPacket;
 use pocketmine\Player;
+use pocketmine\utils\AssumptionFailedError;
 
 abstract class Spawnable extends Tile{
 	/** @var string|null */
@@ -62,6 +63,9 @@ abstract class Spawnable extends Tile{
 		$this->spawnToAll();
 	}
 
+	/**
+	 * @return void
+	 */
 	public function spawnToAll(){
 		if($this->closed){
 			return;
@@ -93,15 +97,14 @@ abstract class Spawnable extends Tile{
 				self::$nbtWriter = new NetworkLittleEndianNBTStream();
 			}
 
-			$this->spawnCompoundCache = self::$nbtWriter->write($this->getSpawnCompound());
+			$spawnCompoundCache = self::$nbtWriter->write($this->getSpawnCompound());
+			if($spawnCompoundCache === false) throw new AssumptionFailedError("NBTStream->write() should not return false when given a CompoundTag");
+			$this->spawnCompoundCache = $spawnCompoundCache;
 		}
 
 		return $this->spawnCompoundCache;
 	}
 
-	/**
-	 * @return CompoundTag
-	 */
 	final public function getSpawnCompound() : CompoundTag{
 		$nbt = new CompoundTag("", [
 			new StringTag(self::TAG_ID, static::getSaveId()),
@@ -116,17 +119,12 @@ abstract class Spawnable extends Tile{
 	/**
 	 * An extension to getSpawnCompound() for
 	 * further modifying the generic tile NBT.
-	 *
-	 * @param CompoundTag $nbt
 	 */
 	abstract protected function addAdditionalSpawnData(CompoundTag $nbt) : void;
 
 	/**
 	 * Called when a player updates a block entity's NBT data
 	 * for example when writing on a sign.
-	 *
-	 * @param CompoundTag $nbt
-	 * @param Player      $player
 	 *
 	 * @return bool indication of success, will respawn the tile to the player if false.
 	 */

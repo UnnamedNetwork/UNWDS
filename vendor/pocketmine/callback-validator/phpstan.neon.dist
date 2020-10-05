@@ -1,0 +1,11 @@
+parameters:
+	level: 8
+	treatPhpDocTypesAsCertain: false
+	paths:
+		- src
+	ignoreErrors:
+		-
+			#some weird bug with strict rules
+			message: "#^Casting to bool something that's already bool\\.$#"
+			count: 2
+			path: src/Type.php

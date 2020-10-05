@@ -75,11 +75,7 @@ class RCONInstance extends Thread{
 
 	/**
 	 * @param resource             $socket
-	 * @param string               $password
-	 * @param int                  $maxClients
-	 * @param \ThreadedLogger      $logger
 	 * @param resource             $ipcSocket
-	 * @param null|SleeperNotifier $notifier
 	 */
 	public function __construct($socket, string $password, int $maxClients = 50, \ThreadedLogger $logger, $ipcSocket, ?SleeperNotifier $notifier){
 		$this->stop = false;
@@ -95,14 +91,27 @@ class RCONInstance extends Thread{
 		$this->start(PTHREADS_INHERIT_NONE);
 	}
 
+	/**
+	 * @param resource $client
+	 *
+	 * @return int|false
+	 */
 	private function writePacket($client, int $requestID, int $packetType, string $payload){
-		$pk = Binary::writeLInt($requestID)
-			. Binary::writeLInt($packetType)
+		$pk = (\pack("V", $requestID))
+			. (\pack("V", $packetType))
 			. $payload
 			. "\x00\x00"; //Terminate payload and packet
-		return socket_write($client, Binary::writeLInt(strlen($pk)) . $pk);
+		return socket_write($client, (\pack("V", strlen($pk))) . $pk);
 	}
 
+	/**
+	 * @param resource $client
+	 * @param int      $requestID reference parameter
+	 * @param int      $packetType reference parameter
+	 * @param string   $payload reference parameter
+	 *
+	 * @return bool
+	 */
 	private function readPacket($client, ?int &$requestID, ?int &$packetType, ?string &$payload){
 		$d = @socket_read($client, 4);
 
@@ -120,7 +129,7 @@ class RCONInstance extends Thread{
 			}
 			return false;
 		}
-		$size = Binary::readLInt($d);
+		$size = (\unpack("V", $d)[1] << 32 >> 32);
 		if($size < 0 or $size > 65535){
 			$this->logger->debug("Packet with too-large length header $size from $ip $port, disconnecting");
 			return false;
@@ -137,22 +146,28 @@ class RCONInstance extends Thread{
 			$this->logger->debug("Truncated packet from $ip $port (want $size bytes, have " . strlen($buf) . "), disconnecting");
 			return false;
 		}
-		$requestID = Binary::readLInt(substr($buf, 0, 4));
-		$packetType = Binary::readLInt(substr($buf, 4, 4));
+		$requestID = (\unpack("V", substr($buf, 0, 4))[1] << 32 >> 32);
+		$packetType = (\unpack("V", substr($buf, 4, 4))[1] << 32 >> 32);
 		$payload = substr($buf, 8, -2); //Strip two null bytes
 		return true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function close(){
 		$this->stop = true;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function run(){
 		$this->registerClassLoader();
 
 		/** @var resource[] $clients */
 		$clients = [];
-		/** @var int[] $authenticated */
+		/** @var bool[] $authenticated */
 		$authenticated = [];
 		/** @var float[] $timeouts */
 		$timeouts = [];
@@ -193,8 +208,6 @@ class RCONInstance extends Thread{
 						if($p === false){
 							$disconnect[$id] = $sock;
 							continue;
-						}elseif($p === null){
-							continue;
 						}
 
 						switch($packetType){
@@ -220,7 +233,7 @@ class RCONInstance extends Thread{
 								}
 								if($payload !== ""){
 									$this->cmd = ltrim($payload);
-									$this->synchronized(function(){
+									$this->synchronized(function() : void{
 										$this->notifier->wakeupSleeper();
 										$this->wait();
 									});
@@ -251,6 +264,9 @@ class RCONInstance extends Thread{
 		}
 	}
 
+	/**
+	 * @param resource $client
+	 */
 	private function disconnectClient($client) : void{
 		socket_getpeername($client, $ip, $port);
 		@socket_set_option($client, SOL_SOCKET, SO_LINGER, ["l_onoff" => 1, "l_linger" => 1]);

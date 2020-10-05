@@ -27,16 +27,12 @@ use pocketmine\nbt\NBT;
 use pocketmine\nbt\NBTStream;
 use pocketmine\nbt\ReaderTracker;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class ByteTag extends NamedTag{
 	/** @var int */
 	private $value;
 
-	/**
-	 * @param string $name
-	 * @param int    $value
-	 */
 	public function __construct(string $name = "", int $value = 0){
 		parent::__construct($name);
 		if($value < -128 or $value > 127){
@@ -54,12 +50,9 @@ class ByteTag extends NamedTag{
 	}
 
 	public function write(NBTStream $nbt) : void{
-		$nbt->putByte($this->value);
+		($nbt->buffer .= \chr($this->value));
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getValue() : int{
 		return $this->value;
 	}

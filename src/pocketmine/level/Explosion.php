@@ -38,7 +38,6 @@ use pocketmine\level\particle\HugeExplodeSeedParticle;
 use pocketmine\level\utils\SubChunkIteratorManager;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\protocol\ExplodePacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Container;
@@ -68,8 +67,6 @@ class Explosion{
 	private $subChunkHandler;
 
 	/**
-	 * @param Position     $center
-	 * @param float        $size
 	 * @param Entity|Block|null $what
 	 */
 	public function __construct(Position $center, float $size, $what = null){
@@ -77,7 +74,7 @@ class Explosion{
 			throw new \InvalidArgumentException("Position does not have a valid world");
 		}
 		$this->source = $center;
-		$this->level = $center->getLevel();
+		$this->level = $center->getLevelNonNull();
 
 		if($size <= 0){
 			throw new \InvalidArgumentException("Explosion radius must be greater than 0, got $size");
@@ -89,10 +86,8 @@ class Explosion{
 	}
 
 	/**
-	 * Calculates which blocks will be destroyed by this explosion. If explodeB() is called without calling this, no blocks 
+	 * Calculates which blocks will be destroyed by this explosion. If explodeB() is called without calling this, no blocks
 	 * will be destroyed.
-	 *
-	 * @return bool
 	 */
 	public function explodeA() : bool{
 		if($this->size < 0.1){
@@ -105,7 +100,7 @@ class Explosion{
 		$currentChunk = null;
 		$currentSubChunk = null;
 
-		$mRays = (int) ($this->rays - 1);
+		$mRays = $this->rays - 1;
 		for($i = 0; $i < $this->rays; ++$i){
 			for($j = 0; $j < $this->rays; ++$j){
 				for($k = 0; $k < $this->rays; ++$k){
@@ -124,6 +119,10 @@ class Explosion{
 							$vBlock->y = $pointerY >= $y ? $y : $y - 1;
 							$vBlock->z = $pointerZ >= $z ? $z : $z - 1;
 
+							$pointerX += $vector->x;
+							$pointerY += $vector->y;
+							$pointerZ += $vector->z;
+
 							if(!$this->subChunkHandler->moveTo($vBlock->x, $vBlock->y, $vBlock->z)){
 								continue;
 							}
@@ -133,15 +132,14 @@ class Explosion{
 							if($blockId !== 0){
 								$blastForce -= (BlockFactory::$blastResistance[$blockId] / 5 + 0.3) * $this->stepLen;
 								if($blastForce > 0){
-									if(!isset($this->affectedBlocks[$index = Level::blockHash($vBlock->x, $vBlock->y, $vBlock->z)])){
-										$this->affectedBlocks[$index] = BlockFactory::get($blockId, $this->subChunkHandler->currentSubChunk->getBlockData($vBlock->x & 0x0f, $vBlock->y & 0x0f, $vBlock->z & 0x0f), $vBlock);
+									if(!isset($this->affectedBlocks[((($vBlock->x) & 0xFFFFFFF) << 36) | ((( $vBlock->y) & 0xff) << 28) | (( $vBlock->z) & 0xFFFFFFF)])){
+										$_block = BlockFactory::get($blockId, $this->subChunkHandler->currentSubChunk->getBlockData($vBlock->x & 0x0f, $vBlock->y & 0x0f, $vBlock->z & 0x0f), $vBlock);
+										foreach($_block->getAffectedBlocks() as $_affectedBlock){
+											$this->affectedBlocks[((($_affectedBlock->x) & 0xFFFFFFF) << 36) | ((( $_affectedBlock->y) & 0xff) << 28) | (( $_affectedBlock->z) & 0xFFFFFFF)] = $_affectedBlock;
+										}
 									}
 								}
 							}
-
-							$pointerX += $vector->x;
-							$pointerY += $vector->y;
-							$pointerZ += $vector->z;
 						}
 					}
 				}
@@ -154,8 +152,6 @@ class Explosion{
 	/**
 	 * Executes the explosion's effects on the world. This includes destroying blocks (if any), harming and knocking back entities,
 	 * and creating sounds and particles.
-	 *
-	 * @return bool
 	 */
 	public function explodeB() : bool{
 		$send = [];
@@ -209,7 +205,6 @@ class Explosion{
 			}
 		}
 
-
 		$air = ItemFactory::get(Item::AIR);
 
 		foreach($this->affectedBlocks as $block){
@@ -237,7 +232,9 @@ class Explosion{
 
 				$t->close();
 			}
+		}
 
+		foreach($this->affectedBlocks as $block){
 			$pos = new Vector3($block->x, $block->y, $block->z);
 
 			for($side = 0; $side <= 5; $side++){
@@ -245,7 +242,7 @@ class Explosion{
 				if(!$this->level->isInWorld($sideBlock->x, $sideBlock->y, $sideBlock->z)){
 					continue;
 				}
-				if(!isset($this->affectedBlocks[$index = Level::blockHash($sideBlock->x, $sideBlock->y, $sideBlock->z)]) and !isset($updateBlocks[$index])){
+				if(!isset($this->affectedBlocks[$index = ((($sideBlock->x) & 0xFFFFFFF) << 36) | ((( $sideBlock->y) & 0xff) << 28) | (( $sideBlock->z) & 0xFFFFFFF)]) and !isset($updateBlocks[$index])){
 					$ev = new BlockUpdateEvent($this->level->getBlockAt($sideBlock->x, $sideBlock->y, $sideBlock->z));
 					$ev->call();
 					if(!$ev->isCancelled()){
@@ -259,12 +256,6 @@ class Explosion{
 			}
 			$send[] = new Vector3($block->x - $source->x, $block->y - $source->y, $block->z - $source->z);
 		}
-
-		$pk = new ExplodePacket();
-		$pk->position = $this->source->asVector3();
-		$pk->radius = $this->size;
-		$pk->records = $send;
-		$this->level->broadcastPacketToViewers($source, $pk);
 
 		$this->level->addParticle(new HugeExplodeSeedParticle($source));
 		$this->level->broadcastLevelSoundEvent($source, LevelSoundEventPacket::SOUND_EXPLODE);

@@ -17,8 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
-
+use pocketmine\utils\Binary;
 
 use raklib\RakLib;
 use function str_pad;
@@ -34,13 +33,13 @@ class OpenConnectionRequest1 extends OfflineMessage{
 
 	protected function encodePayload() : void{
 		$this->writeMagic();
-		$this->putByte($this->protocol);
+		($this->buffer .= \chr($this->protocol));
 		$this->buffer = str_pad($this->buffer, $this->mtuSize, "\x00");
 	}
 
 	protected function decodePayload() : void{
 		$this->readMagic();
-		$this->protocol = $this->getByte();
+		$this->protocol = (\ord($this->get(1)));
 		$this->mtuSize = strlen($this->buffer);
 	}
 }

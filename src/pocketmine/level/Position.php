@@ -24,33 +24,34 @@ declare(strict_types=1);
 namespace pocketmine\level;
 
 use pocketmine\math\Vector3;
+use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\MainLogger;
 use function assert;
 
 class Position extends Vector3{
 
-	/** @var Level */
+	/** @var Level|null */
 	public $level = null;
 
 	/**
-	 * @param int   $x
-	 * @param int   $y
-	 * @param int   $z
-	 * @param Level $level
+	 * @param float|int $x
+	 * @param float|int $y
+	 * @param float|int $z
 	 */
 	public function __construct($x = 0, $y = 0, $z = 0, Level $level = null){
 		parent::__construct($x, $y, $z);
 		$this->setLevel($level);
 	}
 
+	/**
+	 * @return Position
+	 */
 	public static function fromObject(Vector3 $pos, Level $level = null){
 		return new Position($pos->x, $pos->y, $pos->z, $level);
 	}
 
 	/**
 	 * Return a Position instance
-	 *
-	 * @return Position
 	 */
 	public function asPosition() : Position{
 		return new Position($this->x, $this->y, $this->z, $this->level);
@@ -72,9 +73,20 @@ class Position extends Vector3{
 	}
 
 	/**
-	 * Sets the target Level of the position.
+	 * Returns the position's world if valid. Throws an error if the world is unexpectedly null.
 	 *
-	 * @param Level|null $level
+	 * @throws AssumptionFailedError
+	 */
+	public function getLevelNonNull() : Level{
+		$world = $this->getLevel();
+		if($world === null){
+			throw new AssumptionFailedError("Position world is null");
+		}
+		return $world;
+	}
+
+	/**
+	 * Sets the target Level of the position.
 	 *
 	 * @return $this
 	 *
@@ -91,8 +103,6 @@ class Position extends Vector3{
 
 	/**
 	 * Checks if this object has a valid reference to a loaded Level
-	 *
-	 * @return bool
 	 */
 	public function isValid() : bool{
 		if($this->level !== null and $this->level->isClosed()){
@@ -107,9 +117,6 @@ class Position extends Vector3{
 	/**
 	 * Returns a side Vector
 	 *
-	 * @param int $side
-	 * @param int $step
-	 *
 	 * @return Position
 	 */
 	public function getSide(int $side, int $step = 1){
@@ -119,7 +126,7 @@ class Position extends Vector3{
 	}
 
 	public function __toString(){
-		return "Position(level=" . ($this->isValid() ? $this->getLevel()->getName() : "null") . ",x=" . $this->x . ",y=" . $this->y . ",z=" . $this->z . ")";
+		return "Position(level=" . ($this->isValid() ? $this->getLevelNonNull()->getName() : "null") . ",x=" . $this->x . ",y=" . $this->y . ",z=" . $this->z . ")";
 	}
 
 	public function equals(Vector3 $v) : bool{

@@ -25,11 +25,8 @@ namespace pocketmine\nbt;
 
 use function count;
 use function strlen;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class NetworkLittleEndianNBTStream extends LittleEndianNBTStream{
 
@@ -38,7 +35,7 @@ class NetworkLittleEndianNBTStream extends LittleEndianNBTStream{
 	}
 
 	public function putInt(int $v) : void{
-		$this->put(Binary::writeVarInt($v));
+		($this->buffer .= Binary::writeVarInt($v));
 	}
 
 	public function getLong() : int{
@@ -46,7 +43,7 @@ class NetworkLittleEndianNBTStream extends LittleEndianNBTStream{
 	}
 
 	public function putLong(int $v) : void{
-		$this->put(Binary::writeVarLong($v));
+		($this->buffer .= Binary::writeVarLong($v));
 	}
 
 	public function getString() : string{
@@ -54,7 +51,7 @@ class NetworkLittleEndianNBTStream extends LittleEndianNBTStream{
 	}
 
 	public function putString(string $v) : void{
-		$this->put(Binary::writeUnsignedVarInt(self::checkWriteStringLength(strlen($v))) . $v);
+		($this->buffer .= Binary::writeUnsignedVarInt(self::checkWriteStringLength(strlen($v))) . $v);
 	}
 
 	public function getIntArray() : array{

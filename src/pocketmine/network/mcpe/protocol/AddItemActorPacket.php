@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
@@ -42,7 +42,10 @@ class AddItemActorPacket extends DataPacket{
 	public $position;
 	/** @var Vector3|null */
 	public $motion;
-	/** @var array */
+	/**
+	 * @var mixed[][]
+	 * @phpstan-var array<int, array{0: int, 1: mixed}>
+	 */
 	public $metadata = [];
 	/** @var bool */
 	public $isFromFishing = false;
@@ -54,7 +57,7 @@ class AddItemActorPacket extends DataPacket{
 		$this->position = $this->getVector3();
 		$this->motion = $this->getVector3();
 		$this->metadata = $this->getEntityMetadata();
-		$this->isFromFishing = $this->getBool();
+		$this->isFromFishing = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
@@ -64,7 +67,7 @@ class AddItemActorPacket extends DataPacket{
 		$this->putVector3($this->position);
 		$this->putVector3Nullable($this->motion);
 		$this->putEntityMetadata($this->metadata);
-		$this->putBool($this->isFromFishing);
+		($this->buffer .= ($this->isFromFishing ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

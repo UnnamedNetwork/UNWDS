@@ -27,32 +27,29 @@ use function array_values;
 use function count;
 use function pack;
 use function unpack;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class BigEndianNBTStream extends NBTStream{
 
 	public function getShort() : int{
-		return Binary::readShort($this->get(2));
+		return (\unpack("n", $this->get(2))[1]);
 	}
 
 	public function getSignedShort() : int{
-		return Binary::readSignedShort($this->get(2));
+		return (\unpack("n", $this->get(2))[1] << 48 >> 48);
 	}
 
 	public function putShort(int $v) : void{
-		$this->buffer .= Binary::writeShort($v);
+		$this->buffer .= (\pack("n", $v));
 	}
 
 	public function getInt() : int{
-		return Binary::readInt($this->get(4));
+		return (\unpack("N", $this->get(4))[1] << 32 >> 32);
 	}
 
 	public function putInt(int $v) : void{
-		$this->buffer .= Binary::writeInt($v);
+		$this->buffer .= (\pack("N", $v));
 	}
 
 	public function getLong() : int{
@@ -60,23 +57,23 @@ class BigEndianNBTStream extends NBTStream{
 	}
 
 	public function putLong(int $v) : void{
-		$this->buffer .= Binary::writeLong($v);
+		$this->buffer .= (\pack("NN", $v >> 32, $v & 0xFFFFFFFF));
 	}
 
 	public function getFloat() : float{
-		return Binary::readFloat($this->get(4));
+		return (\unpack("G", $this->get(4))[1]);
 	}
 
 	public function putFloat(float $v) : void{
-		$this->buffer .= Binary::writeFloat($v);
+		$this->buffer .= (\pack("G", $v));
 	}
 
 	public function getDouble() : float{
-		return Binary::readDouble($this->get(8));
+		return (\unpack("E", $this->get(8))[1]);
 	}
 
 	public function putDouble(float $v) : void{
-		$this->buffer .= Binary::writeDouble($v);
+		$this->buffer .= (\pack("E", $v));
 	}
 
 	public function getIntArray() : array{
@@ -86,6 +83,6 @@ class BigEndianNBTStream extends NBTStream{
 
 	public function putIntArray(array $array) : void{
 		$this->putInt(count($array));
-		$this->put(pack("N*", ...$array));
+		($this->buffer .= pack("N*", ...$array));
 	}
 }

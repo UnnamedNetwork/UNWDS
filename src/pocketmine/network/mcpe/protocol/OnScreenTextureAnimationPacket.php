@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -34,11 +34,11 @@ class OnScreenTextureAnimationPacket extends DataPacket{
 	public $effectId;
 
 	protected function decodePayload() : void{
-		$this->effectId = $this->getLInt(); //unsigned
+		$this->effectId = ((\unpack("V", $this->get(4))[1] << 32 >> 32)); //unsigned
 	}
 
 	protected function encodePayload() : void{
-		$this->putLInt($this->effectId);
+		($this->buffer .= (\pack("V", $this->effectId)));
 	}
 
 	public function handle(NetworkSession $handler) : bool{

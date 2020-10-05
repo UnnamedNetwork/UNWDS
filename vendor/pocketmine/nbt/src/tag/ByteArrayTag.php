@@ -28,16 +28,12 @@ use pocketmine\nbt\NBTStream;
 use pocketmine\nbt\ReaderTracker;
 use function strlen;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class ByteArrayTag extends NamedTag{
 	/** @var string */
 	private $value;
 
-	/**
-	 * @param string $name
-	 * @param string $value
-	 */
 	public function __construct(string $name = "", string $value = ""){
 		parent::__construct($name);
 		$this->value = $value;
@@ -53,12 +49,9 @@ class ByteArrayTag extends NamedTag{
 
 	public function write(NBTStream $nbt) : void{
 		$nbt->putInt(strlen($this->value));
-		$nbt->put($this->value);
+		($nbt->buffer .= $this->value);
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getValue() : string{
 		return $this->value;
 	}

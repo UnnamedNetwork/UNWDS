@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 use raklib\RakLib;
 use raklib\utils\InternetAddress;
@@ -42,8 +42,8 @@ class NewIncomingConnection extends Packet{
 		foreach($this->systemAddresses as $address){
 			$this->putAddress($address);
 		}
-		$this->putLong($this->sendPingTime);
-		$this->putLong($this->sendPongTime);
+		($this->buffer .= (\pack("NN", $this->sendPingTime >> 32, $this->sendPingTime & 0xFFFFFFFF)));
+		($this->buffer .= (\pack("NN", $this->sendPongTime >> 32, $this->sendPongTime & 0xFFFFFFFF)));
 	}
 
 	protected function decodePayload() : void{
@@ -60,7 +60,7 @@ class NewIncomingConnection extends Packet{
 			}
 		}
 
-		$this->sendPingTime = $this->getLong();
-		$this->sendPongTime = $this->getLong();
+		$this->sendPingTime = (Binary::readLong($this->get(8)));
+		$this->sendPongTime = (Binary::readLong($this->get(8)));
 	}
 }

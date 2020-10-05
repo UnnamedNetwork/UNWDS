@@ -33,6 +33,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\Internet;
 use pocketmine\utils\InternetException;
 use function base64_encode;
+use function count;
 use function fgets;
 use function random_bytes;
 use function sleep;
@@ -43,11 +44,10 @@ use const PHP_EOL;
 use const STDIN;
 
 class SetupWizard{
-	public const DEFAULT_NAME = "UNWDS for Minecraft: Bedrock Edition";
+	public const DEFAULT_NAME = \pocketmine\NAME . " Server";
 	public const DEFAULT_PORT = 19132;
 	public const DEFAULT_PLAYERS = 20;
 	public const DEFAULT_GAMEMODE = Player::SURVIVAL;
-	public const DEFAULT_VIXIK_BRUH = 1;
 
 	/** @var BaseLang */
 	private $lang;
@@ -57,10 +57,10 @@ class SetupWizard{
 	}
 
 	public function run() : bool{
-		$this->message(\pocketmine\NAME . " Server setup");
+		$this->message(\pocketmine\NAME . " set-up wizard");
 
 		$langs = BaseLang::getLanguageList();
-		if(empty($langs)){
+		if(count($langs) === 0){
 			$this->error("No language files found, please use provided builds or clone the repository recursively.");
 			return false;
 		}
@@ -128,13 +128,13 @@ LICENSE;
 		return true;
 	}
 
-	private function welcome(){
+	private function welcome() : void{
 		$this->message($this->lang->get("setting_up_server_now"));
 		$this->message($this->lang->get("default_values_info"));
 		$this->message($this->lang->get("server_properties"));
 	}
 
-	private function generateBaseConfig(){
+	private function generateBaseConfig() : void{
 		$config = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
 
 		$config->set("motd", ($name = $this->getInput($this->lang->get("name_your_server"), self::DEFAULT_NAME)));
@@ -162,7 +162,9 @@ LICENSE;
 
 		$config->set("max-players", (int) $this->getInput($this->lang->get("max_players"), (string) self::DEFAULT_PLAYERS));
 
-		if(strtolower($this->getInput($this->lang->get("Enable spawn protection?"), "n", "y/N")) === "n"){
+		$this->message($this->lang->get("spawn_protection_info"));
+
+		if(strtolower($this->getInput($this->lang->get("spawn_protection"), "n", "y/N")) === "n"){
 			$config->set("spawn-protection", -1);
 		}else{
 			$config->set("spawn-protection", 16);
@@ -171,8 +173,9 @@ LICENSE;
 		$config->save();
 	}
 
-	private function generateUserFiles(){
+	private function generateUserFiles() : void{
 		$this->message($this->lang->get("op_info"));
+
 		$op = strtolower($this->getInput($this->lang->get("op_who"), ""));
 		if($op === ""){
 			$this->error($this->lang->get("op_warning"));
@@ -194,7 +197,7 @@ LICENSE;
 		$config->save();
 	}
 
-	private function networkFunctions(){
+	private function networkFunctions() : void{
 		$config = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
 		$this->error($this->lang->get("query_warning1"));
 		$this->error($this->lang->get("query_warning2"));
@@ -204,7 +207,8 @@ LICENSE;
 			$config->set("enable-query", true);
 		}
 
-		if(strtolower($this->getInput($this->lang->get("Do you want server RCON-enabled?"), "n", "y/N")) === "y"){
+		$this->message($this->lang->get("rcon_info"));
+		if(strtolower($this->getInput($this->lang->get("rcon_enable"), "n", "y/N")) === "y"){
 			$config->set("enable-rcon", true);
 			$password = substr(base64_encode(random_bytes(20)), 3, 10);
 			$config->set("rcon.password", $password);
@@ -214,18 +218,6 @@ LICENSE;
 		}
 
 		$config->save();
-		
-		$vixik = "Do you want enable Vixik-enable messages while your player join server?";
-		$vixik_bruh = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
-		$this->message($this->lang->get("An Vixik message is notify player while them join, they get a message about this server is powered by UNWDS ( default is No ). This can be configured by editing the source code at bin/src/PocketMine/Player.php at line 1134."));
-		if(strtolower($this->getInput($vixik, "n", "y/N")) === "n"){
-			$vixik_bruh->set("vixik-bruh", false);
-			$this->message("Yay!! Vixik messages was disable on your server!");
-		}else{
-			$vixik_bruh->set("vixik-bruh", true);
-			$this->error("Thank you for supporting UNWDS for more people know this software !!");
-		}
-		$vixik_bruh->save();
 
 		$this->message($this->lang->get("ip_get"));
 
@@ -244,7 +236,7 @@ LICENSE;
 		$this->readLine();
 	}
 
-	private function endWizard(){
+	private function endWizard() : void{
 		$this->message($this->lang->get("you_have_finished"));
 		$this->message($this->lang->get("pocketmine_plugins"));
 		$this->message($this->lang->translateString("pocketmine_will_start", [\pocketmine\NAME]));
@@ -255,7 +247,7 @@ LICENSE;
 		sleep(4);
 	}
 
-	private function writeLine(string $line = ""){
+	private function writeLine(string $line = "") : void{
 		echo $line . PHP_EOL;
 	}
 
@@ -263,11 +255,11 @@ LICENSE;
 		return trim((string) fgets(STDIN));
 	}
 
-	private function message(string $message){
+	private function message(string $message) : void{
 		$this->writeLine("[*] " . $message);
 	}
 
-	private function error(string $message){
+	private function error(string $message) : void{
 		$this->writeLine("[!] " . $message);
 	}
 

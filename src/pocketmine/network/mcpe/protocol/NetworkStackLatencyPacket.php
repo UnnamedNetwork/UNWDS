@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -36,13 +36,13 @@ class NetworkStackLatencyPacket extends DataPacket{
 	public $needResponse;
 
 	protected function decodePayload(){
-		$this->timestamp = $this->getLLong();
-		$this->needResponse = $this->getBool();
+		$this->timestamp = (Binary::readLLong($this->get(8)));
+		$this->needResponse = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
-		$this->putLLong($this->timestamp);
-		$this->putBool($this->needResponse);
+		($this->buffer .= (\pack("VV", $this->timestamp & 0xFFFFFFFF, $this->timestamp >> 32)));
+		($this->buffer .= ($this->needResponse ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

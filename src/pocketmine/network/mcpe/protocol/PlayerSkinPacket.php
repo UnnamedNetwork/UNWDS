@@ -23,11 +23,10 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
-use pocketmine\entity\Skin;
 use pocketmine\network\mcpe\NetworkSession;
-use pocketmine\utils\SerializedImage;
+use pocketmine\network\mcpe\protocol\types\SkinData;
 use pocketmine\utils\UUID;
 
 class PlayerSkinPacket extends DataPacket{
@@ -39,46 +38,23 @@ class PlayerSkinPacket extends DataPacket{
 	public $oldSkinName = "";
 	/** @var string */
 	public $newSkinName = "";
-	/** @var Skin */
+	/** @var SkinData */
 	public $skin;
 
 	protected function decodePayload(){
 		$this->uuid = $this->getUUID();
-		if($this->protocol >= ProtocolInfo::PROTOCOL_1_13) {
-            $this->skin = $this->getSkin(); // 1.13
-        }
-		else {
-		    $skin = new Skin();
-
-		    $skin->setSkinId($this->getString());
-		    $this->oldSkinName = $this->getString();
-		    $this->newSkinName = $this->getString();
-		    $skin->setSkinData(SerializedImage::fromLegacy($this->getString()));
-		    $skin->setCapeData(SerializedImage::fromLegacy($this->getString()));
-		    $skin->setSkinResourcePatch(Skin::DEFAULT_SKIN_RESOURCE_PATCH); // $this->>getString(); geometry name
-		    $skin->setGeometryData(""); // $this->getString(); ->geometry data
-		    $this->skin = $skin;
-        }
+		$this->skin = $this->getSkin();
+		$this->newSkinName = $this->getString();
+		$this->oldSkinName = $this->getString();
+		$this->skin->setVerified((($this->get(1) !== "\x00")));
 	}
 
 	protected function encodePayload(){
 		$this->putUUID($this->uuid);
-		if($this->protocol >= ProtocolInfo::PROTOCOL_1_13) {
-            $this->putSkin($this->skin); // 1.13+
-        }
-		else {
-		    if($this->skin->version > ProtocolInfo::PROTOCOL_1_12) {
-		        $this->skin = Skin::getRandomSkin();
-            }
-
-		    $this->putString($this->skin->getSkinId());
-		    $this->putString($this->oldSkinName);
-		    $this->putString($this->newSkinName);
-		    $this->putString($this->skin->getSkinData()->data);
-		    $this->putString($this->skin->getCapeData()->data);
-		    $this->putString($this->skin->getSkinGeometryName());
-		    $this->putString(Skin::prepareGeometryDataForOld($this->skin->getGeometryData()));
-        }
+		$this->putSkin($this->skin);
+		$this->putString($this->newSkinName);
+		$this->putString($this->oldSkinName);
+		($this->buffer .= ($this->skin->isVerified() ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

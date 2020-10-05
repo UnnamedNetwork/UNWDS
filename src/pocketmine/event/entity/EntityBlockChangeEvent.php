@@ -29,6 +29,7 @@ use pocketmine\event\Cancellable;
 
 /**
  * Called when an Entity, excluding players, changes a block directly
+ * @phpstan-extends EntityEvent<Entity>
  */
 class EntityBlockChangeEvent extends EntityEvent implements Cancellable{
 	/** @var Block */
@@ -42,16 +43,10 @@ class EntityBlockChangeEvent extends EntityEvent implements Cancellable{
 		$this->to = $to;
 	}
 
-	/**
-	 * @return Block
-	 */
 	public function getBlock() : Block{
 		return $this->from;
 	}
 
-	/**
-	 * @return Block
-	 */
 	public function getTo() : Block{
 		return $this->to;
 	}

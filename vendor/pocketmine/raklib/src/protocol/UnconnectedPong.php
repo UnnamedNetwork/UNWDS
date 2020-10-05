@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 class UnconnectedPong extends OfflineMessage{
 	public static $ID = MessageIdentifiers::ID_UNCONNECTED_PONG;
@@ -30,15 +30,15 @@ class UnconnectedPong extends OfflineMessage{
 	public $serverName;
 
 	protected function encodePayload() : void{
-		$this->putLong($this->pingID);
-		$this->putLong($this->serverID);
+		($this->buffer .= (\pack("NN", $this->pingID >> 32, $this->pingID & 0xFFFFFFFF)));
+		($this->buffer .= (\pack("NN", $this->serverID >> 32, $this->serverID & 0xFFFFFFFF)));
 		$this->writeMagic();
 		$this->putString($this->serverName);
 	}
 
 	protected function decodePayload() : void{
-		$this->pingID = $this->getLong();
-		$this->serverID = $this->getLong();
+		$this->pingID = (Binary::readLong($this->get(8)));
+		$this->serverID = (Binary::readLong($this->get(8)));
 		$this->readMagic();
 		$this->serverName = $this->getString();
 	}

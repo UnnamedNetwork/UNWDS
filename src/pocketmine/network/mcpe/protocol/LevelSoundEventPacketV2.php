@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -48,21 +48,21 @@ class LevelSoundEventPacketV2 extends DataPacket{
 	public $disableRelativeVolume = false;
 
 	protected function decodePayload(){
-		$this->sound = $this->getByte();
+		$this->sound = (\ord($this->get(1)));
 		$this->position = $this->getVector3();
 		$this->extraData = $this->getVarInt();
 		$this->entityType = $this->getString();
-		$this->isBabyMob = $this->getBool();
-		$this->disableRelativeVolume = $this->getBool();
+		$this->isBabyMob = (($this->get(1) !== "\x00"));
+		$this->disableRelativeVolume = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
-		$this->putByte($this->sound);
+		($this->buffer .= \chr($this->sound));
 		$this->putVector3($this->position);
 		$this->putVarInt($this->extraData);
 		$this->putString($this->entityType);
-		$this->putBool($this->isBabyMob);
-		$this->putBool($this->disableRelativeVolume);
+		($this->buffer .= ($this->isBabyMob ? "\x01" : "\x00"));
+		($this->buffer .= ($this->disableRelativeVolume ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

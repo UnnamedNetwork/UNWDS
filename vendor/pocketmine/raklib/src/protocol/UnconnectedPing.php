@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 class UnconnectedPing extends OfflineMessage{
 	public static $ID = MessageIdentifiers::ID_UNCONNECTED_PING;
@@ -26,12 +26,12 @@ class UnconnectedPing extends OfflineMessage{
 	public $pingID;
 
 	protected function encodePayload() : void{
-		$this->putLong($this->pingID);
+		($this->buffer .= (\pack("NN", $this->pingID >> 32, $this->pingID & 0xFFFFFFFF)));
 		$this->writeMagic();
 	}
 
 	protected function decodePayload() : void{
-		$this->pingID = $this->getLong();
+		$this->pingID = (Binary::readLong($this->get(8)));
 		$this->readMagic();
 	}
 }

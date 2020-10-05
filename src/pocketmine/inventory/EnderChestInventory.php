@@ -52,11 +52,11 @@ class EnderChestInventory extends ChestInventory{
 	/**
 	 * Set the holder's position to that of a tile
 	 *
-	 * @param EnderChest $enderChest
+	 * @return void
 	 */
 	public function setHolderPosition(EnderChest $enderChest){
 		$this->holder->setComponents($enderChest->getFloorX(), $enderChest->getFloorY(), $enderChest->getFloorZ());
-		$this->holder->setLevel($enderChest->getLevel());
+		$this->holder->setLevel($enderChest->getLevelNonNull());
 	}
 
 	protected function getOpenSound() : int{

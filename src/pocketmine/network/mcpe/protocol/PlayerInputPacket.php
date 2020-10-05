@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -41,17 +40,17 @@ class PlayerInputPacket extends DataPacket{
 	public $sneaking;
 
 	protected function decodePayload(){
-		$this->motionX = $this->getLFloat();
-		$this->motionY = $this->getLFloat();
-		$this->jumping = $this->getBool();
-		$this->sneaking = $this->getBool();
+		$this->motionX = ((\unpack("g", $this->get(4))[1]));
+		$this->motionY = ((\unpack("g", $this->get(4))[1]));
+		$this->jumping = (($this->get(1) !== "\x00"));
+		$this->sneaking = (($this->get(1) !== "\x00"));
 	}
 
 	protected function encodePayload(){
-		$this->putLFloat($this->motionX);
-		$this->putLFloat($this->motionY);
-		$this->putBool($this->jumping);
-		$this->putBool($this->sneaking);
+		($this->buffer .= (\pack("g", $this->motionX)));
+		($this->buffer .= (\pack("g", $this->motionY)));
+		($this->buffer .= ($this->jumping ? "\x01" : "\x00"));
+		($this->buffer .= ($this->sneaking ? "\x01" : "\x00"));
 	}
 
 	public function handle(NetworkSession $session) : bool{

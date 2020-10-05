@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace raklib\protocol;
 
+use pocketmine\utils\BinaryDataException;
 use pocketmine\utils\BinaryStream;
 use raklib\utils\InternetAddress;
 use function assert;
@@ -26,35 +27,36 @@ use function inet_ntop;
 use function inet_pton;
 use function strlen;
 use const AF_INET6;
-#ifndef COMPILE
-use pocketmine\utils\Binary;
-#endif
 
-#include <rules/RakLibPacket.h>
+use pocketmine\utils\Binary;
 
 abstract class Packet extends BinaryStream{
+	/** @var int */
 	public static $ID = -1;
 
 	/** @var float|null */
 	public $sendTime;
 
 	protected function getString() : string{
-		return $this->get($this->getShort());
+		return $this->get(((\unpack("n", $this->get(2))[1])));
 	}
 
 	protected function getAddress() : InternetAddress{
-		$version = $this->getByte();
+		$version = (\ord($this->get(1)));
 		if($version === 4){
-			$addr = ((~$this->getByte()) & 0xff) . "." . ((~$this->getByte()) & 0xff) . "." . ((~$this->getByte()) & 0xff) . "." . ((~$this->getByte()) & 0xff);
-			$port = $this->getShort();
+			$addr = ((~(\ord($this->get(1)))) & 0xff) . "." . ((~(\ord($this->get(1)))) & 0xff) . "." . ((~(\ord($this->get(1)))) & 0xff) . "." . ((~(\ord($this->get(1)))) & 0xff);
+			$port = ((\unpack("n", $this->get(2))[1]));
 			return new InternetAddress($addr, $port, $version);
 		}elseif($version === 6){
-			//http://man7.org/linux/man-pages/man7/ipv6.7.html
-			Binary::readLShort($this->get(2)); //Family, AF_INET6
-			$port = $this->getShort();
-			$this->getInt(); //flow info
+			//http://man7.org/1/man-pages/man7/ipv6.7.html
+			(\unpack("v", $this->get(2))[1]); //Family, AF_INET6
+			$port = ((\unpack("n", $this->get(2))[1]));
+			((\unpack("N", $this->get(4))[1] << 32 >> 32)); //flow info
 			$addr = inet_ntop($this->get(16));
-			$this->getInt(); //scope ID
+			if($addr === false){
+				throw new BinaryDataException("Failed to parse IPv6 address");
+			}
+			((\unpack("N", $this->get(4))[1] << 32 >> 32)); //scope ID
 			return new InternetAddress($addr, $port, $version);
 		}else{
 			throw new \UnexpectedValueException("Unknown IP address version $version");
@@ -62,25 +64,29 @@ abstract class Packet extends BinaryStream{
 	}
 
 	protected function putString(string $v) : void{
-		$this->putShort(strlen($v));
-		$this->put($v);
+		($this->buffer .= (\pack("n", strlen($v))));
+		($this->buffer .= $v);
 	}
 
 	protected function putAddress(InternetAddress $address) : void{
-		$this->putByte($address->version);
+		($this->buffer .= \chr($address->version));
 		if($address->version === 4){
 			$parts = explode(".", $address->ip);
 			assert(count($parts) === 4, "Wrong number of parts in IPv4 IP, expected 4, got " . count($parts));
 			foreach($parts as $b){
-				$this->putByte((~((int) $b)) & 0xff);
+				($this->buffer .= \chr((~((int) $b)) & 0xff));
 			}
-			$this->putShort($address->port);
+			($this->buffer .= (\pack("n", $address->port)));
 		}elseif($address->version === 6){
-			$this->put(Binary::writeLShort(AF_INET6));
-			$this->putShort($address->port);
-			$this->putInt(0);
-			$this->put(inet_pton($address->ip));
-			$this->putInt(0);
+			($this->buffer .= (\pack("v", AF_INET6)));
+			($this->buffer .= (\pack("n", $address->port)));
+			($this->buffer .= (\pack("N", 0)));
+			$rawIp = inet_pton($address->ip);
+			if($rawIp === false){
+				throw new \InvalidArgumentException("Invalid IPv6 address could not be encoded");
+			}
+			($this->buffer .= $rawIp);
+			($this->buffer .= (\pack("N", 0)));
 		}else{
 			throw new \InvalidArgumentException("IP version $address->version is not supported");
 		}
@@ -93,7 +99,7 @@ abstract class Packet extends BinaryStream{
 	}
 
 	protected function encodeHeader() : void{
-		$this->putByte(static::$ID);
+		($this->buffer .= \chr(static::$ID));
 	}
 
 	abstract protected function encodePayload() : void;
@@ -105,13 +111,16 @@ abstract class Packet extends BinaryStream{
 	}
 
 	protected function decodeHeader() : void{
-		$this->getByte(); //PID
+		(\ord($this->get(1))); //PID
 	}
 
 	abstract protected function decodePayload() : void;
 
+	/**
+	 * @return $this
+	 */
 	public function clean(){
-		$this->buffer = null;
+		$this->buffer = "";
 		$this->offset = 0;
 		$this->sendTime = null;
 

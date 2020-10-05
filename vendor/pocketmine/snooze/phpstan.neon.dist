@@ -1,0 +1,9 @@
+includes:
+	- tests/phpstan/configs/architectural-issues.neon
+
+parameters:
+	level: 8
+	paths:
+		- src
+	stubFiles:
+		- tests/phpstan/stubs/pthreads.stub

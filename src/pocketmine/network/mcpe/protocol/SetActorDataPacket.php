@@ -23,8 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -33,7 +32,10 @@ class SetActorDataPacket extends DataPacket{
 
 	/** @var int */
 	public $entityRuntimeId;
-	/** @var array */
+	/**
+	 * @var mixed[][]
+	 * @phpstan-var array<int, array{0: int, 1: mixed}>
+	 */
 	public $metadata;
 
 	protected function decodePayload(){

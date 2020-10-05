@@ -32,20 +32,19 @@ use function implode;
 use function is_int;
 use function str_repeat;
 
-#include <rules/NBT.h>
+use pocketmine\utils\Binary;
 
 class IntArrayTag extends NamedTag{
 	/** @var int[] */
 	private $value;
 
 	/**
-	 * @param string $name
 	 * @param int[]  $value
 	 */
 	public function __construct(string $name = "", array $value = []){
 		parent::__construct($name);
 
-		assert((function() use(&$value){
+		assert((function() use(&$value) : bool{
 			foreach($value as $v){
 				if(!is_int($v)){
 					return false;

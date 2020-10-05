@@ -28,32 +28,55 @@ use function fopen;
 use function function_exists;
 use function getenv;
 use function is_array;
+use function sapi_windows_vt100_support;
 use function stream_isatty;
 
 abstract class Terminal{
+	/** @var string */
 	public static $FORMAT_BOLD = "";
+	/** @var string */
 	public static $FORMAT_OBFUSCATED = "";
+	/** @var string */
 	public static $FORMAT_ITALIC = "";
+	/** @var string */
 	public static $FORMAT_UNDERLINE = "";
+	/** @var string */
 	public static $FORMAT_STRIKETHROUGH = "";
 
+	/** @var string */
 	public static $FORMAT_RESET = "";
 
+	/** @var string */
 	public static $COLOR_BLACK = "";
+	/** @var string */
 	public static $COLOR_DARK_BLUE = "";
+	/** @var string */
 	public static $COLOR_DARK_GREEN = "";
+	/** @var string */
 	public static $COLOR_DARK_AQUA = "";
+	/** @var string */
 	public static $COLOR_DARK_RED = "";
+	/** @var string */
 	public static $COLOR_PURPLE = "";
+	/** @var string */
 	public static $COLOR_GOLD = "";
+	/** @var string */
 	public static $COLOR_GRAY = "";
+	/** @var string */
 	public static $COLOR_DARK_GRAY = "";
+	/** @var string */
 	public static $COLOR_BLUE = "";
+	/** @var string */
 	public static $COLOR_GREEN = "";
+	/** @var string */
 	public static $COLOR_AQUA = "";
+	/** @var string */
 	public static $COLOR_RED = "";
+	/** @var string */
 	public static $COLOR_LIGHT_PURPLE = "";
+	/** @var string */
 	public static $COLOR_YELLOW = "";
+	/** @var string */
 	public static $COLOR_WHITE = "";
 
 	/** @var bool|null */
@@ -68,6 +91,7 @@ abstract class Terminal{
 
 	private static function detectFormattingCodesSupport() : bool{
 		$stdout = fopen("php://stdout", "w");
+		if($stdout === false) throw new AssumptionFailedError("Opening php://stdout should never fail");
 		$result = (
 			stream_isatty($stdout) and //STDOUT isn't being piped
 			(
@@ -79,6 +103,9 @@ abstract class Terminal{
 		return $result;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected static function getFallbackEscapeCodes(){
 		self::$FORMAT_BOLD = "\x1b[1m";
 		self::$FORMAT_OBFUSCATED = "";
@@ -106,6 +133,9 @@ abstract class Terminal{
 		self::$COLOR_WHITE = "\x1b[38;5;231m";
 	}
 
+	/**
+	 * @return void
+	 */
 	protected static function getEscapeCodes(){
 		self::$FORMAT_BOLD = `tput bold`;
 		self::$FORMAT_OBFUSCATED = `tput smacs`;
@@ -152,14 +182,14 @@ abstract class Terminal{
 		}
 
 		switch(Utils::getOS()){
-			case "linux":
-			case "mac":
-			case "bsd":
+			case Utils::OS_LINUX:
+			case Utils::OS_MACOS:
+			case Utils::OS_BSD:
 				self::getEscapeCodes();
 				return;
 
-			case "win":
-			case "android":
+			case Utils::OS_WINDOWS:
+			case Utils::OS_ANDROID:
 				self::getFallbackEscapeCodes();
 				return;
 		}
@@ -175,9 +205,7 @@ abstract class Terminal{
 	 * Returns a string with colorized ANSI Escape codes for the current terminal
 	 * Note that this is platform-dependent and might produce different results depending on the terminal type and/or OS.
 	 *
-	 * @param string|array $string
-	 *
-	 * @return string
+	 * @param string|string[] $string
 	 */
 	public static function toANSI($string) : string{
 		if(!is_array($string)){
@@ -262,5 +290,20 @@ abstract class Terminal{
 		}
 
 		return $newString;
+	}
+
+	/**
+	 * Emits a string containing Minecraft colour codes to the console formatted with native colours.
+	 */
+	public static function write(string $line) : void{
+		echo self::toANSI($line);
+	}
+
+	/**
+	 * Emits a string containing Minecraft colour codes to the console formatted with native colours, followed by a
+	 * newline character.
+	 */
+	public static function writeLine(string $line) : void{
+		echo self::toANSI($line) . self::$FORMAT_RESET . PHP_EOL;
 	}
 }

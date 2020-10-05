@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
+use pocketmine\utils\Binary;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -42,14 +42,14 @@ class SpawnParticleEffectPacket extends DataPacket{
 	public $particleName;
 
 	protected function decodePayload(){
-		$this->dimensionId = $this->getByte();
+		$this->dimensionId = (\ord($this->get(1)));
 		$this->entityUniqueId = $this->getEntityUniqueId();
 		$this->position = $this->getVector3();
 		$this->particleName = $this->getString();
 	}
 
 	protected function encodePayload(){
-		$this->putByte($this->dimensionId);
+		($this->buffer .= \chr($this->dimensionId));
 		$this->putEntityUniqueId($this->entityUniqueId);
 		$this->putVector3($this->position);
 		$this->putString($this->particleName);

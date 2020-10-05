@@ -11,8 +11,8 @@ return array(
     'pocketmine\\snooze\\' => array($vendorDir . '/pocketmine/snooze/src'),
     'pocketmine\\nbt\\' => array($vendorDir . '/pocketmine/nbt/src'),
     'pocketmine\\math\\' => array($vendorDir . '/pocketmine/math/src'),
-    'pocketmine\\' => array($baseDir . '/tests/phpunit'),
-    'DaveRandom\\CallbackValidator\\' => array($vendorDir . '/daverandom/callback-validator/src'),
+    'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
+    'DaveRandom\\CallbackValidator\\' => array($vendorDir . '/pocketmine/callback-validator/src'),
     'Ahc\\Json\\' => array($vendorDir . '/adhocore/json-comment/src'),
     '' => array($baseDir . '/src'),
 );

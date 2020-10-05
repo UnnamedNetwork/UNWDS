@@ -46,8 +46,6 @@ class ScriptPluginLoader implements PluginLoader{
 
 	/**
 	 * Loads the plugin contained in $file
-	 *
-	 * @param string $file
 	 */
 	public function loadPlugin(string $file) : void{
 		include_once $file;
@@ -55,13 +53,12 @@ class ScriptPluginLoader implements PluginLoader{
 
 	/**
 	 * Gets the PluginDescription from the file
-	 *
-	 * @param string $file
-	 *
-	 * @return null|PluginDescription
 	 */
 	public function getPluginDescription(string $file) : ?PluginDescription{
-		$content = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$content = @file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		if($content === false){
+			return null;
+		}
 
 		$data = [];
 

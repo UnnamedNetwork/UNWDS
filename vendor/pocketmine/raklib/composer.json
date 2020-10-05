@@ -7,30 +7,20 @@
 		"php": ">=7.2.0",
 		"php-ipv6": "*",
 		"php-64bit": "*",
-		"ext-bcmath": "*",
 		"ext-pthreads": "~3.2.0",
 		"ext-sockets": "*",
-		"pocketmine/spl": "^0.3.0",
+		"pocketmine/log": "^0.2.0",
+		"pocketmine/log-pthreads": "^0.1.0",
 		"pocketmine/binaryutils": "^0.1.9",
 		"pocketmine/snooze": "^0.1.0"
+	},
+	"require-dev": {
+		"phpstan/phpstan": "0.12.40",
+		"phpstan/phpstan-strict-rules": "^0.12.2"
 	},
 	"autoload": {
 		"psr-4": {
 			"raklib\\": "src/"
 		}
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/pmmp/SPL"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/pmmp/BinaryUtils"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/pmmp/Snooze"
-		}
-	]
+	}
 }

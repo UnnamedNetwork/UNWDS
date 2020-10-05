@@ -40,8 +40,6 @@ abstract class ProjectileItem extends Item{
 
 	/**
 	 * Helper function to apply extra NBT tags to pass to the created projectile.
-	 *
-	 * @param CompoundTag $tag
 	 */
 	protected function addExtraTags(CompoundTag $tag) : void{
 
@@ -51,12 +49,12 @@ abstract class ProjectileItem extends Item{
 		$nbt = Entity::createBaseNBT($player->add(0, $player->getEyeHeight(), 0), $directionVector, $player->yaw, $player->pitch);
 		$this->addExtraTags($nbt);
 
-		$projectile = Entity::createEntity($this->getProjectileEntityType(), $player->getLevel(), $nbt, $player);
+		$projectile = Entity::createEntity($this->getProjectileEntityType(), $player->getLevelNonNull(), $nbt, $player);
 		if($projectile !== null){
 			$projectile->setMotion($projectile->getMotion()->multiply($this->getThrowForce()));
 		}
 
-		$this->count--;
+		$this->pop();
 
 		if($projectile instanceof Projectile){
 			$projectileEv = new ProjectileLaunchEvent($projectile);
@@ -66,7 +64,7 @@ abstract class ProjectileItem extends Item{
 			}else{
 				$projectile->spawnToAll();
 
-				$player->getLevel()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_THROW, 0, EntityIds::PLAYER);
+				$player->getLevelNonNull()->broadcastLevelSoundEvent($player, LevelSoundEventPacket::SOUND_THROW, 0, EntityIds::PLAYER);
 			}
 		}elseif($projectile !== null){
 			$projectile->spawnToAll();

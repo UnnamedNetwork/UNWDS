@@ -26,6 +26,9 @@ namespace pocketmine\event\entity;
 use pocketmine\entity\Entity;
 use pocketmine\event\Cancellable;
 
+/**
+ * @phpstan-extends EntityEvent<Entity>
+ */
 class EntityRegainHealthEvent extends EntityEvent implements Cancellable{
 	public const CAUSE_REGEN = 0;
 	public const CAUSE_EATING = 1;
@@ -38,35 +41,22 @@ class EntityRegainHealthEvent extends EntityEvent implements Cancellable{
 	/** @var int */
 	private $reason;
 
-
-	/**
-	 * @param Entity $entity
-	 * @param float  $amount
-	 * @param int    $regainReason
-	 */
 	public function __construct(Entity $entity, float $amount, int $regainReason){
 		$this->entity = $entity;
 		$this->amount = $amount;
 		$this->reason = $regainReason;
 	}
 
-	/**
-	 * @return float
-	 */
 	public function getAmount() : float{
 		return $this->amount;
 	}
 
-	/**
-	 * @param float $amount
-	 */
 	public function setAmount(float $amount) : void{
 		$this->amount = $amount;
 	}
 
 	/**
 	 * Returns one of the CAUSE_* constants to indicate why this regeneration occurred.
-	 * @return int
 	 */
 	public function getRegainReason() : int{
 		return $this->reason;

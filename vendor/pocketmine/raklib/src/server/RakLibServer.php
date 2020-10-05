@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace raklib\server;
 
-use function error_get_last;
 use pocketmine\snooze\SleeperNotifier;
 use raklib\RakLib;
 use raklib\utils\InternetAddress;
 use function array_reverse;
+use function error_get_last;
 use function error_reporting;
 use function function_exists;
 use function gc_enable;
@@ -88,16 +88,12 @@ class RakLibServer extends \Thread{
 	/** @var int */
 	private $protocolVersion;
 
-	/** @var SleeperNotifier */
+	/** @var SleeperNotifier|null */
 	protected $mainThreadNotifier;
 
 	/**
-	 * @param \ThreadedLogger      $logger
 	 * @param string               $autoloaderPath Path to Composer autoloader
-	 * @param InternetAddress      $address
-	 * @param int                  $maxMtuSize
 	 * @param int|null             $overrideProtocolVersion Optional custom protocol version to use, defaults to current RakLib's protocol
-	 * @param SleeperNotifier|null $sleeper
 	 */
 	public function __construct(\ThreadedLogger $logger, string $autoloaderPath, InternetAddress $address, int $maxMtuSize = 1492, ?int $overrideProtocolVersion = null, ?SleeperNotifier $sleeper = null){
 		$this->address = $address;
@@ -114,7 +110,10 @@ class RakLibServer extends \Thread{
 		if(\Phar::running(true) !== ""){
 			$this->mainPath = \Phar::running(true);
 		}else{
-			$this->mainPath = realpath(getcwd()) . DIRECTORY_SEPARATOR;
+			if(($cwd = getcwd()) === false or ($realCwd = realpath($cwd)) === false){
+				throw new \RuntimeException("Failed to get current working directory");
+			}
+			$this->mainPath = $realCwd . DIRECTORY_SEPARATOR;
 		}
 
 		$this->protocolVersion = $overrideProtocolVersion ?? RakLib::DEFAULT_PROTOCOL_VERSION;
@@ -132,7 +131,6 @@ class RakLibServer extends \Thread{
 
 	/**
 	 * Returns the RakNet server ID
-	 * @return int
 	 */
 	public function getServerId() : int{
 		return $this->serverId;
@@ -142,23 +140,14 @@ class RakLibServer extends \Thread{
 		return $this->protocolVersion;
 	}
 
-	/**
-	 * @return \ThreadedLogger
-	 */
 	public function getLogger() : \ThreadedLogger{
 		return $this->logger;
 	}
 
-	/**
-	 * @return \Threaded
-	 */
 	public function getExternalQueue() : \Threaded{
 		return $this->externalQueue;
 	}
 
-	/**
-	 * @return \Threaded
-	 */
 	public function getInternalQueue() : \Threaded{
 		return $this->internalQueue;
 	}
@@ -182,6 +171,9 @@ class RakLibServer extends \Thread{
 		return $this->externalQueue->shift();
 	}
 
+	/**
+	 * @return void
+	 */
 	public function shutdownHandler(){
 		if($this->shutdown !== true){
 			$error = error_get_last();
@@ -193,6 +185,14 @@ class RakLibServer extends \Thread{
 		}
 	}
 
+	/**
+	 * @param int $errno
+	 * @param string $errstr
+	 * @param string $errfile
+	 * @param int $errline
+	 *
+	 * @return bool
+	 */
 	public function errorHandler($errno, $errstr, $errfile, $errline){
 		if(error_reporting() === 0){
 			return false;
@@ -230,6 +230,12 @@ class RakLibServer extends \Thread{
 		return true;
 	}
 
+	/**
+	 * @param int $start
+	 * @param list<array<string, mixed>>|null $trace
+	 *
+	 * @return list<string>
+	 */
 	public function getTrace($start = 0, $trace = null){
 		if($trace === null){
 			if(function_exists("xdebug_get_function_stack")){
@@ -242,7 +248,7 @@ class RakLibServer extends \Thread{
 
 		$messages = [];
 		$j = 0;
-		for($i = (int) $start; isset($trace[$i]); ++$i, ++$j){
+		for($i = $start; isset($trace[$i]); ++$i, ++$j){
 			$params = "";
 			if(isset($trace[$i]["args"]) or isset($trace[$i]["params"])){
 				if(isset($trace[$i]["args"])){
@@ -260,6 +266,11 @@ class RakLibServer extends \Thread{
 		return $messages;
 	}
 
+	/**
+	 * @param string $path
+	 *
+	 * @return string
+	 */
 	public function cleanPath($path){
 		return str_replace(["\\", ".php", "phar://", str_replace(["\\", "phar://"], ["/", ""], $this->mainPath)], ["/", "", "", ""], $path);
 	}
@@ -275,7 +286,6 @@ class RakLibServer extends \Thread{
 
 			set_error_handler([$this, "errorHandler"], E_ALL);
 			register_shutdown_function([$this, "shutdownHandler"]);
-
 
 			$socket = new UDPServerSocket($this->address);
 			new SessionManager($this, $socket, $this->maxMtuSize);

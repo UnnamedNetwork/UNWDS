@@ -23,37 +23,35 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
+use pocketmine\utils\Binary;
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
 
 class RespawnPacket extends DataPacket{
-
 	public const NETWORK_ID = ProtocolInfo::RESPAWN_PACKET;
 
-    public const STATE_SEARCHING_FOR_SPAWN = 0;
-    public const STATE_READY_TO_SPAWN = 1;
-    public const STATE_CLIENT_READY_TO_SPAWN = 2;
+	public const SEARCHING_FOR_SPAWN = 0;
+	public const READY_TO_SPAWN = 1;
+	public const CLIENT_READY_TO_SPAWN = 2;
 
 	/** @var Vector3 */
 	public $position;
-	/** @var int $respawnState */
-	public $respawnState = self::STATE_SEARCHING_FOR_SPAWN;
-	/** @var int $unknownEntityId */
-    public $unknownEntityId = 0;
+	/** @var int */
+	public $respawnState = self::SEARCHING_FOR_SPAWN;
+	/** @var int */
+	public $entityRuntimeId;
 
 	protected function decodePayload(){
 		$this->position = $this->getVector3();
-        $this->respawnState = $this->getByte(); // 1.13
-        $this->unknownEntityId = $this->getEntityRuntimeId();
+		$this->respawnState = (\ord($this->get(1)));
+		$this->entityRuntimeId = $this->getEntityRuntimeId();
 	}
 
 	protected function encodePayload(){
 		$this->putVector3($this->position);
-		$this->putByte($this->respawnState); // 1.13
-		$this->putEntityRuntimeId($this->unknownEntityId);
+		($this->buffer .= \chr($this->respawnState));
+		$this->putEntityRuntimeId($this->entityRuntimeId);
 	}
 
 	public function handle(NetworkSession $session) : bool{

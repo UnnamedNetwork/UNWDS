@@ -37,7 +37,7 @@ abstract class UPnP{
 		if(!Internet::$online){
 			throw new \RuntimeException("Server is offline");
 		}
-		if(Utils::getOS() !== "win"){
+		if(Utils::getOS() !== Utils::OS_WINDOWS){
 			throw new \RuntimeException("UPnP is only supported on Windows");
 		}
 		if(!class_exists("COM")){
@@ -50,7 +50,7 @@ abstract class UPnP{
 		$com = new \COM("HNetCfg.NATUPnP");
 		/** @noinspection PhpUndefinedFieldInspection */
 
-		if($com === false or !is_object($com->StaticPortMappingCollection)){
+		if(!is_object($com->StaticPortMappingCollection)){
 			throw new \RuntimeException("Failed to portforward using UPnP. Ensure that network discovery is enabled in Control Panel.");
 		}
 
@@ -62,7 +62,7 @@ abstract class UPnP{
 		if(!Internet::$online){
 			return false;
 		}
-		if(Utils::getOS() != "win" or !class_exists("COM")){
+		if(Utils::getOS() !== Utils::OS_WINDOWS or !class_exists("COM")){
 			return false;
 		}
 
@@ -70,7 +70,7 @@ abstract class UPnP{
 			/** @noinspection PhpUndefinedClassInspection */
 			$com = new \COM("HNetCfg.NATUPnP");
 			/** @noinspection PhpUndefinedFieldInspection */
-			if($com === false or !is_object($com->StaticPortMappingCollection)){
+			if(!is_object($com->StaticPortMappingCollection)){
 				return false;
 			}
 			/** @noinspection PhpUndefinedFieldInspection */

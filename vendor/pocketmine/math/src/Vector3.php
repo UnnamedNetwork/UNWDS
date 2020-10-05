@@ -64,14 +64,23 @@ class Vector3{
 		$this->z = $z;
 	}
 
+	/**
+	 * @return float|int
+	 */
 	public function getX(){
 		return $this->x;
 	}
 
+	/**
+	 * @return float|int
+	 */
 	public function getY(){
 		return $this->y;
 	}
 
+	/**
+	 * @return float|int
+	 */
 	public function getZ(){
 		return $this->z;
 	}
@@ -89,11 +98,9 @@ class Vector3{
 	}
 
 	/**
-	 * @param Vector3|int $x
-	 * @param int         $y
-	 * @param int         $z
-	 *
-	 * @return Vector3
+	 * @param Vector3|float $x
+	 * @param float         $y
+	 * @param float         $z
 	 */
 	public function add($x, $y = 0, $z = 0) : Vector3{
 		if($x instanceof Vector3){
@@ -104,13 +111,11 @@ class Vector3{
 	}
 
 	/**
-	 * @param Vector3|int $x
-	 * @param int         $y
-	 * @param int         $z
-	 *
-	 * @return Vector3
+	 * @param Vector3|float $x
+	 * @param float         $y
+	 * @param float         $z
 	 */
-	public function subtract($x = 0, $y = 0, $z = 0) : Vector3{
+	public function subtract($x, $y = 0, $z = 0) : Vector3{
 		if($x instanceof Vector3){
 			return $this->add(-$x->x, -$x->y, -$x->z);
 		}else{
@@ -145,9 +150,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $side
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function getSide(int $side, int $step = 1){
@@ -170,8 +172,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function down(int $step = 1){
@@ -179,8 +179,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function up(int $step = 1){
@@ -188,8 +186,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function north(int $step = 1){
@@ -197,8 +193,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function south(int $step = 1){
@@ -206,8 +200,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function west(int $step = 1){
@@ -215,8 +207,6 @@ class Vector3{
 	}
 
 	/**
-	 * @param int $step
-	 *
 	 * @return Vector3
 	 */
 	public function east(int $step = 1){
@@ -225,8 +215,6 @@ class Vector3{
 
 	/**
 	 * Return a Vector3 instance
-	 *
-	 * @return Vector3
 	 */
 	public function asVector3() : Vector3{
 		return new Vector3($this->x, $this->y, $this->z);
@@ -236,7 +224,6 @@ class Vector3{
 	 * Returns the Vector3 side number opposite the specified one
 	 *
 	 * @param int $side 0-5 one of the Vector3::SIDE_* constants
-	 * @return int
 	 *
 	 * @throws \InvalidArgumentException if an invalid side is supplied
 	 */
@@ -256,7 +243,11 @@ class Vector3{
 		return (($this->x - $pos->x) ** 2) + (($this->y - $pos->y) ** 2) + (($this->z - $pos->z) ** 2);
 	}
 
-	public function maxPlainDistance($x = 0, $z = 0) : float{
+	/**
+	 * @param Vector3|Vector2|float $x
+	 * @param float                 $z
+	 */
+	public function maxPlainDistance($x, $z = 0) : float{
 		if($x instanceof Vector3){
 			return $this->maxPlainDistance($x->x, $x->z);
 		}elseif($x instanceof Vector2){
@@ -274,9 +265,6 @@ class Vector3{
 		return $this->x * $this->x + $this->y * $this->y + $this->z * $this->z;
 	}
 
-	/**
-	 * @return Vector3
-	 */
 	public function normalize() : Vector3{
 		$len = $this->lengthSquared();
 		if($len > 0){
@@ -305,11 +293,6 @@ class Vector3{
 	/**
 	 * Returns a new vector with x value equal to the second parameter, along the line between this vector and the
 	 * passed in vector, or null if not possible.
-	 *
-	 * @param Vector3 $v
-	 * @param float   $x
-	 *
-	 * @return Vector3|null
 	 */
 	public function getIntermediateWithXValue(Vector3 $v, float $x) : ?Vector3{
 		$xDiff = $v->x - $this->x;
@@ -332,11 +315,6 @@ class Vector3{
 	/**
 	 * Returns a new vector with y value equal to the second parameter, along the line between this vector and the
 	 * passed in vector, or null if not possible.
-	 *
-	 * @param Vector3 $v
-	 * @param float   $y
-	 *
-	 * @return Vector3|null
 	 */
 	public function getIntermediateWithYValue(Vector3 $v, float $y) : ?Vector3{
 		$xDiff = $v->x - $this->x;
@@ -359,11 +337,6 @@ class Vector3{
 	/**
 	 * Returns a new vector with z value equal to the second parameter, along the line between this vector and the
 	 * passed in vector, or null if not possible.
-	 *
-	 * @param Vector3 $v
-	 * @param float   $z
-	 *
-	 * @return Vector3|null
 	 */
 	public function getIntermediateWithZValue(Vector3 $v, float $z) : ?Vector3{
 		$xDiff = $v->x - $this->x;
@@ -384,9 +357,9 @@ class Vector3{
 	}
 
 	/**
-	 * @param $x
-	 * @param $y
-	 * @param $z
+	 * @param float $x
+	 * @param float $y
+	 * @param float $z
 	 *
 	 * @return $this
 	 */

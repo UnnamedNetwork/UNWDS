@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace pocketmine\utils;
 
 use DaveRandom\CallbackValidator\CallbackType;
-use pocketmine\ThreadManager;
 use function array_combine;
 use function array_map;
 use function array_reverse;
@@ -42,7 +41,6 @@ use function dechex;
 use function error_reporting;
 use function exec;
 use function explode;
-use function fclose;
 use function file;
 use function file_exists;
 use function file_get_contents;
@@ -51,45 +49,48 @@ use function get_current_user;
 use function get_loaded_extensions;
 use function getenv;
 use function gettype;
-use function hexdec;
 use function implode;
 use function is_array;
+use function is_dir;
+use function is_file;
 use function is_object;
-use function is_readable;
 use function is_string;
 use function json_decode;
-use function memory_get_usage;
+use function ltrim;
 use function ob_end_clean;
 use function ob_get_contents;
 use function ob_start;
 use function ord;
 use function php_uname;
 use function phpversion;
-use function posix_kill;
 use function preg_grep;
 use function preg_match;
 use function preg_match_all;
 use function preg_replace;
-use function proc_close;
-use function proc_open;
+use function rmdir;
+use function rtrim;
+use function scandir;
 use function sha1;
 use function spl_object_hash;
 use function str_pad;
 use function str_replace;
 use function str_split;
-use function stream_get_contents;
 use function stripos;
 use function strlen;
 use function strpos;
 use function strtolower;
+use function strtr;
 use function substr;
 use function sys_get_temp_dir;
 use function trim;
+use function unlink;
 use function xdebug_get_function_stack;
+use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 use const PHP_INT_MAX;
 use const PHP_INT_SIZE;
 use const PHP_MAXPATHLEN;
+use const SCANDIR_SORT_NONE;
 use const STR_PAD_LEFT;
 use const STR_PAD_RIGHT;
 
@@ -97,6 +98,15 @@ use const STR_PAD_RIGHT;
  * Big collection of functions
  */
 class Utils{
+	public const OS_WINDOWS = "win";
+	public const OS_IOS = "ios";
+	public const OS_MACOS = "mac";
+	public const OS_ANDROID = "android";
+	public const OS_LINUX = "linux";
+	public const OS_BSD = "bsd";
+	public const OS_UNKNOWN = "other";
+
+	/** @var string|null */
 	public static $os;
 	/** @var UUID|null */
 	private static $serverUniqueId = null;
@@ -104,24 +114,21 @@ class Utils{
 	/**
 	 * Generates an unique identifier to a callable
 	 *
-	 * @param callable $variable
-	 *
 	 * @return string
 	 */
 	public static function getCallableIdentifier(callable $variable){
 		if(is_array($variable)){
 			return sha1(strtolower(spl_object_hash($variable[0])) . "::" . strtolower($variable[1]));
-		}else{
+		}elseif(is_string($variable)){
 			return sha1(strtolower($variable));
+		}else{
+			throw new AssumptionFailedError("Unhandled callable type");
 		}
 	}
 
 	/**
 	 * Returns a readable identifier for the given Closure, including file and line.
 	 *
-	 * @param \Closure $closure
-	 *
-	 * @return string
 	 * @throws \ReflectionException
 	 */
 	public static function getNiceClosureName(\Closure $closure) : string{
@@ -141,21 +148,28 @@ class Utils{
 			//non-class function
 			return $func->getName();
 		}
-		return "closure@" . self::cleanPath($func->getFileName()) . "#L" . $func->getStartLine();
+		$filename = $func->getFileName();
+
+		return "closure@" . ($filename !== false ?
+				self::cleanPath($filename) . "#L" . $func->getStartLine() :
+				"internal"
+			);
 	}
 
 	/**
 	 * Returns a readable identifier for the class of the given object. Sanitizes class names for anonymous classes.
 	 *
-	 * @param object $obj
-	 *
-	 * @return string
 	 * @throws \ReflectionException
 	 */
 	public static function getNiceClassName(object $obj) : string{
 		$reflect = new \ReflectionClass($obj);
 		if($reflect->isAnonymous()){
-			return "anonymous@" . self::cleanPath($reflect->getFileName()) . "#L" . $reflect->getStartLine();
+			$filename = $reflect->getFileName();
+
+			return "anonymous@" . ($filename !== false ?
+					self::cleanPath($filename) . "#L" . $reflect->getStartLine() :
+					"internal"
+				);
 		}
 
 		return $reflect->getName();
@@ -168,8 +182,6 @@ class Utils{
 	 * The rest of the hash will change depending on other factors.
 	 *
 	 * @param string $extra optional, additional data to identify the machine
-	 *
-	 * @return UUID
 	 */
 	public static function getMachineUniqueId(string $extra = "") : UUID{
 		if(self::$serverUniqueId !== null and $extra === ""){
@@ -177,14 +189,14 @@ class Utils{
 		}
 
 		$machine = php_uname("a");
-		$machine .= file_exists("/proc/cpuinfo") ? implode(preg_grep("/(model name|Processor|Serial)/", file("/proc/cpuinfo"))) : "";
+		$machine .= ($cpuinfo = @file("/proc/cpuinfo")) !== false ? implode(preg_grep("/(model name|Processor|Serial)/", $cpuinfo)) : "";
 		$machine .= sys_get_temp_dir();
 		$machine .= $extra;
 		$os = Utils::getOS();
-		if($os === "win"){
+		if($os === Utils::OS_WINDOWS){
 			@exec("ipconfig /ALL", $mac);
 			$mac = implode("\n", $mac);
-			if(preg_match_all("#Physical Address[. ]{1,}: ([0-9A-F\\-]{17})#", $mac, $matches)){
+			if(preg_match_all("#Physical Address[. ]{1,}: ([0-9A-F\\-]{17})#", $mac, $matches) > 0){
 				foreach($matches[1] as $i => $v){
 					if($v == "00-00-00-00-00-00"){
 						unset($matches[1][$i]);
@@ -192,13 +204,13 @@ class Utils{
 				}
 				$machine .= implode(" ", $matches[1]); //Mac Addresses
 			}
-		}elseif($os === "linux"){
+		}elseif($os === Utils::OS_LINUX){
 			if(file_exists("/etc/machine-id")){
 				$machine .= file_get_contents("/etc/machine-id");
 			}else{
 				@exec("ifconfig 2>/dev/null", $mac);
 				$mac = implode("\n", $mac);
-				if(preg_match_all("#HWaddr[ \t]{1,}([0-9a-f:]{17})#", $mac, $matches)){
+				if(preg_match_all("#HWaddr[ \t]{1,}([0-9a-f:]{17})#", $mac, $matches) > 0){
 					foreach($matches[1] as $i => $v){
 						if($v == "00:00:00:00:00:00"){
 							unset($matches[1][$i]);
@@ -207,9 +219,9 @@ class Utils{
 					$machine .= implode(" ", $matches[1]); //Mac Addresses
 				}
 			}
-		}elseif($os === "android"){
+		}elseif($os === Utils::OS_ANDROID){
 			$machine .= @file_get_contents("/system/build.prop");
-		}elseif($os === "mac"){
+		}elseif($os === Utils::OS_MACOS){
 			$machine .= `system_profiler SPHardwareDataType | grep UUID`;
 		}
 		$data = $machine . PHP_MAXPATHLEN;
@@ -250,32 +262,28 @@ class Utils{
 	 * Linux => Linux
 	 * BSD => bsd
 	 * Other => other
-	 *
-	 * @param bool $recalculate
-	 *
-	 * @return string
 	 */
 	public static function getOS(bool $recalculate = false) : string{
 		if(self::$os === null or $recalculate){
 			$uname = php_uname("s");
 			if(stripos($uname, "Darwin") !== false){
 				if(strpos(php_uname("m"), "iP") === 0){
-					self::$os = "ios";
+					self::$os = self::OS_IOS;
 				}else{
-					self::$os = "mac";
+					self::$os = self::OS_MACOS;
 				}
 			}elseif(stripos($uname, "Win") !== false or $uname === "Msys"){
-				self::$os = "win";
+				self::$os = self::OS_WINDOWS;
 			}elseif(stripos($uname, "Linux") !== false){
 				if(@file_exists("/system/build.prop")){
-					self::$os = "android";
+					self::$os = self::OS_ANDROID;
 				}else{
-					self::$os = "linux";
+					self::$os = self::OS_LINUX;
 				}
 			}elseif(stripos($uname, "BSD") !== false or $uname === "DragonFly"){
-				self::$os = "bsd";
+				self::$os = self::OS_BSD;
 			}else{
-				self::$os = "other";
+				self::$os = self::OS_UNKNOWN;
 			}
 		}
 
@@ -283,81 +291,34 @@ class Utils{
 	}
 
 	/**
+	 * @deprecated
+	 * @see Process::getRealMemoryUsage()
+	 *
 	 * @return int[]
 	 */
 	public static function getRealMemoryUsage() : array{
-		$stack = 0;
-		$heap = 0;
-
-		if(Utils::getOS() === "linux" or Utils::getOS() === "android"){
-			$mappings = file("/proc/self/maps");
-			foreach($mappings as $line){
-				if(preg_match("#([a-z0-9]+)\\-([a-z0-9]+) [rwxp\\-]{4} [a-z0-9]+ [^\\[]*\\[([a-zA-z0-9]+)\\]#", trim($line), $matches) > 0){
-					if(strpos($matches[3], "heap") === 0){
-						$heap += hexdec($matches[2]) - hexdec($matches[1]);
-					}elseif(strpos($matches[3], "stack") === 0){
-						$stack += hexdec($matches[2]) - hexdec($matches[1]);
-					}
-				}
-			}
-		}
-
-		return [$heap, $stack];
+		return Process::getRealMemoryUsage();
 	}
 
 	/**
-	 * @param bool $advanced
+	 * @deprecated
+	 * @see Process::getMemoryUsage()
+	 * @see Process::getAdvancedMemoryUsage()
 	 *
 	 * @return int[]|int
 	 */
 	public static function getMemoryUsage(bool $advanced = false){
-		$reserved = memory_get_usage();
-		$VmSize = null;
-		$VmRSS = null;
-		if(Utils::getOS() === "linux" or Utils::getOS() === "android"){
-			$status = file_get_contents("/proc/self/status");
-			if(preg_match("/VmRSS:[ \t]+([0-9]+) kB/", $status, $matches) > 0){
-				$VmRSS = $matches[1] * 1024;
-			}
-
-			if(preg_match("/VmSize:[ \t]+([0-9]+) kB/", $status, $matches) > 0){
-				$VmSize = $matches[1] * 1024;
-			}
-		}
-
-		//TODO: more OS
-
-		if($VmRSS === null){
-			$VmRSS = memory_get_usage();
-		}
-
-		if(!$advanced){
-			return $VmRSS;
-		}
-
-		if($VmSize === null){
-			$VmSize = memory_get_usage(true);
-		}
-
-		return [$reserved, $VmRSS, $VmSize];
-	}
-
-	public static function getThreadCount() : int{
-		if(Utils::getOS() === "linux" or Utils::getOS() === "android"){
-			if(preg_match("/Threads:[ \t]+([0-9]+)/", file_get_contents("/proc/self/status"), $matches) > 0){
-				return (int) $matches[1];
-			}
-		}
-		//TODO: more OS
-
-		return count(ThreadManager::getInstance()->getAll()) + 3; //RakLib + MainLogger + Main Thread
+		return $advanced ? Process::getAdvancedMemoryUsage() : Process::getMemoryUsage();
 	}
 
 	/**
-	 * @param bool $recalculate
-	 *
-	 * @return int
+	 * @deprecated
+	 * @see Process::getThreadCount()
 	 */
+	public static function getThreadCount() : int{
+		return Process::getThreadCount();
+	}
+
 	public static function getCoreCount(bool $recalculate = false) : int{
 		static $processors = 0;
 
@@ -368,25 +329,25 @@ class Utils{
 		}
 
 		switch(Utils::getOS()){
-			case "linux":
-			case "android":
-				if(file_exists("/proc/cpuinfo")){
-					foreach(file("/proc/cpuinfo") as $l){
+			case Utils::OS_LINUX:
+			case Utils::OS_ANDROID:
+				if(($cpuinfo = @file('/proc/cpuinfo')) !== false){
+					foreach($cpuinfo as $l){
 						if(preg_match('/^processor[ \t]*:[ \t]*[0-9]+$/m', $l) > 0){
 							++$processors;
 						}
 					}
-				}elseif(is_readable("/sys/devices/system/cpu/present")){
-					if(preg_match("/^([0-9]+)\\-([0-9]+)$/", trim(file_get_contents("/sys/devices/system/cpu/present")), $matches) > 0){
+				}elseif(($cpuPresent = @file_get_contents("/sys/devices/system/cpu/present")) !== false){
+					if(preg_match("/^([0-9]+)\\-([0-9]+)$/", trim($cpuPresent), $matches) > 0){
 						$processors = (int) ($matches[2] - $matches[1]);
 					}
 				}
 				break;
-			case "bsd":
-			case "mac":
+			case Utils::OS_BSD:
+			case Utils::OS_MACOS:
 				$processors = (int) `sysctl -n hw.ncpu`;
 				break;
-			case "win":
+			case Utils::OS_WINDOWS:
 				$processors = (int) getenv("NUMBER_OF_PROCESSORS");
 				break;
 		}
@@ -395,10 +356,6 @@ class Utils{
 
 	/**
 	 * Returns a prettified hexdump
-	 *
-	 * @param string $bin
-	 *
-	 * @return string
 	 */
 	public static function hexdump(string $bin) : string{
 		$output = "";
@@ -412,13 +369,10 @@ class Utils{
 		return $output;
 	}
 
-
 	/**
 	 * Returns a string that can be printed, replaces non-printable characters
 	 *
 	 * @param mixed $str
-	 *
-	 * @return string
 	 */
 	public static function printable($str) : string{
 		if(!is_string($str)){
@@ -444,14 +398,15 @@ class Utils{
 	 * @deprecated
 	 * @see Internet::getURL()
 	 *
-	 * @param string  $page
-	 * @param int     $timeout default 10
-	 * @param array   $extraHeaders
-	 * @param string  &$err    Will be set to the output of curl_error(). Use this to retrieve errors that occured during the operation.
-	 * @param array[] &$headers
-	 * @param int     &$httpCode
+	 * @param int      $timeout default 10
+	 * @param string[] $extraHeaders
+	 * @param string   $err reference parameter, will be set to the output of curl_error(). Use this to retrieve errors that occured during the operation.
+	 * @param string[] $headers reference parameter
+	 * @param int      $httpCode reference parameter
+	 * @phpstan-param list<string>          $extraHeaders
+	 * @phpstan-param array<string, string> $headers
 	 *
-	 * @return bool|mixed false if an error occurred, mixed data if successful.
+	 * @return string|false
 	 */
 	public static function getURL(string $page, int $timeout = 10, array $extraHeaders = [], &$err = null, &$headers = null, &$httpCode = null){
 		return Internet::getURL($page, $timeout, $extraHeaders, $err, $headers, $httpCode);
@@ -461,15 +416,16 @@ class Utils{
 	 * @deprecated
 	 * @see Internet::postURL()
 	 *
-	 * @param string       $page
-	 * @param array|string $args
-	 * @param int          $timeout
-	 * @param array        $extraHeaders
-	 * @param string       &$err Will be set to the output of curl_error(). Use this to retrieve errors that occured during the operation.
-	 * @param array[]      &$headers
-	 * @param int          &$httpCode
+	 * @param string[]|string $args
+	 * @param string[]        $extraHeaders
+	 * @param string          $err reference parameter, will be set to the output of curl_error(). Use this to retrieve errors that occured during the operation.
+	 * @param string[]        $headers reference parameter
+	 * @param int             $httpCode reference parameter
+	 * @phpstan-param string|array<string, string> $args
+	 * @phpstan-param list<string>                 $extraHeaders
+	 * @phpstan-param array<string, string>        $headers
 	 *
-	 * @return bool|mixed false if an error occurred, mixed data if successful.
+	 * @return string|false
 	 */
 	public static function postURL(string $page, $args, int $timeout = 10, array $extraHeaders = [], &$err = null, &$headers = null, &$httpCode = null){
 		return Internet::postURL($page, $args, $timeout, $extraHeaders, $err, $headers, $httpCode);
@@ -479,13 +435,16 @@ class Utils{
 	 * @deprecated
 	 * @see Internet::simpleCurl()
 	 *
-	 * @param string        $page
 	 * @param float|int     $timeout      The maximum connect timeout and timeout in seconds, correct to ms.
 	 * @param string[]      $extraHeaders extra headers to send as a plain string array
 	 * @param array         $extraOpts    extra CURLOPT_* to set as an [opt => value] map
 	 * @param callable|null $onSuccess    function to be called if there is no error. Accepts a resource argument as the cURL handle.
+	 * @phpstan-param array<int, mixed>                $extraOpts
+	 * @phpstan-param list<string>                     $extraHeaders
+	 * @phpstan-param (callable(resource) : void)|null $onSuccess
 	 *
-	 * @return array a plain array of three [result body : string, headers : array[], HTTP response code : int]. Headers are grouped by requests with strtolower(header name) as keys and header value as values
+	 * @return array a plain array of three [result body : string, headers : string[][], HTTP response code : int]. Headers are grouped by requests with strtolower(header name) as keys and header value as values
+	 * @phpstan-return array{string, list<array<string, string>>, int}
 	 *
 	 * @throws \RuntimeException if a cURL error occurs
 	 */
@@ -497,7 +456,7 @@ class Utils{
 		$hash = 0;
 		for($i = 0, $len = strlen($string); $i < $len; $i++){
 			$ord = ord($string[$i]);
-			if($ord & 0x80){
+			if(($ord & 0x80) !== 0){
 				$ord -= 0x100;
 			}
 			$hash = 31 * $hash + $ord;
@@ -512,73 +471,60 @@ class Utils{
 		return $hash;
 	}
 
-
 	/**
+	 * @deprecated
+	 * @see Process::execute()
+	 *
 	 * @param string      $command Command to execute
-	 * @param string|null &$stdout Reference parameter to write stdout to
-	 * @param string|null &$stderr Reference parameter to write stderr to
+	 * @param string|null $stdout Reference parameter to write stdout to
+	 * @param string|null $stderr Reference parameter to write stderr to
 	 *
 	 * @return int process exit code
 	 */
 	public static function execute(string $command, string &$stdout = null, string &$stderr = null) : int{
-		$process = proc_open($command, [
-			["pipe", "r"],
-			["pipe", "w"],
-			["pipe", "w"]
-		], $pipes);
-
-		if($process === false){
-			$stderr = "Failed to open process";
-			$stdout = "";
-
-			return -1;
-		}
-
-		$stdout = stream_get_contents($pipes[1]);
-		$stderr = stream_get_contents($pipes[2]);
-
-		foreach($pipes as $p){
-			fclose($p);
-		}
-
-		return proc_close($process);
+		return Process::execute($command, $stdout, $stderr);
 	}
 
+	/**
+	 * @return mixed[]
+	 * @phpstan-return array<string, mixed>
+	 */
 	public static function decodeJWT(string $token) : array{
-		list($headB64, $payloadB64, $sigB64) = explode(".", $token);
+		[$headB64, $payloadB64, $sigB64] = explode(".", $token);
 
-		return json_decode(base64_decode(strtr($payloadB64, '-_', '+/'), true), true);
+		$rawPayloadJSON = base64_decode(strtr($payloadB64, '-_', '+/'), true);
+		if($rawPayloadJSON === false){
+			throw new \InvalidArgumentException("Payload base64 is invalid and cannot be decoded");
+		}
+		$decodedPayload = json_decode($rawPayloadJSON, true);
+		if(!is_array($decodedPayload)){
+			throw new \InvalidArgumentException("Decoded payload should be array, " . gettype($decodedPayload) . " received");
+		}
+
+		return $decodedPayload;
 	}
 
+	/**
+	 * @deprecated
+	 * @see Process::kill()
+	 *
+	 * @param int $pid
+	 */
 	public static function kill($pid) : void{
-		if(MainLogger::isRegisteredStatic()){
-			MainLogger::getLogger()->syncFlushBuffer();
-		}
-		switch(Utils::getOS()){
-			case "win":
-				exec("taskkill.exe /F /PID " . ((int) $pid) . " > NUL");
-				break;
-			case "mac":
-			case "linux":
-			default:
-				if(function_exists("posix_kill")){
-					posix_kill($pid, 9); //SIGKILL
-				}else{
-					exec("kill -9 " . ((int) $pid) . " > /dev/null 2>&1");
-				}
-		}
+		Process::kill($pid);
 	}
 
 	/**
 	 * @param object $value
-	 * @param bool   $includeCurrent
 	 *
 	 * @return int
 	 */
 	public static function getReferenceCount($value, bool $includeCurrent = true){
 		ob_start();
 		debug_zval_dump($value);
-		$ret = explode("\n", ob_get_contents());
+		$contents = ob_get_contents();
+		if($contents === false) throw new AssumptionFailedError("ob_get_contents() should never return false here");
+		$ret = explode("\n", $contents);
 		ob_end_clean();
 
 		if(count($ret) >= 1 and preg_match('/^.* refcount\\(([0-9]+)\\)\\{$/', trim($ret[0]), $m) > 0){
@@ -588,10 +534,10 @@ class Utils{
 	}
 
 	/**
-	 * @param array $trace
-	 * @param int   $maxStringLength
+	 * @param mixed[][] $trace
+	 * @phpstan-param list<array<string, mixed>> $trace
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public static function printableTrace(array $trace, int $maxStringLength = 80) : array{
 		$messages = [];
@@ -604,7 +550,7 @@ class Utils{
 					$args = $trace[$i]["params"];
 				}
 
-				$params = implode(", ", array_map(function($value) use($maxStringLength){
+				$params = implode(", ", array_map(function($value) use($maxStringLength) : string{
 					if(is_object($value)){
 						return "object " . self::getNiceClassName($value);
 					}
@@ -623,9 +569,8 @@ class Utils{
 	}
 
 	/**
-	 * @param int $skipFrames
-	 *
-	 * @return array
+	 * @return mixed[][]
+	 * @phpstan-return list<array<string, mixed>>
 	 */
 	public static function currentTrace(int $skipFrames = 0) : array{
 		++$skipFrames; //omit this frame from trace, in addition to other skipped frames
@@ -642,16 +587,19 @@ class Utils{
 	}
 
 	/**
-	 * @param int $skipFrames
-	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public static function printableCurrentTrace(int $skipFrames = 0) : array{
 		return self::printableTrace(self::currentTrace(++$skipFrames));
 	}
 
+	/**
+	 * @param string $path
+	 *
+	 * @return string
+	 */
 	public static function cleanPath($path){
-		$result = str_replace(["\\", ".php", "phar://"], ["/", "", ""], $path);
+		$result = str_replace([DIRECTORY_SEPARATOR, ".php", "phar://"], ["/", "", ""], $path);
 
 		//remove relative paths
 		//TODO: make these paths dynamic so they can be unit-tested against
@@ -660,7 +608,7 @@ class Utils{
 			\pocketmine\PATH => ""
 		];
 		foreach($cleanPaths as $cleanPath => $replacement){
-			$cleanPath = rtrim(str_replace(["\\", "phar://"], ["/", ""], $cleanPath), "/");
+			$cleanPath = rtrim(str_replace([DIRECTORY_SEPARATOR, "phar://"], ["/", ""], $cleanPath), "/");
 			if(strpos($result, $cleanPath) === 0){
 				$result = ltrim(str_replace($cleanPath, $replacement, $result), "/");
 			}
@@ -671,33 +619,35 @@ class Utils{
 	/**
 	 * Extracts one-line tags from the doc-comment
 	 *
-	 * @param string $docComment
-	 *
 	 * @return string[] an array of tagName => tag value. If the tag has no value, an empty string is used as the value.
 	 */
 	public static function parseDocComment(string $docComment) : array{
-		preg_match_all('/(*ANYCRLF)^[\t ]*\* @([a-zA-Z]+)(?:[\t ]+(.+))?[\t ]*$/m', $docComment, $matches);
+		$rawDocComment = substr($docComment, 3, -2); //remove the opening and closing markers
+		if($rawDocComment === false){ //usually empty doc comment, but this is safer and statically analysable
+			return [];
+		}
+		preg_match_all('/(*ANYCRLF)^[\t ]*(?:\* )?@([a-zA-Z]+)(?:[\t ]+(.+?))?[\t ]*$/m', $rawDocComment, $matches);
 
-		return array_combine($matches[1], $matches[2]);
+		$result = array_combine($matches[1], $matches[2]);
+		if($result === false) throw new AssumptionFailedError("array_combine() doesn't return false with two equal-sized arrays");
+		return $result;
 	}
 
 	/**
-	 * @param int    $severity
-	 * @param string $message
-	 * @param string $file
-	 * @param int    $line
-	 *
-	 * @return bool
 	 * @throws \ErrorException
 	 */
 	public static function errorExceptionHandler(int $severity, string $message, string $file, int $line) : bool{
-		if(error_reporting() & $severity){
+		if((error_reporting() & $severity) !== 0){
 			throw new \ErrorException($message, 0, $severity, $file, $line);
 		}
 
 		return true; //stfu operator
 	}
 
+	/**
+	 * @phpstan-param class-string $className
+	 * @phpstan-param class-string $baseName
+	 */
 	public static function testValidInstance(string $className, string $baseName) : void{
 		try{
 			$base = new \ReflectionClass($baseName);
@@ -732,6 +682,40 @@ class Utils{
 	public static function validateCallableSignature(callable $signature, callable $subject) : void{
 		if(!($sigType = CallbackType::createFromCallable($signature))->isSatisfiedBy($subject)){
 			throw new \TypeError("Declaration of callable `" . CallbackType::createFromCallable($subject) . "` must be compatible with `" . $sigType . "`");
+		}
+	}
+
+	/**
+	 * @phpstan-template TMemberType
+	 * @phpstan-param array<mixed, TMemberType> $array
+	 * @phpstan-param \Closure(TMemberType) : void $validator
+	 */
+	public static function validateArrayValueType(array $array, \Closure $validator) : void{
+		foreach($array as $k => $v){
+			try{
+				$validator($v);
+			}catch(\TypeError $e){
+				throw new \TypeError("Incorrect type of element at \"$k\": " . $e->getMessage(), 0, $e);
+			}
+		}
+	}
+
+	public static function recursiveUnlink(string $dir) : void{
+		if(is_dir($dir)){
+			$objects = scandir($dir, SCANDIR_SORT_NONE);
+			if($objects === false) throw new AssumptionFailedError("scandir() shouldn't return false when is_dir() returns true");
+			foreach($objects as $object){
+				if($object !== "." and $object !== ".."){
+					if(is_dir($dir . "/" . $object)){
+						self::recursiveUnlink($dir . "/" . $object);
+					}else{
+						unlink($dir . "/" . $object);
+					}
+				}
+			}
+			rmdir($dir);
+		}elseif(is_file($dir)){
+			unlink($dir);
 		}
 	}
 }

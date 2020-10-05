@@ -26,10 +26,10 @@ namespace pocketmine\event\entity;
 use pocketmine\entity\projectile\Projectile;
 use pocketmine\event\Cancellable;
 
+/**
+ * @phpstan-extends EntityEvent<Projectile>
+ */
 class ProjectileLaunchEvent extends EntityEvent implements Cancellable{
-	/**
-	 * @param Projectile $entity
-	 */
 	public function __construct(Projectile $entity){
 		$this->entity = $entity;
 

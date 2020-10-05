@@ -35,34 +35,24 @@ class RegionLocationTableEntry{
 	private $timestamp;
 
 	/**
-	 * @param int $firstSector
-	 * @param int $sectorCount
-	 * @param int $timestamp
-	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct(int $firstSector, int $sectorCount, int $timestamp){
-		if($firstSector < 0){
+		if($firstSector < 0 or $firstSector >= 2 ** 24){
 			throw new \InvalidArgumentException("Start sector must be positive, got $firstSector");
 		}
 		$this->firstSector = $firstSector;
-		if($sectorCount < 0 or $sectorCount > 255){
-			throw new \InvalidArgumentException("Sector count must be in range 0...255, got $sectorCount");
+		if($sectorCount < 1){
+			throw new \InvalidArgumentException("Sector count must be positive, got $sectorCount");
 		}
 		$this->sectorCount = $sectorCount;
 		$this->timestamp = $timestamp;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getFirstSector() : int{
 		return $this->firstSector;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getLastSector() : int{
 		return $this->firstSector + $this->sectorCount - 1;
 	}
@@ -75,24 +65,24 @@ class RegionLocationTableEntry{
 		return range($this->getFirstSector(), $this->getLastSector());
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getSectorCount() : int{
 		return $this->sectorCount;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getTimestamp() : int{
 		return $this->timestamp;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isNull() : bool{
-		return $this->firstSector === 0 or $this->sectorCount === 0;
+	public function overlaps(RegionLocationTableEntry $other) : bool{
+		$overlapCheck = static function(RegionLocationTableEntry $entry1, RegionLocationTableEntry $entry2) : bool{
+			$entry1Last = $entry1->getLastSector();
+			$entry2Last = $entry2->getLastSector();
+
+			return (
+				($entry2->firstSector >= $entry1->firstSector and $entry2->firstSector <= $entry1Last) or
+				($entry2Last >= $entry1->firstSector and $entry2Last <= $entry1Last)
+			);
+		};
+		return $overlapCheck($this, $other) or $overlapCheck($other, $this);
 	}
 }

@@ -19,9 +19,20 @@
  *
 */
 
+declare(strict_types=1);
+
 namespace pocketmine;
 
+use function defined;
+
+// composer autoload doesn't use require_once and also pthreads can inherit things
+// TODO: drop this file and use a final class with constants
+if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
+	return;
+}
+const _VERSION_INFO_INCLUDED = true;
+
 const NAME = "UNWDS";
-const BASE_VERSION = "2.0.0.0";
+const BASE_VERSION = "2.0.0";
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 2000;
+const BUILD_NUMBER = 0003;

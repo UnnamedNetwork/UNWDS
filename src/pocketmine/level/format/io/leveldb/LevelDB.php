@@ -26,6 +26,7 @@ namespace pocketmine\level\format\io\leveldb;
 use pocketmine\level\format\Chunk;
 use pocketmine\level\format\io\BaseLevelProvider;
 use pocketmine\level\format\io\ChunkUtils;
+use pocketmine\level\format\io\exception\CorruptedChunkException;
 use pocketmine\level\format\io\exception\UnsupportedChunkFormatException;
 use pocketmine\level\format\SubChunk;
 use pocketmine\level\generator\Flat;
@@ -33,12 +34,18 @@ use pocketmine\level\generator\GeneratorManager;
 use pocketmine\level\Level;
 use pocketmine\level\LevelException;
 use pocketmine\nbt\LittleEndianNBTStream;
-use pocketmine\nbt\tag\{ByteTag, CompoundTag, FloatTag, IntTag, LongTag, StringTag};
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\LongTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\utils\Binary;
 use pocketmine\utils\BinaryStream;
 use function array_values;
 use function chr;
+use function count;
 use function defined;
 use function explode;
 use function extension_loaded;
@@ -95,7 +102,7 @@ class LevelDB extends BaseLevelProvider{
 	/** @var \LevelDB */
 	protected $db;
 
-	private static function checkForLevelDBExtension(){
+	private static function checkForLevelDBExtension() : void{
 		if(!extension_loaded('leveldb')){
 			throw new LevelException("The leveldb PHP extension is required to use this world format");
 		}
@@ -119,8 +126,16 @@ class LevelDB extends BaseLevelProvider{
 	}
 
 	protected function loadLevelData() : void{
+		$rawLevelData = file_get_contents($this->getPath() . "level.dat");
+		if($rawLevelData === false or strlen($rawLevelData) <= 8){
+			throw new LevelException("Truncated level.dat");
+		}
 		$nbt = new LittleEndianNBTStream();
-		$levelData = $nbt->read(substr(file_get_contents($this->getPath() . "level.dat"), 8));
+		try{
+			$levelData = $nbt->read(substr($rawLevelData, 8));
+		}catch(\UnexpectedValueException $e){
+			throw new LevelException("Invalid level.dat (" . $e->getMessage() . ")", 0, $e);
+		}
 		if($levelData instanceof CompoundTag){
 			$this->levelData = $levelData;
 		}else{
@@ -239,8 +254,7 @@ class LevelDB extends BaseLevelProvider{
 
 		$nbt = new LittleEndianNBTStream();
 		$buffer = $nbt->write($levelData);
-		file_put_contents($path . "level.dat", Binary::writeLInt(self::CURRENT_STORAGE_VERSION) . Binary::writeLInt(strlen($buffer)) . $buffer);
-
+		file_put_contents($path . "level.dat", (\pack("V", self::CURRENT_STORAGE_VERSION)) . (\pack("V", strlen($buffer))) . $buffer);
 
 		$db = self::createDB($path);
 
@@ -266,7 +280,7 @@ class LevelDB extends BaseLevelProvider{
 
 		$nbt = new LittleEndianNBTStream();
 		$buffer = $nbt->write($this->levelData);
-		file_put_contents($this->getPath() . "level.dat", Binary::writeLInt(self::CURRENT_STORAGE_VERSION) . Binary::writeLInt(strlen($buffer)) . $buffer);
+		file_put_contents($this->getPath() . "level.dat", (\pack("V", self::CURRENT_STORAGE_VERSION)) . (\pack("V", strlen($buffer))) . $buffer);
 	}
 
 	public function getGenerator() : string{
@@ -286,16 +300,13 @@ class LevelDB extends BaseLevelProvider{
 	}
 
 	/**
-	 * @param int $chunkX
-	 * @param int $chunkZ
-	 *
-	 * @return Chunk|null
 	 * @throws UnsupportedChunkFormatException
 	 */
 	protected function readChunk(int $chunkX, int $chunkZ) : ?Chunk{
 		$index = LevelDB::chunkIndex($chunkX, $chunkZ);
 
-		if(!$this->chunkExists($chunkX, $chunkZ)){
+		$chunkVersionRaw = $this->db->get($index . self::TAG_VERSION);
+		if($chunkVersionRaw === false){
 			return null;
 		}
 
@@ -310,7 +321,7 @@ class LevelDB extends BaseLevelProvider{
 		/** @var bool $lightPopulated */
 		$lightPopulated = true;
 
-		$chunkVersion = ord($this->db->get($index . self::TAG_VERSION));
+		$chunkVersion = ord($chunkVersionRaw);
 		$hasBeenUpgraded = $chunkVersion < self::CURRENT_LEVEL_CHUNK_VERSION;
 
 		$binaryStream = new BinaryStream();
@@ -362,7 +373,11 @@ class LevelDB extends BaseLevelProvider{
 				}
 				break;
 			case 2: // < MCPE 1.0
-				$binaryStream->setBuffer($this->db->get($index . self::TAG_LEGACY_TERRAIN));
+				$legacyTerrain = $this->db->get($index . self::TAG_LEGACY_TERRAIN);
+				if($legacyTerrain === false){
+					throw new CorruptedChunkException("Expected to find a LEGACY_TERRAIN key for this chunk version, but none found");
+				}
+				$binaryStream->setBuffer($legacyTerrain);
 				$fullIds = $binaryStream->get(32768);
 				$fullData = $binaryStream->get(16384);
 				$fullSkyLight = $binaryStream->get(16384);
@@ -409,24 +424,27 @@ class LevelDB extends BaseLevelProvider{
 		/** @var CompoundTag[] $entities */
 		$entities = [];
 		if(($entityData = $this->db->get($index . self::TAG_ENTITY)) !== false and $entityData !== ""){
-			$entities = $nbt->read($entityData, true);
-			if(!is_array($entities)){
-				$entities = [$entities];
+			$entityTags = $nbt->read($entityData, true);
+			foreach((is_array($entityTags) ? $entityTags : [$entityTags]) as $entityTag){
+				if(!($entityTag instanceof CompoundTag)){
+					throw new CorruptedChunkException("Entity root tag should be TAG_Compound");
+				}
+				if($entityTag->hasTag("id", IntTag::class)){
+					$entityTag->setInt("id", $entityTag->getInt("id") & 0xff); //remove type flags - TODO: use these instead of removing them)
+				}
+				$entities[] = $entityTag;
 			}
 		}
 
-		/** @var CompoundTag $entityNBT */
-		foreach($entities as $entityNBT){
-			if($entityNBT->hasTag("id", IntTag::class)){
-				$entityNBT->setInt("id", $entityNBT->getInt("id") & 0xff); //remove type flags - TODO: use these instead of removing them)
-			}
-		}
-
+		/** @var CompoundTag[] $tiles */
 		$tiles = [];
 		if(($tileData = $this->db->get($index . self::TAG_BLOCK_ENTITY)) !== false and $tileData !== ""){
-			$tiles = $nbt->read($tileData, true);
-			if(!is_array($tiles)){
-				$tiles = [$tiles];
+			$tileTags = $nbt->read($tileData, true);
+			foreach((is_array($tileTags) ? $tileTags : [$tileTags]) as $tileTag){
+				if(!($tileTag instanceof CompoundTag)){
+					throw new CorruptedChunkException("Tile root tag should be TAG_Compound");
+				}
+				$tiles[] = $tileTag;
 			}
 		}
 
@@ -507,10 +525,9 @@ class LevelDB extends BaseLevelProvider{
 
 	/**
 	 * @param CompoundTag[] $targets
-	 * @param string        $index
 	 */
-	private function writeTags(array $targets, string $index){
-		if(!empty($targets)){
+	private function writeTags(array $targets, string $index) : void{
+		if(count($targets) > 0){
 			$nbt = new LittleEndianNBTStream();
 			$this->db->put($index, $nbt->write($targets));
 		}else{
@@ -518,15 +535,12 @@ class LevelDB extends BaseLevelProvider{
 		}
 	}
 
-	/**
-	 * @return \LevelDB
-	 */
 	public function getDatabase() : \LevelDB{
 		return $this->db;
 	}
 
 	public static function chunkIndex(int $chunkX, int $chunkZ) : string{
-		return Binary::writeLInt($chunkX) . Binary::writeLInt($chunkZ);
+		return (\pack("V", $chunkX)) . (\pack("V", $chunkZ));
 	}
 
 	private function chunkExists(int $chunkX, int $chunkZ) : bool{

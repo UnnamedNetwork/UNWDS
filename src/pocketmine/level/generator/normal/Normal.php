@@ -55,11 +55,14 @@ class Normal extends Generator{
 	/** @var BiomeSelector */
 	private $selector;
 
+	/** @var float[][]|null */
 	private static $GAUSSIAN_KERNEL = null;
+	/** @var int */
 	private static $SMOOTH_SIZE = 2;
 
 	/**
-	 * @param array $options
+	 * @param mixed[] $options
+	 * @phpstan-param array<string, mixed> $options
 	 *
 	 * @throws InvalidGeneratorOptionsException
 	 */
@@ -200,7 +203,7 @@ class Normal extends Generator{
 						if($sx === 0 and $sz === 0){
 							$adjacent = $biome;
 						}else{
-							$index = Level::chunkHash($chunkX * 16 + $x + $sx, $chunkZ * 16 + $z + $sz);
+							$index = ((($chunkX * 16 + $x + $sx) & 0xFFFFFFFF) << 32) | (( $chunkZ * 16 + $z + $sz) & 0xFFFFFFFF);
 							if(isset($biomeCache[$index])){
 								$adjacent = $biomeCache[$index];
 							}else{
