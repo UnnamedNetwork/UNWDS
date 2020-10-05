@@ -12,8 +12,7 @@ None
 + I dunno, it worked correctly in my server	
 + If you want a bug report, translate report,etc please open issues in this repo :) Thank you	
 
-## Contribution:	
-+ You can contribute/donate for this project by enable Vixik messages for your server.	
+## Contribution:
 + You MUST submit a bug with an console logs, system information. Your console logs and system infomation play a big role in our inprovement this project	
 
 # (c) Remake with <3 by CuongZ
