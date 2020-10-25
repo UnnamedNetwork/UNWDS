@@ -1,6 +1,6 @@
 # UNWDelicatedSoftware (UNWDS)	
 
-A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of [pmmp](https://github.com/pmmp/PocketMine-MP).
+A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of [PocketMine-MP](https://github.com/pmmp/PocketMine-MP).
 
 # About plugins:	
 Most of PMMP can used with UNWDS, but few plugin is included Spoon, that will auto-disable load plugin after checked that the server image is 3rd build, not by PMMP.	
