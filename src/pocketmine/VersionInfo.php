@@ -36,3 +36,10 @@ const NAME = "UNWDS";
 const BASE_VERSION = "2.0.0";
 const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0006;
+const BUILD_NUMBER = 0011;
+const CODENAME = "Reborn";
+
+// these should just appear here... just giving some info for debugging in our special plugin after build into phar file.
+const DEV_BUILDVENDOR = "UNWDS DevTools v1.2";
+const DEV_BUILDINFO = "dtcu0ng@01.11.2020";
+
