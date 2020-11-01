@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine;
 
-use PackageVersions\Versions;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLoadOrder;

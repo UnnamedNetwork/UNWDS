@@ -33,14 +33,14 @@ use function implode;
 use function stripos;
 use function strtolower;
 
-class VersionCommand extends VanillaCommand{
+class BuildInfoCommand extends VanillaCommand{
 
 	public function __construct(string $name){
 		parent::__construct(
 			$name,
-			"%pocketmine.command.version.description",
-			"%pocketmine.command.version.usage",
-			["ver", "about"]
+			"%pocketmine.command.buildinfo.description",
+			"%pocketmine.command.buildinfo.usage",
+			["buildinfo"]
 		);
 		$this->setPermission("pocketmine.command.version");
 	}
@@ -51,7 +51,7 @@ class VersionCommand extends VanillaCommand{
 		}
 
 		if(count($args) === 0){
-			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended", [
+			$sender->sendMessage(new TranslationContainer("pocketmine.server.buildinfo.extended", [
 				$sender->getServer()->getName(),
 				$sender->getServer()->getCodename(),
 				$sender->getServer()->getPocketMineVersion(),

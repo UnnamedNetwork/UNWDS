@@ -35,11 +35,10 @@ const _VERSION_INFO_INCLUDED = true;
 const NAME = "UNWDS";
 const BASE_VERSION = "2.0.2";
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0007;
-
-// codename will be used in future release.
+const BUILD_NUMBER = 0011;
 const CODENAME = "Reborn";
 
-// just for giving more info and recognise this build are build by DevTools or pmmp Build script, this just appear here.
-const BUILD_BY = "UNWDS DevTools v1";
-const BUILD_INFO = "dtcu0ng@25.10.2020";
+// these should just appear here... just giving some info for debugging in our special plugin after build into phar file.
+const DEV_BUILDVENDOR = "UNWDS DevTools v1.2";
+const DEV_BUILDINFO = "dtcu0ng@01.11.2020";
+

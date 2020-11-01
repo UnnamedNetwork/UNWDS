@@ -358,7 +358,7 @@ class Server{
 		return \pocketmine\VERSION;
 	}
 
-	public function getUNWDScodename() : string{
+	public function getCodename() : string{
 		return \pocketmine\CODENAME;
 	}
 
