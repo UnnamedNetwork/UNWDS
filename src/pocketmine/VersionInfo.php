@@ -35,10 +35,10 @@ const _VERSION_INFO_INCLUDED = true;
 const NAME = "UNWDS";
 const BASE_VERSION = "2.0.2";
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0011;
+const BUILD_NUMBER = 0012;
 const CODENAME = "Reborn";
 
 // these should just appear here... just giving some info for debugging in our special plugin after build into phar file.
-const DEV_BUILDVENDOR = "UNWDS DevTools v1.2";
-const DEV_BUILDINFO = "dtcu0ng@01.11.2020";
+const DEV_BUILDVENDOR = "PocketMine-MP Build Script";
+const DEV_BUILDINFO = "dtcu0ng@05.11.2020";
 
