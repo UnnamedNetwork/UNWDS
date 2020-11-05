@@ -53,6 +53,10 @@ class VersionCommand extends VanillaCommand{
 		if(count($args) === 0){
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended", [
 				$sender->getServer()->getName(),
+<<<<<<< Updated upstream
+=======
+				$sender->getServer()->getCodename(),
+>>>>>>> Stashed changes
 				$sender->getServer()->getPocketMineVersion(),
 				$sender->getServer()->getVersion(),
 				ProtocolInfo::CURRENT_PROTOCOL

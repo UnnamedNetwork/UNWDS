@@ -369,10 +369,6 @@ class Server{
 	public function getApiVersion() : string{
 		return \pocketmine\BASE_VERSION;
 	}
-	
-	public function getCodename() : string{
-		return \pocketmine\CODENAME;
-	}
 
 	public function getFilePath() : string{
 		return \pocketmine\PATH;
