@@ -54,10 +54,12 @@ class VersionCommand extends VanillaCommand{
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended", [
 				$sender->getServer()->getName(),
 				$sender->getServer()->getCodename(),
-				$sender->getServer()->getPocketMineVersion(),
-				$sender->getServer()->getVersion(),
+				$sender->getServer()->getUNWDSVersion(),
+				$sender->getServer()->getAPIVersion(),
+				$sender->getServer()->getMinecraftVersion(),
 				ProtocolInfo::CURRENT_PROTOCOL
-			]));
+			]
+			));
 		}else{
 			$pluginName = implode(" ", $args);
 			$exactPlugin = $sender->getServer()->getPluginManager()->getPlugin($pluginName);

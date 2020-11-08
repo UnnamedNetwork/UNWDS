@@ -358,12 +358,20 @@ class Server{
 		return \pocketmine\VERSION;
 	}
 
+	public function getMinecraftVersion() : string{
+		return \pocketmine\SUPPORTED_CLIENT_VERSION;
+	}
+
 	public function getCodename() : string{
 		return \pocketmine\CODENAME;
 	}
 
 	public function getVersion() : string{
 		return ProtocolInfo::MINECRAFT_VERSION;
+	}
+
+	public function getUNWDSVersion() : string{
+		return \pocketmine\UNWDS_VERSION;
 	}
 
 	public function getApiVersion() : string{

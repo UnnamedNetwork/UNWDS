@@ -191,7 +191,7 @@ namespace pocketmine {
 
 		set_error_handler([Utils::class, 'errorExceptionHandler']);
 
-		$version = new VersionString(\pocketmine\BASE_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
+		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION, \pocketmine\CODENAME);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
 		$gitHash = str_repeat("00", 20);

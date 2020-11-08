@@ -33,12 +33,14 @@ if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 const _VERSION_INFO_INCLUDED = true;
 
 const NAME = "UNWDS";
-const BASE_VERSION = "2.0.2";
+const BASE_VERSION = "3.15.3";
+const UNWDS_VERSION = "2.0.2";
+const SUPPORTED_CLIENT_VERSION = "1.16.20";
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0012;
+const BUILD_NUMBER = 0017;
 const CODENAME = "Reborn";
 
 // these should just appear here... just giving some info for debugging in our special plugin after build into phar file.
 const DEV_BUILDVENDOR = "PocketMine-MP Build Script";
-const DEV_BUILDINFO = "dtcu0ng@05.11.2020";
+const DEV_BUILDINFO = "dtcu0ng@08.11.2020";
 

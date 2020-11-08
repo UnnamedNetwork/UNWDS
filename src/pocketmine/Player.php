@@ -4118,7 +4118,8 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 	}
 
 	public function onChunkChanged(Chunk $chunk){
-		if(isset($this->usedChunks[$hash = ((($chunk->getX()) & 0xFFFFFFFF) << 32) | (( $chunk->getZ()) & 0xFFFFFFFF)])){
+		$hasSent = $this->usedChunks[$hash = Level::chunkHash($chunk->getX(), $chunk->getZ())] ?? false;
+		if($hasSent){
 			$this->usedChunks[$hash] = false;
 			$this->nextChunkOrderRun = 0;
 		}
