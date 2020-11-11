@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine\build\server_phar;
 
-use pocketmine\utils\Git;
 use function array_map;
 use function count;
 use function defined;
@@ -131,12 +130,6 @@ function main() : void{
 	}
 
 	$opts = getopt("", ["out:", "git:"]);
-	if(isset($opts["git"])){
-		$gitHash = $opts["git"];
-	}else{
-		$gitHash = Git::getRepositoryStatePretty(dirname(__DIR__));
-		echo "Git hash detected as $gitHash" . PHP_EOL;
-	}
 	foreach(buildPhar(
 		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
@@ -145,7 +138,6 @@ function main() : void{
 			'vendor'
 		],
 		[
-			'git' => $gitHash
 		],
 		<<<'STUB'
 <?php
