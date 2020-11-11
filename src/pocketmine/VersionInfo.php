@@ -34,9 +34,9 @@ const _VERSION_INFO_INCLUDED = true;
 
 const NAME = "UNWDS";
 const BASE_VERSION = "3.15.4";
-const UNWDS_VERSION = "2.0.3";
+const UNWDS_VERSION = "2.0.4";
 const SUPPORTED_CLIENT_VERSION = "1.16.20";
 const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 0022;
+const BUILD_NUMBER = 0023;
 const CODENAME = "Reborn";
 
