@@ -14,4 +14,6 @@ Some issue will be fixed at future version:
 + If you want a bug report, translate report,etc please open issues in this repo :) Thank you	
 
 ## Contribution:
-+ You MUST submit a bug with an console logs, system information, crashdumps,... Your console logs and system infomation play a big role in our inprovement this project	
++ Feel free to open the issues, PR, etc...
++ But you MUST submit a bug with an console logs, system information, crashdumps, how to reproduce it,... 
++ This play a big role in our inprovement this project	
