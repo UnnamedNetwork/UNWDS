@@ -5,16 +5,30 @@ REM You can edit everything you want on this script.
 
 
 set BUILD_SCRIPT=build\build.php
+:PHPE
 set PHP_BINARY=bin\php\php.exe
 if exist %PHP_BINARY% (
 echo PHP Binary found. Going to building progress.
+goto BUILD
 ) else (
-set PHP_BINARY=php
+goto PHPV
 )
+
+:PHPV
+set PHP_BINARY=php (
+echo PHP Binary found. Going to building progress.
+goto BUILD
+) else (
+echo PHP Binary not found. The progress can not continue.
+echo Press any key to exit
+)
+
+:BUILD
 if exist %BUILD_SCRIPT% (
 echo Build script found. Building server software...
 ) else (
-echo "Couldn't find build script..."
+echo "Couldn't find build script. The progress can not continue."
+echo Press any key to exit.
 pause
 exit 1
 )

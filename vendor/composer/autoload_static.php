@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
+class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
 {
     public static $files = array (
         '44f761fde233c98b53686bd6223104dd' => __DIR__ . '/../..' . '/src/pocketmine/CoreConstants.php',
@@ -23,10 +23,6 @@ class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
             'pocketmine\\snooze\\' => 18,
             'pocketmine\\nbt\\' => 15,
             'pocketmine\\math\\' => 16,
-        ),
-        'P' => 
-        array (
-            'PackageVersions\\' => 16,
         ),
         'D' => 
         array (
@@ -59,10 +55,6 @@ class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
         array (
             0 => __DIR__ . '/..' . '/pocketmine/math/src',
         ),
-        'PackageVersions\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions',
-        ),
         'DaveRandom\\CallbackValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/pocketmine/callback-validator/src',
@@ -86,6 +78,7 @@ class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
         'ClassCastException' => __DIR__ . '/..' . '/pocketmine/spl/src/ClassCastException.php',
         'ClassLoader' => __DIR__ . '/..' . '/pocketmine/classloader/src/ClassLoader.php',
         'ClassNotFoundException' => __DIR__ . '/..' . '/pocketmine/spl/src/ClassNotFoundException.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DaveRandom\\CallbackValidator\\BuiltInTypes' => __DIR__ . '/..' . '/pocketmine/callback-validator/src/BuiltInTypes.php',
         'DaveRandom\\CallbackValidator\\CallbackType' => __DIR__ . '/..' . '/pocketmine/callback-validator/src/CallbackType.php',
         'DaveRandom\\CallbackValidator\\InvalidCallbackException' => __DIR__ . '/..' . '/pocketmine/callback-validator/src/InvalidCallbackException.php',
@@ -99,9 +92,6 @@ class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
         'LogLevel' => __DIR__ . '/..' . '/pocketmine/log/src/LogLevel.php',
         'Logger' => __DIR__ . '/..' . '/pocketmine/log/src/Logger.php',
         'LoggerAttachment' => __DIR__ . '/..' . '/pocketmine/log/src/LoggerAttachment.php',
-        'PackageVersions\\FallbackVersions' => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions/FallbackVersions.php',
-        'PackageVersions\\Installer' => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions/Installer.php',
-        'PackageVersions\\Versions' => __DIR__ . '/..' . '/ocramius/package-versions/src/PackageVersions/Versions.php',
         'SplFixedByteArray' => __DIR__ . '/..' . '/pocketmine/spl/src/SplFixedByteArray.php',
         'StringOutOfBoundsException' => __DIR__ . '/..' . '/pocketmine/spl/src/StringOutOfBoundsException.php',
         'ThreadException' => __DIR__ . '/..' . '/pocketmine/spl/src/ThreadException.php',
@@ -1223,10 +1213,10 @@ class ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e::$fallbackDirsPsr4;
-            $loader->classMap = ComposerStaticInit8a8d8465560a37fb62e945fb1cbd2f0e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$fallbackDirsPsr4;
+            $loader->classMap = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$classMap;
 
         }, null, ClassLoader::class);
     }
