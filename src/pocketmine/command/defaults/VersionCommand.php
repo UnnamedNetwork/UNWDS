@@ -52,7 +52,7 @@ class VersionCommand extends VanillaCommand{
 
 		if(count($args) === 0){
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended", [
-				$sender->getServer()->getName(),
+				$sender->getServer()->getDistroName(),
 				$sender->getServer()->getCodename(),
 				$sender->getServer()->getUNWDSVersion(),
 				$sender->getServer()->getAPIVersion(),
@@ -60,7 +60,7 @@ class VersionCommand extends VanillaCommand{
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
-			$sender->sendMessage(TextFormat::WHITE . "Source: https://github.com/dtcu0ng/UNWDS ");
+			$sender->sendMessage(TextFormat::YELLOW . "Github: https://github.com/dtcu0ng/UNWDS");
 		}else{
 			$pluginName = implode(" ", $args);
 			$exactPlugin = $sender->getServer()->getPluginManager()->getPlugin($pluginName);

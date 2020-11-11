@@ -32,11 +32,12 @@ if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 }
 const _VERSION_INFO_INCLUDED = true;
 
-const NAME = "UNWDS";
+const NAME = "PocketMine-MP";
 const BASE_VERSION = "3.15.4";
+const DISTRO_NAME = "UNWDS";
 const UNWDS_VERSION = "2.0.4";
 const SUPPORTED_CLIENT_VERSION = "1.16.20";
-const IS_DEVELOPMENT_BUILD = false;
+const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0023;
 const CODENAME = "Reborn";
 

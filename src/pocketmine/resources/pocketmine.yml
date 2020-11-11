@@ -52,7 +52,7 @@ memory:
   garbage-collection:
     #Period in ticks to fire the garbage collector manually (default 30 minutes), set to 0 to disable
     #This only affects the main thread. Other threads should fire their own collections
-    period: 36000
+    period: 18000
 
     #Fire asynchronous tasks to collect garbage from workers
     collect-async-worker: true
@@ -117,10 +117,10 @@ chunk-sending:
 
 chunk-ticking:
   #Max amount of chunks processed each tick
-  per-tick: 40
+  per-tick: 30
   #Radius of chunks around a player to tick
   tick-radius: 3
-  light-updates: false
+  light-updates: true
   clear-tick-list: true
   #IDs of blocks not to perform random ticking on.
   disable-block-ticking:
@@ -128,10 +128,10 @@ chunk-ticking:
 
 chunk-generation:
   #Max. amount of chunks in the waiting queue to be populated
-  population-queue-size: 32
+  population-queue-size: 26
 
 ticks-per:
-  autosave: 6000
+  autosave: 3200
 
 timings:
   #Choose the host to use for viewing your timings results.

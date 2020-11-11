@@ -38,7 +38,8 @@ class SayCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.say.description",
-			"%commands.say.usage"
+			"%commands.say.usage",
+			["s"]
 		);
 		$this->setPermission("pocketmine.command.say");
 	}
@@ -52,7 +53,7 @@ class SayCommand extends VanillaCommand{
 			throw new InvalidCommandSyntaxException();
 		}
 
-		$sender->getServer()->broadcastMessage(new TranslationContainer(TextFormat::LIGHT_PURPLE . "%chat.type.announcement", [$sender instanceof Player ? $sender->getDisplayName() : ($sender instanceof ConsoleCommandSender ? "Server" : $sender->getName()), TextFormat::LIGHT_PURPLE . implode(" ", $args)]));
+		$sender->getServer()->broadcastMessage(new TranslationContainer(TextFormat::RED . "%chat.type.announcement", [$sender instanceof Player ? $sender->getDisplayName() : ($sender instanceof ConsoleCommandSender ? "Server" : $sender->getName()), TextFormat::WHITE . implode(" ", $args)]));
 		return true;
 	}
 }

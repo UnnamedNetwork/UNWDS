@@ -350,6 +350,10 @@ class Server{
 		return \pocketmine\NAME;
 	}
 
+	public function getDistroName() : string{
+		return \pocketmine\DISTRO_NAME;
+	}
+
 	public function isRunning() : bool{
 		return $this->isRunning;
 	}
@@ -1365,7 +1369,7 @@ class Server{
 			$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
 
 			if(\pocketmine\IS_DEVELOPMENT_BUILD and !((bool) $this->getProperty("settings.enable-dev-builds", false))){
-				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error1", [\pocketmine\NAME]));
+				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error1", [\pocketmine\DISTRO_NAME]));
 				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error2"));
 				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error3"));
 				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error4", ["settings.enable-dev-builds"]));
@@ -1476,7 +1480,7 @@ class Server{
 			}
 
 			if(\pocketmine\DEBUG >= 0){
-				@cli_set_process_title($this->getName() . " " . $this->getPocketMineVersion());
+				@cli_set_process_title($this->getDistroName() . " " . $this->getPocketMineVersion());
 			}
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.networkStart", [$this->getIp(), $this->getPort()]));
@@ -1490,10 +1494,10 @@ class Server{
 			$this->network->setName($this->getMotd());
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.info", [
-				$this->getName(),
+				$this->getDistroName(),
 				(\pocketmine\IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : "") . $this->getPocketMineVersion() . TextFormat::RESET
 			]));
-			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getName()]));
+			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getDistroName()]));
 
 			Timings::init();
 			TimingsHandler::setEnabled((bool) $this->getProperty("settings.enable-profiling", false));
@@ -2097,7 +2101,7 @@ class Server{
 					$postUrlError = "Unknown error";
 					$reply = Internet::postURL($url, [
 						"report" => "yes",
-						"name" => $this->getName() . " " . $this->getPocketMineVersion(),
+						"name" => $this->getDistroName() . " " . $this->getPocketMineVersion(),
 						"email" => "crash@dtcg.xyz",
 						"reportPaste" => base64_encode($dump->getEncodedData())
 					], 10, [], $postUrlError);
@@ -2337,7 +2341,7 @@ class Server{
 		$u = Process::getAdvancedMemoryUsage();
 		$usage = sprintf("%g/%g/%g/%g MB @ %d threads", round(($u[0] / 1024) / 1024, 2), round(($d[0] / 1024) / 1024, 2), round(($u[1] / 1024) / 1024, 2), round(($u[2] / 1024) / 1024, 2), Process::getThreadCount());
 
-		echo "\x1b]0;" . $this->getName() . " " .
+		echo "\x1b]0;" . $this->getDistroName() . " " .
 			$this->getPocketMineVersion() .
 			" | Online " . count($this->players) . "/" . $this->getMaxPlayers() .
 			" | Memory " . $usage .
