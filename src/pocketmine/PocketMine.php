@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine {
 
-	use pocketmine\utils\Git;
 	use pocketmine\utils\MainLogger;
 	use pocketmine\utils\Process;
 	use pocketmine\utils\ServerKiller;
@@ -194,19 +193,7 @@ namespace pocketmine {
 		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION, \pocketmine\CODENAME);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
-		$gitHash = str_repeat("00", 20);
 
-		if(\Phar::running(true) === ""){
-			$gitHash = Git::getRepositoryStatePretty(\pocketmine\PATH);
-		}else{
-			$phar = new \Phar(\Phar::running(false));
-			$meta = $phar->getMetadata();
-			if(isset($meta["git"])){
-				$gitHash = $meta["git"];
-			}
-		}
-
-		define('pocketmine\GIT_COMMIT', $gitHash);
 
 		$opts = getopt("", ["data:", "plugins:", "no-wizard", "enable-ansi", "disable-ansi"]);
 

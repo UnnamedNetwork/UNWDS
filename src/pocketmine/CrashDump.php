@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine;
 
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\PluginLoadOrder;
@@ -54,6 +54,7 @@ use function php_uname;
 use function phpinfo;
 use function phpversion;
 use function preg_replace;
+use function sprintf;
 use function str_split;
 use function strpos;
 use function substr;
@@ -124,7 +125,7 @@ class CrashDump{
 		$this->fp = $fp;
 		$this->data["format_version"] = self::FORMAT_VERSION;
 		$this->data["time"] = $this->time;
-		$this->addLine($this->server->getName() . " Crash Dump " . date("D M j H:i:s T Y", $this->time));
+		$this->addLine($this->server->getDistroName() . " Crash Dump " . date("D M j H:i:s T Y", $this->time));
 		$this->addLine();
 		$this->baseCrash();
 		$this->generalData();
@@ -338,8 +339,17 @@ class CrashDump{
 
 	private function generalData() : void{
 		$version = new VersionString(\pocketmine\BASE_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
+		$composerLibraries = [];
+		foreach(InstalledVersions::getInstalledPackages() as $package){
+			$composerLibraries[$package] = sprintf(
+				"%s@%s",
+				InstalledVersions::getPrettyVersion($package) ?? "unknown",
+				InstalledVersions::getReference($package) ?? "unknown"
+			);
+		}
+
 		$this->data["general"] = [];
-		$this->data["general"]["name"] = $this->server->getName();
+		$this->data["general"]["name"] = $this->server->getDistroName();
 		$this->data["general"]["base_version"] = \pocketmine\BASE_VERSION;
 		$this->data["general"]["build"] = \pocketmine\BUILD_NUMBER;
 		$this->data["general"]["is_dev"] = \pocketmine\IS_DEVELOPMENT_BUILD;
@@ -349,16 +359,13 @@ class CrashDump{
 		$this->data["general"]["zend"] = zend_version();
 		$this->data["general"]["php_os"] = PHP_OS;
 		$this->data["general"]["os"] = Utils::getOS();
-		$this->data["general"]["composer_libraries"] = Versions::VERSIONS;
-		$this->addLine($this->server->getName() . " version: " . $version->getFullVersion(true) . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
+		$this->data["general"]["composer_libraries"] = $composerLibraries;
+		$this->addLine($this->server->getDistroName() . " version: " . $this->server->getUNWDSVersion() . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
+		$this->addLine("Emulating: " . $this->server->getName() . " version: " . $this->server->getApiVersion());
 		$this->addLine("uname -a: " . php_uname("a"));
 		$this->addLine("PHP Version: " . phpversion());
 		$this->addLine("Zend version: " . zend_version());
 		$this->addLine("OS : " . PHP_OS . ", " . Utils::getOS());
-		$this->addLine("Composer libraries: ");
-		foreach(Versions::VERSIONS as $library => $libraryVersion){
-			$this->addLine("- $library $libraryVersion");
-		}
 	}
 
 	/**

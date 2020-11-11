@@ -60,7 +60,11 @@ class VersionCommand extends VanillaCommand{
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
-			$sender->sendMessage(TextFormat::YELLOW . "Github: https://github.com/dtcu0ng/UNWDS");
+			$sender->sendMessage(new TranslationContainer("pocketmine.mask.info", [
+				$sender->getServer()->getName(),
+				$sender->getServer()->getAPIVersion(),
+			]
+			));
 		}else{
 			$pluginName = implode(" ", $args);
 			$exactPlugin = $sender->getServer()->getPluginManager()->getPlugin($pluginName);

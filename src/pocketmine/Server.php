@@ -2091,11 +2091,6 @@ class Server{
 					$report = false;
 				}
 
-				if(strrpos(\pocketmine\GIT_COMMIT, "-dirty") !== false or \pocketmine\GIT_COMMIT === str_repeat("00", 20)){
-					$this->logger->debug("Not sending crashdump due to locally modified");
-					$report = false; //Don't send crashdumps for locally modified builds
-				}
-
 				if($report){
 					$url = ((bool) $this->getProperty("auto-report.use-https", true) ? "https" : "http") . "://" . $this->getProperty("auto-report.host", "swcrash.dtcg.xyz") . "/submit/api";
 					$postUrlError = "Unknown error";
