@@ -88,7 +88,6 @@ class LevelTimings{
 		$this->syncChunkLoadDataTimer = new TimingsHandler("** " . $name . "syncChunkLoad - Data");
 		$this->syncChunkLoadEntitiesTimer = new TimingsHandler("** " . $name . "syncChunkLoad - Entities");
 		$this->syncChunkLoadTileEntitiesTimer = new TimingsHandler("** " . $name . "syncChunkLoad - TileEntities");
-
 		$this->syncChunkSaveTimer = new TimingsHandler("** " . $name . "syncChunkSave", Timings::$worldSaveTimer);
 
 		$this->doTick = new TimingsHandler($name . "doTick");

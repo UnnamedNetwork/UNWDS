@@ -248,9 +248,10 @@ class InventoryTransaction{
 				$candidate = $action;
 				unset($newList[$i]);
 			}
-			if($candidate === null){
-				//chaining is not possible with this origin, none of the actions are valid
-				return null;
+		}
+		if($candidate === null){
+			//chaining is not possible with this origin, none of the actions are valid
+			return null;
 		}
 
 		if(count($newList) === 0){

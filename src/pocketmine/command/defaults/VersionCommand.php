@@ -60,6 +60,7 @@ class VersionCommand extends VanillaCommand{
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
+			$sender->sendMessage(TextFormat::WHITE . "Source: https://github.com/dtcu0ng/UNWDS ");
 		}else{
 			$pluginName = implode(" ", $args);
 			$exactPlugin = $sender->getServer()->getPluginManager()->getPlugin($pluginName);

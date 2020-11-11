@@ -72,11 +72,11 @@ final class RegionGarbageMap{
 			$prevEndPlusOne = ($prevEntry !== null ? $prevEntry->getLastSector() + 1 : RegionLoader::FIRST_SECTOR);
 			$currentStart = $entry->getFirstSector();
 			if($prevEndPlusOne < $currentStart){
-			//found a gap in the table
-			$garbageMap[$prevEndPlusOne] = new RegionLocationTableEntry($prevEndPlusOne, $currentStart - $prevEndPlusOne, 0);
-		}elseif($prevEndPlusOne > $currentStart){
-			//current entry starts inside the previous. This would be a bug since RegionLoader should prevent this
-			throw new AssumptionFailedError("Overlapping entries detected");
+				//found a gap in the table
+				$garbageMap[$prevEndPlusOne] = new RegionLocationTableEntry($prevEndPlusOne, $currentStart - $prevEndPlusOne, 0);
+			}elseif($prevEndPlusOne > $currentStart){
+				//current entry starts inside the previous. This would be a bug since RegionLoader should prevent this
+				throw new AssumptionFailedError("Overlapping entries detected");
 			}
 			$prevEntry = $entry;
 		}

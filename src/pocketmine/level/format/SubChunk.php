@@ -39,6 +39,7 @@ if(!defined(__NAMESPACE__ . '\ZERO_NIBBLE_ARRAY')){
 
 class SubChunk implements SubChunkInterface{
 	private const ZERO_NIBBLE_ARRAY = ZERO_NIBBLE_ARRAY;
+
 	/** @var string */
 	protected $ids;
 	/** @var string */
@@ -69,7 +70,7 @@ class SubChunk implements SubChunkInterface{
 			substr_count($this->ids, "\x00") === 4096 and
 			(!$checkLight or (
 				substr_count($this->skyLight, "\xff") === 2048 and
-                $this->blockLight === self::ZERO_NIBBLE_ARRAY
+				$this->blockLight === self::ZERO_NIBBLE_ARRAY
 			))
 		);
 	}
