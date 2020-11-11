@@ -1,4 +1,4 @@
-# UNWDelicatedSoftware (UNWDS)	
+# UNWDS (UNWDelicatedSoftware)	
 
 A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of [PocketMine-MP](https://github.com/pmmp/PocketMine-MP).
 
