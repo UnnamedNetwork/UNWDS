@@ -48,7 +48,7 @@ or
 
  ```sh
 
-bash: ./PocketMine-MP.phar: Permission denied
+bash: ./UNWDS.phar: Permission denied
 
 ```
 
