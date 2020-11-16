@@ -34,7 +34,7 @@ class StopCommand extends VanillaCommand{
 			$name,
 			"%pocketmine.command.stop.description",
 			"%commands.stop.usage",
-			["exit", "end"]
+			["shutdown", "end"]
 		);
 		$this->setPermission("pocketmine.command.stop");
 	}

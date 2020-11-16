@@ -137,7 +137,7 @@ namespace pocketmine {
 		}
 		if(\Phar::running(true) === ""){
 			$logger->warning("Non-packaged UNWDS installation detected. This will degrade autoloading speed and make startup times longer.");
-			$logger->warning("Download the stable pre-packaged version at: https://github.com/dtcu0ng/UNWDS/releases");
+			$logger->warning("Download the stable pre-packaged version at: https://github.com/UnnamedNetwork/UNWDS/releases");
 		
 		}
 	}

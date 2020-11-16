@@ -38,7 +38,7 @@ if exist PocketMine-MP.phar (
     echo =================================
 	echo You can get the lastest build of PocketMine-MP in https://github.com/pmmp/PocketMine-MP/releases
 	echo or
-	echo You can get the lastest build of UNWDS in https://github.com/dtcu0ng/UNWDS/releases
+	echo You can get the lastest build of UNWDS in https://github.com/dtcu0ng/UnnamedNetwork/releases
 	pause
 	exit
 )
