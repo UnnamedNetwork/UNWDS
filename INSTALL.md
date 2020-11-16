@@ -2,7 +2,7 @@
 This will follow the PocketMine-MP install guide.
 ## Windows:
 + Follow the instruction from PocketMine-MP [here](https://pmmp.readthedocs.io/en/rtfd/installation.html)
-+ Download ["start.sh"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
++ Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
 + Start the server!
 
 ## Linux/MacOS
@@ -35,4 +35,35 @@ Lastest Stable version: v2.0.3
 Lastest Alpha version: v2.0.4%2Bdev.19
 
 Replace these to command above to download the server software phar file
-+ Now, execute ./start.sh to run the server!
++ Now, type ./start.sh to run the server!
+
+## Fix Linux/MacOS permission issues
++ If you are facing with somethings like this:
+ ```sh
+
+bash: ./start.sh: Permission denied
+
+```
+or 
+
+ ```sh
+
+bash: ./PocketMine-MP.phar: Permission denied
+
+```
+
+try use these commands:
+
+ ```sh
+
+chmod +x ./start.sh
+
+```
+ ```sh
+
+chmod +x ./UNWDS.phar
+
+```
+
++ And run ./start.sh again!
+
