@@ -31,6 +31,8 @@ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_V
 
 ```
 Lastest Stable version: v2.0.3
+
 Lastest Alpha version: v2.0.4%2Bdev.19
+
 Replace these to command above to download the server software phar file
 + Now, execute ./start.sh to run the server!
