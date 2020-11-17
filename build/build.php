@@ -40,6 +40,7 @@ use function rtrim;
 use function sprintf;
 use function str_replace;
 use function unlink;
+use const PHP_EOL;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -128,7 +129,11 @@ function main() : void{
 		echo "Set phar.readonly to 0 with -dphar.readonly=0" . PHP_EOL;
 		exit(1);
 	}
-
+	if(file_exists(dirname(__DIR__) . '/vendor/phpunit')){
+		echo "Remove Composer dev dependencies before building (composer install --no-dev)" . PHP_EOL;
+		exit(1);
+	}
+	
 	$opts = getopt("", ["out:", "git:"]);
 	foreach(buildPhar(
 		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
