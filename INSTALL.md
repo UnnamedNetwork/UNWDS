@@ -30,7 +30,7 @@ $ wget https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.sh &&
 If you want to use Stable release, use this:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar && chmod +x ./UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar
 
 ```
 Lastest Stable version: v2.0.3
@@ -38,7 +38,7 @@ Lastest Stable version: v2.0.3
 If you want to use Alpha release, use this:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}%2Bdev.{BUILD_NUMBER}/UNWDS.phar && chmod +x ./UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}%2Bdev.{BUILD_NUMBER}/UNWDS.phar
 
 ```
 
