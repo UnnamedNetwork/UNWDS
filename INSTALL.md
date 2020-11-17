@@ -5,7 +5,24 @@ This will follow the PocketMine-MP install guide.
 + Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
 + Start the server!
 
-## Linux/MacOS
+## Linux/MacOS (use github.dtcg.xyz/UNWDS/installer.sh)
++ Create a directory which you want to install PocketMine-MP into, and cd into it.
++ Then use `curl` to install PocketMine-MP using the following command:
+```sh
+
+$ curl -sL https://github.dtcg.xyz/UNWDS/installer.sh | bash -s -
+
+```
+or, if you don’t have `curl`, try `wget`:
+```sh
+
+$ wget -q -O - https://github.dtcg.xyz/UNWDS/installer.sh | bash -s -
+
+
+```
++ Now, type ./start.sh to run the server!
+
+## Linux/MacOS (manually)
 + Follow the instruction from PocketMine-MP for Linux/MacOS [here](https://pmmp.readthedocs.io/en/rtfd/installation/get-dot-pmmp-dot-io.html)
 + After complete, delete the PocketMine-MP phar file and "start.sh" by:
 ```sh
