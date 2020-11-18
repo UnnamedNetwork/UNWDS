@@ -10,13 +10,13 @@ This will follow the PocketMine-MP install guide.
 + Then use `curl` to install PocketMine-MP using the following command:
 ```sh
 
-$ curl -sL https://github.dtcg.xyz/installer.sh | bash -s -
+$ curl -sL https://github.dtcg.xyz/UNWDS/scripts/installer.sh | bash -s -
 
 ```
 or, if you don’t have `curl`, try `wget`:
 ```sh
 
-$ wget -q -O - https://github.dtcg.xyz/installer.sh | bash -s -
+$ wget -q -O - https://github.dtcg.xyz/UNWDS/scripts/installer.sh | bash -s -
 
 ```
 + Now, type ./start.sh to run the server!
@@ -26,13 +26,13 @@ $ wget -q -O - https://github.dtcg.xyz/installer.sh | bash -s -
 + After complete, delete the PocketMine-MP phar file and "start.sh" by:
 ```sh
 
-$ rm -rf ./PocketMine-MP.phar
+$ rm PocketMine-MP.phar
 
 ```
 and
 ```sh
 
-$ rm -rf ./start.sh
+$ rm start.sh
 
 ```
 + Then, download the UNWDS phar file and startup file by:
