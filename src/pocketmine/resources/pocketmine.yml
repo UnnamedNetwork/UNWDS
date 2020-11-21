@@ -1,4 +1,4 @@
-# Main configuration file for UNWDS
+# Main configuration file for PocketMine-MP
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
@@ -52,7 +52,7 @@ memory:
   garbage-collection:
     #Period in ticks to fire the garbage collector manually (default 30 minutes), set to 0 to disable
     #This only affects the main thread. Other threads should fire their own collections
-    period: 18000
+    period: 36000
 
     #Fire asynchronous tasks to collect garbage from workers
     collect-async-worker: true
@@ -117,10 +117,10 @@ chunk-sending:
 
 chunk-ticking:
   #Max amount of chunks processed each tick
-  per-tick: 30
+  per-tick: 40
   #Radius of chunks around a player to tick
   tick-radius: 3
-  light-updates: true
+  light-updates: false
   clear-tick-list: true
   #IDs of blocks not to perform random ticking on.
   disable-block-ticking:
@@ -128,10 +128,35 @@ chunk-ticking:
 
 chunk-generation:
   #Max. amount of chunks in the waiting queue to be populated
-  population-queue-size: 26
+  population-queue-size: 32
 
 ticks-per:
-  autosave: 3200
+  autosave: 6000
+
+auto-report:
+  #Send crash reports for processing
+  enabled: true
+  send-code: true
+  send-settings: true
+  send-phpinfo: false
+  use-https: true
+  host: crash.pmmp.io
+
+anonymous-statistics:
+  #Sends anonymous statistics for data aggregation, plugin usage tracking
+  enabled: false #TODO: re-enable this when we have a new stats host
+  host: stats.pocketmine.net
+
+auto-updater:
+  enabled: true
+  on-update:
+    warn-console: true
+    warn-ops: true
+  #Can be development, alpha, beta or stable.
+  preferred-channel: stable
+  #If using a development version, it will suggest changing the channel
+  suggest-channels: true
+  host: update.pmmp.io
 
 timings:
   #Choose the host to use for viewing your timings results.

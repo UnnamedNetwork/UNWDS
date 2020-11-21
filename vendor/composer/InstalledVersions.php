@@ -14,12 +14,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.15.4',
-    'version' => '3.15.4.0',
+    'pretty_version' => '3.16.0',
+    'version' => '3.16.0.0',
     'aliases' => 
     array (
     ),
-    'reference' => 'e8b6b56330c8918b911ccc48e88a88b1e2cd201c',
+    'reference' => 'd2f68836c60fd9db1bab3e8e70bc817dda6664ea',
     'name' => 'pocketmine/pocketmine-mp',
   ),
   'versions' => 
@@ -105,12 +105,12 @@ private static $installed = array (
     ),
     'pocketmine/pocketmine-mp' => 
     array (
-      'pretty_version' => '3.15.4',
-      'version' => '3.15.4.0',
+      'pretty_version' => '3.16.0',
+      'version' => '3.16.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'e8b6b56330c8918b911ccc48e88a88b1e2cd201c',
+      'reference' => 'd2f68836c60fd9db1bab3e8e70bc817dda6664ea',
     ),
     'pocketmine/raklib' => 
     array (

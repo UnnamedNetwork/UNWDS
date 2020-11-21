@@ -21,23 +21,28 @@
 
 declare(strict_types=1);
 
-namespace pocketmine;
+namespace pocketmine\utils;
 
-use function defined;
+trait SingletonTrait{
+	/** @var self|null */
+	private static $instance = null;
 
-// composer autoload doesn't use require_once and also pthreads can inherit things
-// TODO: drop this file and use a final class with constants
-if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
-	return;
+	private static function make() : self{
+		return new self;
+	}
+
+	public static function getInstance() : self{
+		if(self::$instance === null){
+			self::$instance = self::make();
+		}
+		return self::$instance;
+	}
+
+	public static function setInstance(self $instance) : void{
+		self::$instance = $instance;
+	}
+
+	public static function reset() : void{
+		self::$instance = null;
+	}
 }
-const _VERSION_INFO_INCLUDED = true;
-
-const NAME = "PocketMine-MP";
-const BASE_VERSION = "3.16.0";
-const DISTRO_NAME = "UNWDS";
-const UNWDS_VERSION = "2.1.0";
-const SUPPORTED_CLIENT_VERSION = "1.16.20";
-const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 0027;
-const CODENAME = "Reborn";
-

@@ -21,35 +21,23 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol;
+namespace pocketmine\network\mcpe\protocol\types;
 
-use pocketmine\utils\Binary;
-
-use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\network\mcpe\NetworkSession;
 
-class UpdateBlockPropertiesPacket extends DataPacket{
-	public const NETWORK_ID = ProtocolInfo::UPDATE_BLOCK_PROPERTIES_PACKET;
+final class BlockPaletteEntry{
 
 	/** @var string */
-	private $nbt;
+	private $name;
+	/** @var CompoundTag */
+	private $states;
 
-	public static function create(CompoundTag $data) : self{
-		$result = new self;
-		$result->nbt = (new NetworkLittleEndianNBTStream())->write($data);
-		return $result;
+	public function __construct(string $name, CompoundTag $states){
+		$this->name = $name;
+		$this->states = $states;
 	}
 
-	protected function decodePayload() : void{
-		$this->nbt = $this->getRemaining();
-	}
+	public function getName() : string{ return $this->name; }
 
-	protected function encodePayload() : void{
-		($this->buffer .= $this->nbt);
-	}
-
-	public function handle(NetworkSession $handler) : bool{
-		return $handler->handleUpdateBlockProperties($this);
-	}
+	public function getStates() : CompoundTag{ return $this->states; }
 }

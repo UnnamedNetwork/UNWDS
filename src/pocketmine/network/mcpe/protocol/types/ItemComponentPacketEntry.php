@@ -21,23 +21,23 @@
 
 declare(strict_types=1);
 
-namespace pocketmine;
+namespace pocketmine\network\mcpe\protocol\types;
 
-use function defined;
+use pocketmine\nbt\tag\CompoundTag;
 
-// composer autoload doesn't use require_once and also pthreads can inherit things
-// TODO: drop this file and use a final class with constants
-if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
-	return;
+final class ItemComponentPacketEntry{
+
+	/** @var string */
+	private $name;
+	/** @var CompoundTag */
+	private $componentNbt;
+
+	public function __construct(string $name, CompoundTag $componentNbt){
+		$this->name = $name;
+		$this->componentNbt = $componentNbt;
+	}
+
+	public function getName() : string{ return $this->name; }
+
+	public function getComponentNbt() : CompoundTag{ return $this->componentNbt; }
 }
-const _VERSION_INFO_INCLUDED = true;
-
-const NAME = "PocketMine-MP";
-const BASE_VERSION = "3.16.0";
-const DISTRO_NAME = "UNWDS";
-const UNWDS_VERSION = "2.1.0";
-const SUPPORTED_CLIENT_VERSION = "1.16.20";
-const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 0027;
-const CODENAME = "Reborn";
-

@@ -23,7 +23,7 @@
             },
             "time": "2020-01-03T13:51:23+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Ahc\\Json\\": "src/"
@@ -77,7 +77,7 @@
             },
             "time": "2020-08-28T20:43:21+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "pocketmine\\utils\\": "src/"
@@ -173,7 +173,7 @@
             },
             "time": "2020-08-22T11:48:51+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "./src"
@@ -217,7 +217,7 @@
             },
             "time": "2020-03-31T15:43:47+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "./src"
@@ -262,7 +262,7 @@
             },
             "time": "2020-03-31T16:17:19+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "./src"
@@ -305,7 +305,7 @@
             },
             "time": "2020-08-27T11:45:40+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "pocketmine\\math\\": "src/"
@@ -351,7 +351,7 @@
             },
             "time": "2020-08-28T15:11:32+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "pocketmine\\nbt\\": "src/"
@@ -400,7 +400,7 @@
             },
             "time": "2020-08-28T15:22:57+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "raklib\\": "src/"
@@ -443,7 +443,7 @@
             },
             "time": "2020-08-28T22:19:21+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "pocketmine\\snooze\\": "src/"
@@ -483,7 +483,7 @@
             },
             "time": "2020-01-31T16:18:03+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "classmap": [
                     "./src"

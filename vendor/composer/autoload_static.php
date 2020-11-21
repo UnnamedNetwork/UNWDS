@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
+class ComposerStaticInit3a116edf28463c3e1b7c8795f791c6c3
 {
     public static $files = array (
         '44f761fde233c98b53686bd6223104dd' => __DIR__ . '/../..' . '/src/pocketmine/CoreConstants.php',
@@ -853,10 +853,11 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\RakLibInterface' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/RakLibInterface.php',
         'pocketmine\\network\\mcpe\\VerifyLoginException' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/VerifyLoginException.php',
         'pocketmine\\network\\mcpe\\VerifyLoginTask' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/VerifyLoginTask.php',
+        'pocketmine\\network\\mcpe\\convert\\ItemTranslator' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/convert/ItemTranslator.php',
+        'pocketmine\\network\\mcpe\\convert\\ItemTypeDictionary' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/convert/ItemTypeDictionary.php',
         'pocketmine\\network\\mcpe\\convert\\R12ToCurrentBlockMapEntry' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/convert/R12ToCurrentBlockMapEntry.php',
         'pocketmine\\network\\mcpe\\convert\\RuntimeBlockMapping' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/convert/RuntimeBlockMapping.php',
         'pocketmine\\network\\mcpe\\protocol\\ActorEventPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ActorEventPacket.php',
-        'pocketmine\\network\\mcpe\\protocol\\ActorFallPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ActorFallPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ActorPickRequestPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ActorPickRequestPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AddActorPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AddActorPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AddBehaviorTreePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AddBehaviorTreePacket.php',
@@ -865,6 +866,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\AddPaintingPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AddPaintingPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AddPlayerPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AddPlayerPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AdventureSettingsPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AdventureSettingsPacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\AnimateEntityPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AnimateEntityPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AnimatePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AnimatePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AnvilDamagePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AnvilDamagePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\AutomationClientConnectPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/AutomationClientConnectPacket.php',
@@ -878,6 +880,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\BookEditPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/BookEditPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\BossEventPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/BossEventPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\CameraPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CameraPacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\CameraShakePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CameraShakePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ChangeDimensionPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ChangeDimensionPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ChunkRadiusUpdatedPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ChunkRadiusUpdatedPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ClientCacheBlobStatusPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ClientCacheBlobStatusPacket.php',
@@ -893,6 +896,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\ContainerClosePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ContainerClosePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ContainerOpenPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ContainerOpenPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ContainerSetDataPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ContainerSetDataPacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\CorrectPlayerMovePredictionPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CorrectPlayerMovePredictionPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\CraftingDataPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CraftingDataPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\CraftingEventPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CraftingEventPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\CreativeContentPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/CreativeContentPacket.php',
@@ -910,6 +914,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\InventoryContentPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/InventoryContentPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\InventorySlotPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/InventorySlotPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\InventoryTransactionPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/InventoryTransactionPacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\ItemComponentPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ItemComponentPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ItemFrameDropItemPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ItemFrameDropItemPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ItemStackRequestPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ItemStackRequestPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ItemStackResponsePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ItemStackResponsePacket.php',
@@ -929,6 +934,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\MobEquipmentPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/MobEquipmentPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ModalFormRequestPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ModalFormRequestPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\ModalFormResponsePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/ModalFormResponsePacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\MotionPredictionHintsPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/MotionPredictionHintsPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\MoveActorAbsolutePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/MoveActorAbsolutePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\MoveActorDeltaPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/MoveActorDeltaPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\MovePlayerPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/MovePlayerPacket.php',
@@ -947,6 +953,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\PlayerArmorDamagePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerArmorDamagePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\PlayerAuthInputPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerAuthInputPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\PlayerEnchantOptionsPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerEnchantOptionsPacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\PlayerFogPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerFogPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\PlayerHotbarPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerHotbarPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\PlayerInputPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerInputPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\PlayerListPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/PlayerListPacket.php',
@@ -1007,12 +1014,12 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\UnknownPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UnknownPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateAttributesPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateAttributesPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateBlockPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateBlockPacket.php',
-        'pocketmine\\network\\mcpe\\protocol\\UpdateBlockPropertiesPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateBlockPropertiesPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateBlockSyncedPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateBlockSyncedPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateEquipPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateEquipPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdatePlayerGameTypePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdatePlayerGameTypePacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateSoftEnumPacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateSoftEnumPacket.php',
         'pocketmine\\network\\mcpe\\protocol\\UpdateTradePacket' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/UpdateTradePacket.php',
+        'pocketmine\\network\\mcpe\\protocol\\types\\BlockPaletteEntry' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/BlockPaletteEntry.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\ChunkCacheBlob' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/ChunkCacheBlob.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\CommandData' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/CommandData.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\CommandEnum' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/CommandEnum.php',
@@ -1027,10 +1034,13 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\types\\Enchant' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/Enchant.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\EnchantOption' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/EnchantOption.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\EntityLink' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/EntityLink.php',
+        'pocketmine\\network\\mcpe\\protocol\\types\\Experiments' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/Experiments.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\GameMode' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/GameMode.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\GameRuleType' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/GameRuleType.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\GeneratorType' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/GeneratorType.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\InputMode' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/InputMode.php',
+        'pocketmine\\network\\mcpe\\protocol\\types\\ItemComponentPacketEntry' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/ItemComponentPacketEntry.php',
+        'pocketmine\\network\\mcpe\\protocol\\types\\ItemTypeEntry' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/ItemTypeEntry.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\LegacySkinAdapter' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/LegacySkinAdapter.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\MapDecoration' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/MapDecoration.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\MapTrackedObject' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/MapTrackedObject.php',
@@ -1040,6 +1050,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\network\\mcpe\\protocol\\types\\PersonaSkinPiece' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PersonaSkinPiece.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\PlayMode' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PlayMode.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\PlayerListEntry' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PlayerListEntry.php',
+        'pocketmine\\network\\mcpe\\protocol\\types\\PlayerMovementType' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PlayerMovementType.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\PlayerPermissions' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PlayerPermissions.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\PotionContainerChangeRecipe' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PotionContainerChangeRecipe.php',
         'pocketmine\\network\\mcpe\\protocol\\types\\PotionTypeRecipe' => __DIR__ . '/../..' . '/src/pocketmine/network/mcpe/protocol/types/PotionTypeRecipe.php',
@@ -1167,6 +1178,7 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
         'pocketmine\\utils\\ReversePriorityQueue' => __DIR__ . '/../..' . '/src/pocketmine/utils/ReversePriorityQueue.php',
         'pocketmine\\utils\\ServerException' => __DIR__ . '/../..' . '/src/pocketmine/utils/ServerException.php',
         'pocketmine\\utils\\ServerKiller' => __DIR__ . '/../..' . '/src/pocketmine/utils/ServerKiller.php',
+        'pocketmine\\utils\\SingletonTrait' => __DIR__ . '/../..' . '/src/pocketmine/utils/SingletonTrait.php',
         'pocketmine\\utils\\Terminal' => __DIR__ . '/../..' . '/src/pocketmine/utils/Terminal.php',
         'pocketmine\\utils\\TextFormat' => __DIR__ . '/../..' . '/src/pocketmine/utils/TextFormat.php',
         'pocketmine\\utils\\TextFormatJsonObject' => __DIR__ . '/../..' . '/src/pocketmine/utils/TextFormatJsonObject.php',
@@ -1213,10 +1225,10 @@ class ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$fallbackDirsPsr4;
-            $loader->classMap = ComposerStaticInit2b8ac399219d8a04891c51782dcc70b3::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3a116edf28463c3e1b7c8795f791c6c3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3a116edf28463c3e1b7c8795f791c6c3::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit3a116edf28463c3e1b7c8795f791c6c3::$fallbackDirsPsr4;
+            $loader->classMap = ComposerStaticInit3a116edf28463c3e1b7c8795f791c6c3::$classMap;
 
         }, null, ClassLoader::class);
     }
