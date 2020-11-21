@@ -32,8 +32,8 @@ if [ "$PHP_BINARY" == "" ]; then
 	fi
 fi
 
-if [ "$BUILD_FILE" == "" ]; then
-	if [ -f ./UNWDS.phar ]; then
+if [ "$BUILD_FILE" == "./build/build.php" ]; then
+	if [ -f ./build/build.php ]; then
 		BUILD_FILE="./build/build.php"
 	else
 		echo "Build file (./build/build.php) not found"
