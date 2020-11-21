@@ -36,8 +36,8 @@ const NAME = "PocketMine-MP";
 const BASE_VERSION = "3.16.0";
 const DISTRO_NAME = "UNWDS";
 const UNWDS_VERSION = "2.1.0";
-const SUPPORTED_CLIENT_VERSION = "1.16.20";
+const SUPPORTED_CLIENT_VERSION = "1.16.100";
 const IS_DEVELOPMENT_BUILD = false;
-const BUILD_NUMBER = 0027;
+const BUILD_NUMBER = 0029;
 const CODENAME = "Reborn";
 
