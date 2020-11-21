@@ -49,7 +49,7 @@ If you want to use Stable release, use this:
 $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar
 
 ```
-Lastest Stable version: v2.0.3
+Lastest Stable version: v2.1.0
 
 If you want to use Alpha release, use this:
 ```sh
