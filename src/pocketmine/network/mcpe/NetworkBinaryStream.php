@@ -148,6 +148,7 @@ class NetworkBinaryStream extends BinaryStream{
 			$this->putSkinImage($animation->getImage());
 			($this->buffer .= (\pack("V", $animation->getType())));
 			($this->buffer .= (\pack("g", $animation->getFrames())));
+			$this->putLInt($animation->getExpressionType());
 		}
 		$this->putSkinImage($skin->getCapeImage());
 		$this->putString($skin->getGeometryData());
