@@ -135,7 +135,7 @@ function main() : void{
 	}
 
 	foreach(buildPhar(
-		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
+		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "PocketMine-MP.phar",
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
 		[
 			'src',
