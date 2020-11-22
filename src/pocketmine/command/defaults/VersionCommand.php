@@ -56,11 +56,11 @@ class VersionCommand extends VanillaCommand{
 				$sender->getServer()->getCodename(),
 				$sender->getServer()->getUNWDSVersion(),
 				$sender->getServer()->getAPIVersion(),
-				$sender->getServer()->getMinecraftVersion(),
+				$sender->getServer()->getVersion(),
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
-			$sender->sendMessage(new TranslationContainer("pocketmine.mask.info", [
+			$sender->sendMessage(new TranslationContainer("unwds.mask.info", [
 				$sender->getServer()->getName(),
 				$sender->getServer()->getAPIVersion(),
 			]
