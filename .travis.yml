@@ -3,9 +3,10 @@ import:
 
 script:
  - composer install --prefer-dist
- - ./vendor/bin/phpstan analyze --no-progress --memory-limit=2G
+ - composer update
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
  - composer install --no-dev --prefer-dist
+ - composer update
  - ./tests/travis.sh -t4
 
 cache:
