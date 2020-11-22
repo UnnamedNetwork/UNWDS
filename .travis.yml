@@ -3,8 +3,10 @@ import:
 
 script:
  - composer install --prefer-dist
+ - composer update
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
  - composer install --no-dev --prefer-dist
+ - composer update
  - ./tests/travis.sh -t4
 
 cache:
