@@ -1,0 +1,43 @@
+includes:
+	- tests/phpstan/configs/actual-problems.neon
+	- tests/phpstan/configs/check-explicit-mixed-baseline.neon
+	- tests/phpstan/configs/com-dotnet-magic.neon
+	- tests/phpstan/configs/gc-hacks.neon
+	- tests/phpstan/configs/l7-baseline.neon
+	- tests/phpstan/configs/l8-baseline.neon
+	- tests/phpstan/configs/php-bugs.neon
+	- tests/phpstan/configs/phpstan-bugs.neon
+	- tests/phpstan/configs/phpunit-wiring-tests.neon
+	- tests/phpstan/configs/pthreads-bugs.neon
+	- tests/phpstan/configs/runtime-type-checks.neon
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+	level: 8
+	checkExplicitMixed: true
+	bootstrapFiles:
+		- tests/phpstan/bootstrap.php
+	scanDirectories:
+	    - tests/plugins/TesterPlugin
+	scanFiles:
+		- src/pocketmine/PocketMine.php
+		- build/make-release.php
+		- build/server-phar.php
+	paths:
+		- src
+		- build/make-release.php
+		- build/server-phar.php
+		- tests/phpunit
+		- tests/plugins/TesterPlugin
+	dynamicConstantNames:
+		- pocketmine\IS_DEVELOPMENT_BUILD
+		- pocketmine\DEBUG
+	stubFiles:
+		- tests/phpstan/stubs/pthreads.stub
+		- tests/phpstan/stubs/chunkutils.stub
+		- tests/phpstan/stubs/leveldb.stub
+	reportUnmatchedIgnoredErrors: false #no other way to silence platform-specific non-warnings
+	staticReflectionClassNamePatterns:
+		- "#^COM$#"
