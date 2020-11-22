@@ -362,10 +362,6 @@ class Server{
 		return \pocketmine\VERSION;
 	}
 
-	public function getMinecraftVersion() : string{
-		return \pocketmine\SUPPORTED_CLIENT_VERSION;
-	}
-
 	public function getCodename() : string{
 		return \pocketmine\CODENAME;
 	}
