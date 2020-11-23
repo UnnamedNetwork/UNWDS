@@ -1,6 +1,9 @@
 import:
  source: ./tests/travis/setup-php.yml
-
+os:
+ - linux
+dist:
+ - focal
 script:
  - composer install --prefer-dist
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
