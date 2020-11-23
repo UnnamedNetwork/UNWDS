@@ -33,5 +33,3 @@ if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 const _VERSION_INFO_INCLUDED = true;
 
 const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0035;
-
