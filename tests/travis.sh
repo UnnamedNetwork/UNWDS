@@ -15,7 +15,7 @@ DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
 rm -rf "$DATA_DIR"
-rm PocketMine-MP.phar 2> /dev/null
+rm UNWDS.phar 2> /dev/null
 mkdir "$DATA_DIR"
 mkdir "$PLUGINS_DIR"
 
@@ -24,7 +24,7 @@ php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ -
 cd ../../..
 composer make-server
 
-if [ -f PocketMine-MP.phar ]; then
+if [ -f UNWDS.phar ]; then
 	echo Server phar created successfully.
 else
 	echo Server phar was not created!
