@@ -35,6 +35,7 @@ const _VERSION_INFO_INCLUDED = true;
 const NAME = "PocketMine-MP";
 const BASE_VERSION = "3.16.1";
 const UNWDS_VERSION = "2.1.1";
+const CODENAME = "Reborn";
 const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0031;
 
