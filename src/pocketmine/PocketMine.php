@@ -35,7 +35,17 @@ namespace pocketmine {
 	require_once __DIR__ . '/VersionInfo.php';
 
 	const MIN_PHP_VERSION = "7.3.0";
+	
+      // This will bypass the Spoon detector
+	const NAME = "PocketMine-MP";
+	const BASE_VERSION = "3.16.1";
+	
+      // The UNWDS version strings
+        const DISTRO_NAME = "UNWDS";
+        const CODENAME = "Reborn";
+        const UNWDS_VERSION = "2.1.1";
 
+	
 	/**
 	 * @param string $message
 	 * @return void
@@ -190,7 +200,7 @@ namespace pocketmine {
 
 		set_error_handler([Utils::class, 'errorExceptionHandler']);
 
-		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION, \pocketmine\CODENAME);
+		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
 

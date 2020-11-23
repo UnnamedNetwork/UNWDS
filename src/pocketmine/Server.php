@@ -351,7 +351,11 @@ class Server{
 	}
 
 	public function getDistroName() : string{
-		return "UNWDS";
+		return \pocketmine\DISTRO_NAME;
+	}
+	
+	public function getCodename() : string{
+		return \pocketmine\CODENAME;
 	}
 
 	public function isRunning() : bool{
@@ -360,10 +364,6 @@ class Server{
 
 	public function getPocketMineVersion() : string{
 		return \pocketmine\VERSION;
-	}
-
-	public function getCodename() : string{
-		return \pocketmine\CODENAME;
 	}
 
 	public function getVersion() : string{
