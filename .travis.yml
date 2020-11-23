@@ -3,7 +3,7 @@ import:
 os:
  - linux
 dist:
- - focal
+ - bionic
 script:
  - composer install --prefer-dist
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
