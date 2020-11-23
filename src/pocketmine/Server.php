@@ -351,7 +351,7 @@ class Server{
 	}
 
 	public function getDistroName() : string{
-		return \pocketmine\DISTRO_NAME;
+		return "UNWDS";
 	}
 
 	public function isRunning() : bool{
@@ -363,7 +363,7 @@ class Server{
 	}
 
 	public function getCodename() : string{
-		return \pocketmine\CODENAME;
+		return "Reborn";
 	}
 
 	public function getVersion() : string{
