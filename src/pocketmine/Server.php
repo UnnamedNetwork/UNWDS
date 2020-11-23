@@ -363,7 +363,7 @@ class Server{
 	}
 
 	public function getCodename() : string{
-		return "Reborn";
+		return \pocketmine\CODENAME;
 	}
 
 	public function getVersion() : string{
