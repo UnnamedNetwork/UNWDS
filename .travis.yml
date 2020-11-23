@@ -3,7 +3,7 @@ import:
 os:
  - linux
 dist:
- - bionic
+ - xenial
 script:
  - composer install --prefer-dist
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
