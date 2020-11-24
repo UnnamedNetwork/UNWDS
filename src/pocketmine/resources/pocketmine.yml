@@ -135,28 +135,13 @@ ticks-per:
 
 auto-report:
   #Send crash reports for processing
-  enabled: true
-  send-code: true
-  send-settings: true
+  #Will re-enable it when server build complete
+  enabled: false
+  send-code: false
+  send-settings: false
   send-phpinfo: false
-  use-https: true
-  host: crash.pmmp.io
-
-anonymous-statistics:
-  #Sends anonymous statistics for data aggregation, plugin usage tracking
-  enabled: false #TODO: re-enable this when we have a new stats host
-  host: stats.pocketmine.net
-
-auto-updater:
-  enabled: true
-  on-update:
-    warn-console: true
-    warn-ops: true
-  #Can be development, alpha, beta or stable.
-  preferred-channel: stable
-  #If using a development version, it will suggest changing the channel
-  suggest-channels: true
-  host: update.pmmp.io
+  use-https: false
+  host: unwds-crash.dtcg.xyz
 
 timings:
   #Choose the host to use for viewing your timings results.
