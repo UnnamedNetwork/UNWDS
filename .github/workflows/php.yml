@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-xenial
+    runs-on: ubuntu-lastest
 
     steps:
     - uses: actions/checkout@v2
