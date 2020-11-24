@@ -4,7 +4,7 @@ REM Made by dtcu0ng with love.
 REM You can edit everything you want on this script.
 
 
-set BUILD_SCRIPT=build\build.php
+set BUILD_SCRIPT=build\server-phar.php
 :PHPE
 set PHP_BINARY=bin\php\php.exe
 if exist %PHP_BINARY% (

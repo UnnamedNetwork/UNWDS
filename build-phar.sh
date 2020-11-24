@@ -32,12 +32,12 @@ if [ "$PHP_BINARY" == "" ]; then
 	fi
 fi
 
-if [ "$BUILD_FILE" == "./build/build.php" ]; then
-	if [ -f ./build/build.php ]; then
-		BUILD_FILE="./build/build.php"
+if [ "$BUILD_FILE" == "./build/server-phar.php" ]; then
+	if [ -f ./build/server-phar.php ]; then
+		BUILD_FILE="./build/server-phar.php"
 	else
-		echo "Build file (./build/build.php) not found"
-		echo "Source code download can be found at https://github.com/UnnamedNetwork/UNWDS/build/build.php"
+		echo "Build file (./build/server-phar.php) not found"
+		echo "Source code download can be found at https://github.com/UnnamedNetwork/UNWDS/build/server-phar.php"
 		exit 1
 	fi
 fi

@@ -30,6 +30,5 @@ use function defined;
 if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 	return;
 }
-const _VERSION_INFO_INCLUDED = true;
 
-const IS_DEVELOPMENT_BUILD = true;
+// We will get out of this file soon.
