@@ -1,7 +1,4 @@
-arch: arm64-graviton2 # in AWS over Graviton2 CPU
-virt: lxd             # required, routes to an LXD container
-os: linux             # required for arch different than amd64
-group: edge
+arch: arm64 
 import:
  source: ./tests/travis/setup-php.yml
 script:
