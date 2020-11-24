@@ -1,6 +1,7 @@
 import:
  source: ./tests/travis/setup-php.yml
 script:
+ - composer config set fund false
  - composer install --prefer-dist
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
  - composer install --no-dev --prefer-dist

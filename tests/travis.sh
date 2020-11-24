@@ -1,5 +1,4 @@
 #!/bin/bash
-composer update
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
