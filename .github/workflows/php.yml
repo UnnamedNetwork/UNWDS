@@ -1,0 +1,45 @@
+name: tests
+
+on:
+  push:
+    branches: [ stable ]
+  pull_request:
+    branches: [ stable ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-xenial
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+      
+    - name: Install
+      run: composer install --prefer-dist
+      
+    - name: Fund
+      run: composer fund
+    
+    - name: autoload
+      run : ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
+     
+     - name: Install 2
+       run: composer install --no-dev --prefer-dist
+       
+     - name: Fund 2
+       run: composer fund
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Run test suite
+      run: ./tests/travis.sh -t4
