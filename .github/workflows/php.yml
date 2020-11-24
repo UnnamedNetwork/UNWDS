@@ -25,12 +25,12 @@ jobs:
     
     - name: autoload
       run : ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
-     
-     - name: Install 2
-       run: composer install --no-dev --prefer-dist
+      
+    - name: Install 2
+      run: composer install --no-dev --prefer-dist
        
-     - name: Fund 2
-       run: composer fund
+    - name: Fund 2
+      run: composer fund
 
     - name: Cache Composer packages
       id: composer-cache
