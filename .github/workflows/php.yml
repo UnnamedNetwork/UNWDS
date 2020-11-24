@@ -13,9 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate
       
     - name: Install
       run: composer install --prefer-dist
