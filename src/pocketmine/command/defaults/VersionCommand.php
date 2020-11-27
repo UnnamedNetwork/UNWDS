@@ -60,7 +60,7 @@ class VersionCommand extends VanillaCommand{
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
-			$sender->sendMessage(new TranslationContainer("unwds.mask.info", [
+			$sender->sendMessage(new TranslationContainer("pocketmine.mask.info", [
 				$sender->getServer()->getName(),
 				$sender->getServer()->getAPIVersion(),
 			]

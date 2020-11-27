@@ -563,7 +563,7 @@ class Server{
 	}
 
 	public function getMotd() : string{
-		return $this->getConfigString("motd", \pocketmine\NAME . " Server");
+		return $this->getConfigString("motd", \pocketmine\DISTRO_NAME . " Server");
 	}
 
 	/**
@@ -1334,7 +1334,7 @@ class Server{
 
 			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
-				"motd" => \pocketmine\NAME . "-based server",
+				"motd" => \pocketmine\DISTRO_NAME . "-based server",
 				"server-port" => 19132,
 				"white-list" => false,
 				"announce-player-achievements" => true,
