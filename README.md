@@ -6,13 +6,14 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
 ## Documentation
 - [Documentation](DOCUMENT.md)
 - [How to install](INSTALL.md)
+- [SpoonMask documentation](https://github.com/dtcu0ng/SpoonMask/DOCUMENT.md)
 
 ## For developers
  * [Building and running from source](BUILDING.md)
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
 
 ## About plugins:
-+ UNWDS is a SpoonDetector bypass PocketMine-MP distro. I don't modified into the PocketMine-MP important cores (just modified for software's behaviour after adding some constants like the distro name or custom version.)
++ UNWDS is a PocketMine-MP bypass SpoonMask distro. I don't modified into the PocketMine-MP important cores (just modified for software's behaviour after adding some constants like the distro name or custom version.)
 + I will write a document describe how the SpoonMask work as soon as possible.
 + Read [this](https://github.com/dtcu0ng/UNWDS/releases/tag/2.0.1-RC2) release note to get more info (if you're running version <2.0.1-RC2).
 + Read [this](https://github.com/dtcu0ng/UNWDS/releases/tag/2.0.4%2Bdev.19) release note to get more info with the Spoon included plugins.
