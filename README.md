@@ -6,7 +6,7 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
 ## Documentation
 - [Documentation](DOCUMENT.md)
 - [How to install](INSTALL.md)
-- [SpoonMask documentation](https://github.com/dtcu0ng/SpoonMask/DOCUMENT.md)
+- [SpoonMask documentation](https://github.com/dtcu0ng/SpoonMask/blob/main/DOCUMENT.md)
 
 ## For developers
  * [Building and running from source](BUILDING.md)
