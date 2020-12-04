@@ -33,21 +33,9 @@ namespace pocketmine {
 	use pocketmine\wizard\SetupWizard;
 
 	require_once __DIR__ . '/VersionInfo.php';
+        require_once __DIR__ . '/SpoonMask.php';
 
 	const MIN_PHP_VERSION = "7.3.0";
-	
-      // PocketMine-MP's default version constants, this will bypass the Spoon detector
-	const NAME = "PocketMine-MP";
-	const BASE_VERSION = "3.16.1";
-	const _VERSION_INFO_INCLUDED = true;
-    const IS_DEVELOPMENT_BUILD = true;
-	
-      // The UNWDS version strings
-    const DISTRO_NAME = "UNWDS";
-    const CODENAME = "Reborn";
-    const UNWDS_VERSION = "2.1.1";
-    const BUILD_NUMBER = 0035;
-
 	
 	/**
 	 * @param string $message

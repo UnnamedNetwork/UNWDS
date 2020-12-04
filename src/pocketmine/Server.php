@@ -1322,7 +1322,9 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
-			$this->logger->info("Loading pocketmine.yml...");
+			$this->logger->info("We just modified PocketMine-MP with built-in SpoonMask into UNWDS so...");
+			$this->logger->info("...you will not be notified by SpoonDetector but supports for plugins by these authors will not be accepted if you run them on UNWDS.");
+			$this->logger->info("Loading core files...");
 			if(!file_exists($this->dataPath . "pocketmine.yml")){
 				$content = file_get_contents(\pocketmine\RESOURCE_PATH . "pocketmine.yml");
 				if(\pocketmine\IS_DEVELOPMENT_BUILD){
@@ -1332,7 +1334,6 @@ class Server{
 			}
 			$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
 
-			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 				"motd" => \pocketmine\DISTRO_NAME . "-based server",
 				"server-port" => 19132,
@@ -1362,7 +1363,6 @@ class Server{
 
 			$this->forceLanguage = (bool) $this->getProperty("settings.force-language", false);
 			$this->baseLang = new BaseLang($this->getConfigString("language", $this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE)));
-			$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
 
 			if(\pocketmine\IS_DEVELOPMENT_BUILD and !((bool) $this->getProperty("settings.enable-dev-builds", false))){
 				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error1", [\pocketmine\DISTRO_NAME]));
