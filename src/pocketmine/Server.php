@@ -353,10 +353,6 @@ class Server{
 	public function getDistroName() : string{
 		return \pocketmine\DISTRO_NAME;
 	}
-	
-	public function getCodename() : string{
-		return \pocketmine\CODENAME;
-	}
 
 	public function isRunning() : bool{
 		return $this->isRunning;
@@ -364,6 +360,10 @@ class Server{
 
 	public function getPocketMineVersion() : string{
 		return \pocketmine\VERSION;
+	}
+
+	public function getCodename() : string{
+		return \pocketmine\CODENAME;
 	}
 
 	public function getVersion() : string{
@@ -1322,9 +1322,7 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
-			$this->logger->info("We just modified PocketMine-MP with built-in SpoonMask into UNWDS so...");
-			$this->logger->info("...you will not be notified by SpoonDetector but supports for plugins by these authors will not be accepted if you run them on UNWDS.");
-			$this->logger->info("Loading core files...");
+			$this->logger->info("Loading pocketmine.yml...");
 			if(!file_exists($this->dataPath . "pocketmine.yml")){
 				$content = file_get_contents(\pocketmine\RESOURCE_PATH . "pocketmine.yml");
 				if(\pocketmine\IS_DEVELOPMENT_BUILD){
@@ -1334,6 +1332,7 @@ class Server{
 			}
 			$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
 
+			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 				"motd" => \pocketmine\DISTRO_NAME . "-based server",
 				"server-port" => 19132,
@@ -1363,6 +1362,7 @@ class Server{
 
 			$this->forceLanguage = (bool) $this->getProperty("settings.force-language", false);
 			$this->baseLang = new BaseLang($this->getConfigString("language", $this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE)));
+			$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
 
 			if(\pocketmine\IS_DEVELOPMENT_BUILD and !((bool) $this->getProperty("settings.enable-dev-builds", false))){
 				$this->logger->emergency($this->baseLang->translateString("pocketmine.server.devBuild.error1", [\pocketmine\DISTRO_NAME]));
@@ -1380,7 +1380,7 @@ class Server{
 
 			$this->memoryManager = new MemoryManager($this);
 
-			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.start", [TextFormat::AQUA . $this->getVersion() . TextFormat::RESET]));
+			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.start", [TextFormat::AQUA . $this->getUNWDSVersion() . TextFormat::RESET]));
 
 			if(($poolSize = $this->getProperty("settings.async-workers", "auto")) === "auto"){
 				$poolSize = 2;
@@ -1476,7 +1476,7 @@ class Server{
 			}
 
 			if(\pocketmine\DEBUG >= 0){
-				@cli_set_process_title($this->getDistroName() . " " . $this->getPocketMineVersion());
+				@cli_set_process_title($this->getDistroName() . " " . $this->getUNWDSVersion());
 			}
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.networkStart", [$this->getIp(), $this->getPort()]));
@@ -1491,7 +1491,7 @@ class Server{
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.info", [
 				$this->getDistroName(),
-				(\pocketmine\IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : "") . $this->getPocketMineVersion() . TextFormat::RESET
+				(\pocketmine\IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : "") . $this->getUNWDSVersion() . TextFormat::RESET
 			]));
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getDistroName()]));
 
@@ -2092,7 +2092,7 @@ class Server{
 					$postUrlError = "Unknown error";
 					$reply = Internet::postURL($url, [
 						"report" => "yes",
-						"name" => $this->getDistroName() . " " . $this->getPocketMineVersion(),
+						"name" => $this->getDistroName() . " " . $this->getUNWDSVersion(),
 						"email" => "crash@dtcg.xyz",
 						"reportPaste" => base64_encode($dump->getEncodedData())
 					], 10, [], $postUrlError);
@@ -2333,7 +2333,7 @@ class Server{
 		$usage = sprintf("%g/%g/%g/%g MB @ %d threads", round(($u[0] / 1024) / 1024, 2), round(($d[0] / 1024) / 1024, 2), round(($u[1] / 1024) / 1024, 2), round(($u[2] / 1024) / 1024, 2), Process::getThreadCount());
 
 		echo "\x1b]0;" . $this->getDistroName() . " " .
-			$this->getPocketMineVersion() .
+			$this->getUNWDSVersion() .
 			" | Online " . count($this->players) . "/" . $this->getMaxPlayers() .
 			" | Memory " . $usage .
 			" | U " . round($this->network->getUpload() / 1024, 2) .

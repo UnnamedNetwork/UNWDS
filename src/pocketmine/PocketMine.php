@@ -33,7 +33,7 @@ namespace pocketmine {
 	use pocketmine\wizard\SetupWizard;
 
 	require_once __DIR__ . '/VersionInfo.php';
-        require_once __DIR__ . '/SpoonMask.php';
+	require_once __DIR__ . '/SpoonMask.php';
 
 	const MIN_PHP_VERSION = "7.3.0";
 	
