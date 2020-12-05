@@ -79,7 +79,7 @@ class UUID{
 			throw new \InvalidArgumentException("Must have exactly 16 bytes");
 		}
 
-		return new UUID((\unpack("N", substr($uuid, 0, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 4, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 8, 4))[1] << 32 >> 32), (\unpack("N", substr($uuid, 12, 4))[1] << 32 >> 32), $version);
+		return new UUID(Binary::readInt(substr($uuid, 0, 4)), Binary::readInt(substr($uuid, 4, 4)), Binary::readInt(substr($uuid, 8, 4)), Binary::readInt(substr($uuid, 12, 4)), $version);
 	}
 
 	/**
@@ -94,11 +94,11 @@ class UUID{
 	}
 
 	public static function fromRandom() : UUID{
-		return self::fromData((\pack("N", time())), (\pack("n", getmypid())), (\pack("n", getmyuid())), (\pack("N", mt_rand(-0x7fffffff, 0x7fffffff))), (\pack("N", mt_rand(-0x7fffffff, 0x7fffffff))));
+		return self::fromData(Binary::writeInt(time()), Binary::writeShort(getmypid()), Binary::writeShort(getmyuid()), Binary::writeInt(mt_rand(-0x7fffffff, 0x7fffffff)), Binary::writeInt(mt_rand(-0x7fffffff, 0x7fffffff)));
 	}
 
 	public function toBinary() : string{
-		return (\pack("N", $this->parts[0])) . (\pack("N", $this->parts[1])) . (\pack("N", $this->parts[2])) . (\pack("N", $this->parts[3]));
+		return Binary::writeInt($this->parts[0]) . Binary::writeInt($this->parts[1]) . Binary::writeInt($this->parts[2]) . Binary::writeInt($this->parts[3]);
 	}
 
 	public function toString() : string{

@@ -88,7 +88,7 @@ abstract class Timezone{
 				break;
 			}
 
-			if($response = Internet::getURL("http://ip-api.com/json") //If system timezone detection fails or timezone is an invalid value.
+			if(($response = Internet::getURL("http://ip-api.com/json")) !== false //If system timezone detection fails or timezone is an invalid value.
 				and $ip_geolocation_data = json_decode($response, true)
 				and $ip_geolocation_data['status'] !== 'fail'
 				and date_default_timezone_set($ip_geolocation_data['timezone'])
@@ -159,7 +159,7 @@ abstract class Timezone{
 					return trim($data['ZONE']);
 				}
 
-				//Portable method for incompatible 1 distributions.
+				//Portable method for incompatible linux distributions.
 
 				$offset = trim(exec('date +%:z'));
 
