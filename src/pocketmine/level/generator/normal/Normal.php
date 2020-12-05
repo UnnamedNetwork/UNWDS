@@ -203,7 +203,7 @@ class Normal extends Generator{
 						if($sx === 0 and $sz === 0){
 							$adjacent = $biome;
 						}else{
-							$index = ((($chunkX * 16 + $x + $sx) & 0xFFFFFFFF) << 32) | (( $chunkZ * 16 + $z + $sz) & 0xFFFFFFFF);
+							$index = Level::chunkHash($chunkX * 16 + $x + $sx, $chunkZ * 16 + $z + $sz);
 							if(isset($biomeCache[$index])){
 								$adjacent = $biomeCache[$index];
 							}else{

@@ -337,7 +337,7 @@ abstract class Liquid extends Transparent{
 				++$z;
 			}
 
-			if(!isset($this->flowCostVisited[$hash = ((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)])){
+			if(!isset($this->flowCostVisited[$hash = Level::blockHash($x, $y, $z)])){
 				$blockSide = $this->level->getBlockAt($x, $y, $z);
 				if(!$this->canFlowInto($blockSide)){
 					$this->flowCostVisited[$hash] = self::BLOCKED;
@@ -393,13 +393,13 @@ abstract class Liquid extends Transparent{
 			$block = $this->level->getBlockAt($x, $y, $z);
 
 			if(!$this->canFlowInto($block)){
-				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::BLOCKED;
+				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::BLOCKED;
 				continue;
 			}elseif($this->level->getBlockAt($x, $y - 1, $z)->canBeFlowedInto()){
-				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::CAN_FLOW_DOWN;
+				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::CAN_FLOW_DOWN;
 				$flowCost[$j] = $maxCost = 0;
 			}elseif($maxCost > 0){
-				$this->flowCostVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = self::CAN_FLOW;
+				$this->flowCostVisited[Level::blockHash($x, $y, $z)] = self::CAN_FLOW;
 				$flowCost[$j] = $this->calculateFlowCost($x, $y, $z, 1, $maxCost, $j ^ 0x01, $j ^ 0x01);
 				$maxCost = min($maxCost, $flowCost[$j]);
 			}

@@ -2,10 +2,8 @@ import:
  source: ./tests/travis/setup-php.yml
 script:
  - composer install --prefer-dist
- - composer fund
  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
  - composer install --no-dev --prefer-dist
- - composer fund
  - ./tests/travis.sh -t4
 
 cache:

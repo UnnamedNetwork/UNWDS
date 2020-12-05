@@ -150,7 +150,7 @@ class RegionLoader{
 		if($prefix === false or strlen($prefix) !== 4){
 			throw new CorruptedChunkException("Corrupted chunk header detected (unexpected end of file reading length prefix)");
 		}
-		$length = (\unpack("N", $prefix)[1] << 32 >> 32);
+		$length = Binary::readInt($prefix);
 
 		if($length <= 0){ //TODO: if we reached here, the locationTable probably needs updating
 			return null;
@@ -218,7 +218,7 @@ class RegionLoader{
 
 		/* write the chunk data into the chosen location */
 		fseek($this->filePointer, $newLocation->getFirstSector() << 12);
-		fwrite($this->filePointer, str_pad((\pack("N", $length)) . chr(self::COMPRESSION_ZLIB) . $chunkData, $newSize << 12, "\x00", STR_PAD_RIGHT));
+		fwrite($this->filePointer, str_pad(Binary::writeInt($length) . chr(self::COMPRESSION_ZLIB) . $chunkData, $newSize << 12, "\x00", STR_PAD_RIGHT));
 
 		/*
 		 * update the file header - we do this after writing the main data, so that if a failure occurs while writing,
@@ -399,9 +399,9 @@ class RegionLoader{
 	protected function writeLocationIndex($index){
 		$entry = $this->locationTable[$index];
 		fseek($this->filePointer, $index << 2);
-		fwrite($this->filePointer, (\pack("N", $entry !== null ? ($entry->getFirstSector() << 8) | $entry->getSectorCount() : 0)), 4);
+		fwrite($this->filePointer, Binary::writeInt($entry !== null ? ($entry->getFirstSector() << 8) | $entry->getSectorCount() : 0), 4);
 		fseek($this->filePointer, 4096 + ($index << 2));
-		fwrite($this->filePointer, (\pack("N", $entry !== null ? $entry->getTimestamp() : 0)), 4);
+		fwrite($this->filePointer, Binary::writeInt($entry !== null ? $entry->getTimestamp() : 0), 4);
 	}
 
 	/**

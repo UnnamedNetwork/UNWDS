@@ -83,7 +83,7 @@ abstract class LightUpdate{
 	 * @return void
 	 */
 	public function setAndUpdateLight(int $x, int $y, int $z, int $newLevel){
-		$this->updateNodes[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)] = [$x, $y, $z, $newLevel];
+		$this->updateNodes[Level::blockHash($x, $y, $z)] = [$x, $y, $z, $newLevel];
 	}
 
 	private function prepareNodes() : void{
@@ -133,7 +133,7 @@ abstract class LightUpdate{
 		while(!$this->spreadQueue->isEmpty()){
 			list($x, $y, $z) = $this->spreadQueue->dequeue();
 
-			unset($this->spreadVisited[((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)]);
+			unset($this->spreadVisited[Level::blockHash($x, $y, $z)]);
 
 			if(!$this->subChunkHandler->moveTo($x, $y, $z)){
 				continue;
@@ -170,14 +170,14 @@ abstract class LightUpdate{
 		if($current !== 0 and $current < $oldAdjacentLevel){
 			$this->setLight($x, $y, $z, 0);
 
-			if(!isset($this->removalVisited[$index = ((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)])){
+			if(!isset($this->removalVisited[$index = Level::blockHash($x, $y, $z)])){
 				$this->removalVisited[$index] = true;
 				if($current > 1){
 					$this->removalQueue->enqueue([$x, $y, $z, $current]);
 				}
 			}
 		}elseif($current >= $oldAdjacentLevel){
-			if(!isset($this->spreadVisited[$index = ((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)])){
+			if(!isset($this->spreadVisited[$index = Level::blockHash($x, $y, $z)])){
 				$this->spreadVisited[$index] = true;
 				$this->spreadQueue->enqueue([$x, $y, $z]);
 			}
@@ -194,7 +194,7 @@ abstract class LightUpdate{
 		if($current < $potentialLight){
 			$this->setLight($x, $y, $z, $potentialLight);
 
-			if(!isset($this->spreadVisited[$index = ((($x) & 0xFFFFFFF) << 36) | ((( $y) & 0xff) << 28) | (( $z) & 0xFFFFFFF)]) and $potentialLight > 1){
+			if(!isset($this->spreadVisited[$index = Level::blockHash($x, $y, $z)]) and $potentialLight > 1){
 				$this->spreadVisited[$index] = true;
 				$this->spreadQueue->enqueue([$x, $y, $z]);
 			}

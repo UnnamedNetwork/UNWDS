@@ -135,13 +135,12 @@ ticks-per:
 
 auto-report:
   #Send crash reports for processing
-  #Will re-enable it when server build complete
   enabled: false
   send-code: false
   send-settings: false
   send-phpinfo: false
-  use-https: false
-  host: unwds-crash.dtcg.xyz
+  use-https: true
+  host: development.dtcg.xyz
 
 timings:
   #Choose the host to use for viewing your timings results.

@@ -254,7 +254,7 @@ class LevelDB extends BaseLevelProvider{
 
 		$nbt = new LittleEndianNBTStream();
 		$buffer = $nbt->write($levelData);
-		file_put_contents($path . "level.dat", (\pack("V", self::CURRENT_STORAGE_VERSION)) . (\pack("V", strlen($buffer))) . $buffer);
+		file_put_contents($path . "level.dat", Binary::writeLInt(self::CURRENT_STORAGE_VERSION) . Binary::writeLInt(strlen($buffer)) . $buffer);
 
 		$db = self::createDB($path);
 
@@ -280,7 +280,7 @@ class LevelDB extends BaseLevelProvider{
 
 		$nbt = new LittleEndianNBTStream();
 		$buffer = $nbt->write($this->levelData);
-		file_put_contents($this->getPath() . "level.dat", (\pack("V", self::CURRENT_STORAGE_VERSION)) . (\pack("V", strlen($buffer))) . $buffer);
+		file_put_contents($this->getPath() . "level.dat", Binary::writeLInt(self::CURRENT_STORAGE_VERSION) . Binary::writeLInt(strlen($buffer)) . $buffer);
 	}
 
 	public function getGenerator() : string{
@@ -540,7 +540,7 @@ class LevelDB extends BaseLevelProvider{
 	}
 
 	public static function chunkIndex(int $chunkX, int $chunkZ) : string{
-		return (\pack("V", $chunkX)) . (\pack("V", $chunkZ));
+		return Binary::writeLInt($chunkX) . Binary::writeLInt($chunkZ);
 	}
 
 	private function chunkExists(int $chunkX, int $chunkZ) : bool{
