@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use function count;
@@ -42,16 +42,16 @@ class ResourcePackClientResponsePacket extends DataPacket{
 	public $packIds = [];
 
 	protected function decodePayload(){
-		$this->status = (\ord($this->get(1)));
-		$entryCount = ((\unpack("v", $this->get(2))[1]));
+		$this->status = $this->getByte();
+		$entryCount = $this->getLShort();
 		while($entryCount-- > 0){
 			$this->packIds[] = $this->getString();
 		}
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->status));
-		($this->buffer .= (\pack("v", count($this->packIds))));
+		$this->putByte($this->status);
+		$this->putLShort(count($this->packIds));
 		foreach($this->packIds as $id){
 			$this->putString($id);
 		}

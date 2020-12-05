@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -46,7 +46,7 @@ class BlockActorDataPacket extends DataPacket{
 
 	protected function encodePayload(){
 		$this->putBlockPosition($this->x, $this->y, $this->z);
-		($this->buffer .= $this->namedtag);
+		$this->put($this->namedtag);
 	}
 
 	public function handle(NetworkSession $session) : bool{

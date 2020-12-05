@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkBinaryStream;
 use pocketmine\network\mcpe\NetworkSession;
@@ -33,6 +33,9 @@ use function strlen;
 use function zlib_decode;
 use function zlib_encode;
 use const ZLIB_ENCODING_RAW;
+#ifndef COMPILE
+use pocketmine\utils\Binary;
+#endif
 
 class BatchPacket extends DataPacket{
 	public const NETWORK_ID = 0xfe;
@@ -51,7 +54,7 @@ class BatchPacket extends DataPacket{
 	}
 
 	protected function decodeHeader(){
-		$pid = (\ord($this->get(1)));
+		$pid = $this->getByte();
 		assert($pid === static::NETWORK_ID);
 	}
 
@@ -65,11 +68,11 @@ class BatchPacket extends DataPacket{
 	}
 
 	protected function encodeHeader(){
-		($this->buffer .= \chr(static::NETWORK_ID));
+		$this->putByte(static::NETWORK_ID);
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= zlib_encode($this->payload, ZLIB_ENCODING_RAW, $this->compressionLevel));
+		$this->put(zlib_encode($this->payload, ZLIB_ENCODING_RAW, $this->compressionLevel));
 	}
 
 	/**

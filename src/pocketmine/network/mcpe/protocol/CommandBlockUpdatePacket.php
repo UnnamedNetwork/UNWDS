@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -63,13 +63,13 @@ class CommandBlockUpdatePacket extends DataPacket{
 	public $executeOnFirstTick;
 
 	protected function decodePayload(){
-		$this->isBlock = (($this->get(1) !== "\x00"));
+		$this->isBlock = $this->getBool();
 
 		if($this->isBlock){
 			$this->getBlockPosition($this->x, $this->y, $this->z);
 			$this->commandBlockMode = $this->getUnsignedVarInt();
-			$this->isRedstoneMode = (($this->get(1) !== "\x00"));
-			$this->isConditional = (($this->get(1) !== "\x00"));
+			$this->isRedstoneMode = $this->getBool();
+			$this->isConditional = $this->getBool();
 		}else{
 			//Minecart with command block
 			$this->minecartEid = $this->getEntityRuntimeId();
@@ -79,19 +79,19 @@ class CommandBlockUpdatePacket extends DataPacket{
 		$this->lastOutput = $this->getString();
 		$this->name = $this->getString();
 
-		$this->shouldTrackOutput = (($this->get(1) !== "\x00"));
-		$this->tickDelay = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->executeOnFirstTick = (($this->get(1) !== "\x00"));
+		$this->shouldTrackOutput = $this->getBool();
+		$this->tickDelay = $this->getLInt();
+		$this->executeOnFirstTick = $this->getBool();
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= ($this->isBlock ? "\x01" : "\x00"));
+		$this->putBool($this->isBlock);
 
 		if($this->isBlock){
 			$this->putBlockPosition($this->x, $this->y, $this->z);
 			$this->putUnsignedVarInt($this->commandBlockMode);
-			($this->buffer .= ($this->isRedstoneMode ? "\x01" : "\x00"));
-			($this->buffer .= ($this->isConditional ? "\x01" : "\x00"));
+			$this->putBool($this->isRedstoneMode);
+			$this->putBool($this->isConditional);
 		}else{
 			$this->putEntityRuntimeId($this->minecartEid);
 		}
@@ -100,9 +100,9 @@ class CommandBlockUpdatePacket extends DataPacket{
 		$this->putString($this->lastOutput);
 		$this->putString($this->name);
 
-		($this->buffer .= ($this->shouldTrackOutput ? "\x01" : "\x00"));
-		($this->buffer .= (\pack("V", $this->tickDelay)));
-		($this->buffer .= ($this->executeOnFirstTick ? "\x01" : "\x00"));
+		$this->putBool($this->shouldTrackOutput);
+		$this->putLInt($this->tickDelay);
+		$this->putBool($this->executeOnFirstTick);
 	}
 
 	public function handle(NetworkSession $session) : bool{

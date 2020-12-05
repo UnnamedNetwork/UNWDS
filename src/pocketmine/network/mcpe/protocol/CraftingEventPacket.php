@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\NetworkSession;
@@ -51,7 +51,7 @@ class CraftingEventPacket extends DataPacket{
 	}
 
 	protected function decodePayload(){
-		$this->windowId = (\ord($this->get(1)));
+		$this->windowId = $this->getByte();
 		$this->type = $this->getVarInt();
 		$this->id = $this->getUUID();
 
@@ -67,7 +67,7 @@ class CraftingEventPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->windowId));
+		$this->putByte($this->windowId);
 		$this->putVarInt($this->type);
 		$this->putUUID($this->id);
 

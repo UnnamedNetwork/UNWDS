@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
@@ -184,8 +184,8 @@ class StartGamePacket extends DataPacket{
 
 		$this->playerPosition = $this->getVector3();
 
-		$this->pitch = ((\unpack("g", $this->get(4))[1]));
-		$this->yaw = ((\unpack("g", $this->get(4))[1]));
+		$this->pitch = $this->getLFloat();
+		$this->yaw = $this->getLFloat();
 
 		//Level settings
 		$this->seed = $this->getVarInt();
@@ -194,39 +194,39 @@ class StartGamePacket extends DataPacket{
 		$this->worldGamemode = $this->getVarInt();
 		$this->difficulty = $this->getVarInt();
 		$this->getBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		$this->hasAchievementsDisabled = (($this->get(1) !== "\x00"));
+		$this->hasAchievementsDisabled = $this->getBool();
 		$this->time = $this->getVarInt();
 		$this->eduEditionOffer = $this->getVarInt();
-		$this->hasEduFeaturesEnabled = (($this->get(1) !== "\x00"));
+		$this->hasEduFeaturesEnabled = $this->getBool();
 		$this->eduProductUUID = $this->getString();
-		$this->rainLevel = ((\unpack("g", $this->get(4))[1]));
-		$this->lightningLevel = ((\unpack("g", $this->get(4))[1]));
-		$this->hasConfirmedPlatformLockedContent = (($this->get(1) !== "\x00"));
-		$this->isMultiplayerGame = (($this->get(1) !== "\x00"));
-		$this->hasLANBroadcast = (($this->get(1) !== "\x00"));
+		$this->rainLevel = $this->getLFloat();
+		$this->lightningLevel = $this->getLFloat();
+		$this->hasConfirmedPlatformLockedContent = $this->getBool();
+		$this->isMultiplayerGame = $this->getBool();
+		$this->hasLANBroadcast = $this->getBool();
 		$this->xboxLiveBroadcastMode = $this->getVarInt();
 		$this->platformBroadcastMode = $this->getVarInt();
-		$this->commandsEnabled = (($this->get(1) !== "\x00"));
-		$this->isTexturePacksRequired = (($this->get(1) !== "\x00"));
+		$this->commandsEnabled = $this->getBool();
+		$this->isTexturePacksRequired = $this->getBool();
 		$this->gameRules = $this->getGameRules();
 		$this->experiments = Experiments::read($this);
-		$this->hasBonusChestEnabled = (($this->get(1) !== "\x00"));
-		$this->hasStartWithMapEnabled = (($this->get(1) !== "\x00"));
+		$this->hasBonusChestEnabled = $this->getBool();
+		$this->hasStartWithMapEnabled = $this->getBool();
 		$this->defaultPlayerPermission = $this->getVarInt();
-		$this->serverChunkTickRadius = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->hasLockedBehaviorPack = (($this->get(1) !== "\x00"));
-		$this->hasLockedResourcePack = (($this->get(1) !== "\x00"));
-		$this->isFromLockedWorldTemplate = (($this->get(1) !== "\x00"));
-		$this->useMsaGamertagsOnly = (($this->get(1) !== "\x00"));
-		$this->isFromWorldTemplate = (($this->get(1) !== "\x00"));
-		$this->isWorldTemplateOptionLocked = (($this->get(1) !== "\x00"));
-		$this->onlySpawnV1Villagers = (($this->get(1) !== "\x00"));
+		$this->serverChunkTickRadius = $this->getLInt();
+		$this->hasLockedBehaviorPack = $this->getBool();
+		$this->hasLockedResourcePack = $this->getBool();
+		$this->isFromLockedWorldTemplate = $this->getBool();
+		$this->useMsaGamertagsOnly = $this->getBool();
+		$this->isFromWorldTemplate = $this->getBool();
+		$this->isWorldTemplateOptionLocked = $this->getBool();
+		$this->onlySpawnV1Villagers = $this->getBool();
 		$this->vanillaVersion = $this->getString();
-		$this->limitedWorldWidth = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->limitedWorldLength = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->isNewNether = (($this->get(1) !== "\x00"));
-		if((($this->get(1) !== "\x00"))){
-			$this->experimentalGameplayOverride = (($this->get(1) !== "\x00"));
+		$this->limitedWorldWidth = $this->getLInt();
+		$this->limitedWorldLength = $this->getLInt();
+		$this->isNewNether = $this->getBool();
+		if($this->getBool()){
+			$this->experimentalGameplayOverride = $this->getBool();
 		}else{
 			$this->experimentalGameplayOverride = null;
 		}
@@ -234,9 +234,9 @@ class StartGamePacket extends DataPacket{
 		$this->levelId = $this->getString();
 		$this->worldName = $this->getString();
 		$this->premiumWorldTemplateId = $this->getString();
-		$this->isTrial = (($this->get(1) !== "\x00"));
+		$this->isTrial = $this->getBool();
 		$this->playerMovementType = $this->getVarInt();
-		$this->currentTick = (Binary::readLLong($this->get(8)));
+		$this->currentTick = $this->getLLong();
 
 		$this->enchantmentSeed = $this->getVarInt();
 
@@ -250,14 +250,14 @@ class StartGamePacket extends DataPacket{
 		$this->itemTable = [];
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 			$stringId = $this->getString();
-			$numericId = ((\unpack("v", $this->get(2))[1] << 48 >> 48));
-			$isComponentBased = (($this->get(1) !== "\x00"));
+			$numericId = $this->getSignedLShort();
+			$isComponentBased = $this->getBool();
 
 			$this->itemTable[] = new ItemTypeEntry($stringId, $numericId, $isComponentBased);
 		}
 
 		$this->multiplayerCorrelationId = $this->getString();
-		$this->enableNewInventorySystem = (($this->get(1) !== "\x00"));
+		$this->enableNewInventorySystem = $this->getBool();
 	}
 
 	protected function encodePayload(){
@@ -267,8 +267,8 @@ class StartGamePacket extends DataPacket{
 
 		$this->putVector3($this->playerPosition);
 
-		($this->buffer .= (\pack("g", $this->pitch)));
-		($this->buffer .= (\pack("g", $this->yaw)));
+		$this->putLFloat($this->pitch);
+		$this->putLFloat($this->yaw);
 
 		//Level settings
 		$this->putVarInt($this->seed);
@@ -277,48 +277,48 @@ class StartGamePacket extends DataPacket{
 		$this->putVarInt($this->worldGamemode);
 		$this->putVarInt($this->difficulty);
 		$this->putBlockPosition($this->spawnX, $this->spawnY, $this->spawnZ);
-		($this->buffer .= ($this->hasAchievementsDisabled ? "\x01" : "\x00"));
+		$this->putBool($this->hasAchievementsDisabled);
 		$this->putVarInt($this->time);
 		$this->putVarInt($this->eduEditionOffer);
-		($this->buffer .= ($this->hasEduFeaturesEnabled ? "\x01" : "\x00"));
+		$this->putBool($this->hasEduFeaturesEnabled);
 		$this->putString($this->eduProductUUID);
-		($this->buffer .= (\pack("g", $this->rainLevel)));
-		($this->buffer .= (\pack("g", $this->lightningLevel)));
-		($this->buffer .= ($this->hasConfirmedPlatformLockedContent ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isMultiplayerGame ? "\x01" : "\x00"));
-		($this->buffer .= ($this->hasLANBroadcast ? "\x01" : "\x00"));
+		$this->putLFloat($this->rainLevel);
+		$this->putLFloat($this->lightningLevel);
+		$this->putBool($this->hasConfirmedPlatformLockedContent);
+		$this->putBool($this->isMultiplayerGame);
+		$this->putBool($this->hasLANBroadcast);
 		$this->putVarInt($this->xboxLiveBroadcastMode);
 		$this->putVarInt($this->platformBroadcastMode);
-		($this->buffer .= ($this->commandsEnabled ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isTexturePacksRequired ? "\x01" : "\x00"));
+		$this->putBool($this->commandsEnabled);
+		$this->putBool($this->isTexturePacksRequired);
 		$this->putGameRules($this->gameRules);
 		$this->experiments->write($this);
-		($this->buffer .= ($this->hasBonusChestEnabled ? "\x01" : "\x00"));
-		($this->buffer .= ($this->hasStartWithMapEnabled ? "\x01" : "\x00"));
+		$this->putBool($this->hasBonusChestEnabled);
+		$this->putBool($this->hasStartWithMapEnabled);
 		$this->putVarInt($this->defaultPlayerPermission);
-		($this->buffer .= (\pack("V", $this->serverChunkTickRadius)));
-		($this->buffer .= ($this->hasLockedBehaviorPack ? "\x01" : "\x00"));
-		($this->buffer .= ($this->hasLockedResourcePack ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isFromLockedWorldTemplate ? "\x01" : "\x00"));
-		($this->buffer .= ($this->useMsaGamertagsOnly ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isFromWorldTemplate ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isWorldTemplateOptionLocked ? "\x01" : "\x00"));
-		($this->buffer .= ($this->onlySpawnV1Villagers ? "\x01" : "\x00"));
+		$this->putLInt($this->serverChunkTickRadius);
+		$this->putBool($this->hasLockedBehaviorPack);
+		$this->putBool($this->hasLockedResourcePack);
+		$this->putBool($this->isFromLockedWorldTemplate);
+		$this->putBool($this->useMsaGamertagsOnly);
+		$this->putBool($this->isFromWorldTemplate);
+		$this->putBool($this->isWorldTemplateOptionLocked);
+		$this->putBool($this->onlySpawnV1Villagers);
 		$this->putString($this->vanillaVersion);
-		($this->buffer .= (\pack("V", $this->limitedWorldWidth)));
-		($this->buffer .= (\pack("V", $this->limitedWorldLength)));
-		($this->buffer .= ($this->isNewNether ? "\x01" : "\x00"));
-		($this->buffer .= ($this->experimentalGameplayOverride !== null ? "\x01" : "\x00"));
+		$this->putLInt($this->limitedWorldWidth);
+		$this->putLInt($this->limitedWorldLength);
+		$this->putBool($this->isNewNether);
+		$this->putBool($this->experimentalGameplayOverride !== null);
 		if($this->experimentalGameplayOverride !== null){
-			($this->buffer .= ($this->experimentalGameplayOverride ? "\x01" : "\x00"));
+			$this->putBool($this->experimentalGameplayOverride);
 		}
 
 		$this->putString($this->levelId);
 		$this->putString($this->worldName);
 		$this->putString($this->premiumWorldTemplateId);
-		($this->buffer .= ($this->isTrial ? "\x01" : "\x00"));
+		$this->putBool($this->isTrial);
 		$this->putVarInt($this->playerMovementType);
-		($this->buffer .= (\pack("VV", $this->currentTick & 0xFFFFFFFF, $this->currentTick >> 32)));
+		$this->putLLong($this->currentTick);
 
 		$this->putVarInt($this->enchantmentSeed);
 
@@ -326,17 +326,17 @@ class StartGamePacket extends DataPacket{
 		$nbtWriter = new NetworkLittleEndianNBTStream();
 		foreach($this->blockPalette as $entry){
 			$this->putString($entry->getName());
-			($this->buffer .= $nbtWriter->write($entry->getStates()));
+			$this->put($nbtWriter->write($entry->getStates()));
 		}
 		$this->putUnsignedVarInt(count($this->itemTable));
 		foreach($this->itemTable as $entry){
 			$this->putString($entry->getStringId());
-			($this->buffer .= (\pack("v", $entry->getNumericId())));
-			($this->buffer .= ($entry->isComponentBased() ? "\x01" : "\x00"));
+			$this->putLShort($entry->getNumericId());
+			$this->putBool($entry->isComponentBased());
 		}
 
 		$this->putString($this->multiplayerCorrelationId);
-		($this->buffer .= ($this->enableNewInventorySystem ? "\x01" : "\x00"));
+		$this->putBool($this->enableNewInventorySystem);
 	}
 
 	public function handle(NetworkSession $session) : bool{

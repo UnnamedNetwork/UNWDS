@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -49,15 +49,15 @@ class PlaySoundPacket extends DataPacket{
 		$this->x /= 8;
 		$this->y /= 8;
 		$this->z /= 8;
-		$this->volume = ((\unpack("g", $this->get(4))[1]));
-		$this->pitch = ((\unpack("g", $this->get(4))[1]));
+		$this->volume = $this->getLFloat();
+		$this->pitch = $this->getLFloat();
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->soundName);
 		$this->putBlockPosition((int) ($this->x * 8), (int) ($this->y * 8), (int) ($this->z * 8));
-		($this->buffer .= (\pack("g", $this->volume)));
-		($this->buffer .= (\pack("g", $this->pitch)));
+		$this->putLFloat($this->volume);
+		$this->putLFloat($this->pitch);
 	}
 
 	public function handle(NetworkSession $session) : bool{

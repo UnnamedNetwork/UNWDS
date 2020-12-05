@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\ResourcePackType;
@@ -48,22 +48,22 @@ class ResourcePackDataInfoPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->packId = $this->getString();
-		$this->maxChunkSize = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->chunkCount = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-		$this->compressedPackSize = (Binary::readLLong($this->get(8)));
+		$this->maxChunkSize = $this->getLInt();
+		$this->chunkCount = $this->getLInt();
+		$this->compressedPackSize = $this->getLLong();
 		$this->sha256 = $this->getString();
-		$this->isPremium = (($this->get(1) !== "\x00"));
-		$this->packType = (\ord($this->get(1)));
+		$this->isPremium = $this->getBool();
+		$this->packType = $this->getByte();
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->packId);
-		($this->buffer .= (\pack("V", $this->maxChunkSize)));
-		($this->buffer .= (\pack("V", $this->chunkCount)));
-		($this->buffer .= (\pack("VV", $this->compressedPackSize & 0xFFFFFFFF, $this->compressedPackSize >> 32)));
+		$this->putLInt($this->maxChunkSize);
+		$this->putLInt($this->chunkCount);
+		$this->putLLong($this->compressedPackSize);
 		$this->putString($this->sha256);
-		($this->buffer .= ($this->isPremium ? "\x01" : "\x00"));
-		($this->buffer .= \chr($this->packType));
+		$this->putBool($this->isPremium);
+		$this->putByte($this->packType);
 	}
 
 	public function handle(NetworkSession $session) : bool{

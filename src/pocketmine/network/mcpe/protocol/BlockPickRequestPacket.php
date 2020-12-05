@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -43,14 +43,14 @@ class BlockPickRequestPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->getSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
-		$this->addUserData = (($this->get(1) !== "\x00"));
-		$this->hotbarSlot = (\ord($this->get(1)));
+		$this->addUserData = $this->getBool();
+		$this->hotbarSlot = $this->getByte();
 	}
 
 	protected function encodePayload(){
 		$this->putSignedBlockPosition($this->blockX, $this->blockY, $this->blockZ);
-		($this->buffer .= ($this->addUserData ? "\x01" : "\x00"));
-		($this->buffer .= \chr($this->hotbarSlot));
+		$this->putBool($this->addUserData);
+		$this->putByte($this->hotbarSlot);
 	}
 
 	public function handle(NetworkSession $session) : bool{

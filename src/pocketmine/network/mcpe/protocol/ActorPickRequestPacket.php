@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -36,13 +36,13 @@ class ActorPickRequestPacket extends DataPacket{
 	public $hotbarSlot;
 
 	protected function decodePayload(){
-		$this->entityUniqueId = (Binary::readLLong($this->get(8)));
-		$this->hotbarSlot = (\ord($this->get(1)));
+		$this->entityUniqueId = $this->getLLong();
+		$this->hotbarSlot = $this->getByte();
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= (\pack("VV", $this->entityUniqueId & 0xFFFFFFFF, $this->entityUniqueId >> 32)));
-		($this->buffer .= \chr($this->hotbarSlot));
+		$this->putLLong($this->entityUniqueId);
+		$this->putByte($this->hotbarSlot);
 	}
 
 	public function handle(NetworkSession $session) : bool{

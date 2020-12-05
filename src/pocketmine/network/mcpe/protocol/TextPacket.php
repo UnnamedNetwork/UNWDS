@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use function count;
@@ -59,8 +59,8 @@ class TextPacket extends DataPacket{
 	public $platformChatId = "";
 
 	protected function decodePayload(){
-		$this->type = (\ord($this->get(1)));
-		$this->needsTranslation = (($this->get(1) !== "\x00"));
+		$this->type = $this->getByte();
+		$this->needsTranslation = $this->getBool();
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:
@@ -91,8 +91,8 @@ class TextPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->type));
-		($this->buffer .= ($this->needsTranslation ? "\x01" : "\x00"));
+		$this->putByte($this->type);
+		$this->putBool($this->needsTranslation);
 		switch($this->type){
 			case self::TYPE_CHAT:
 			case self::TYPE_WHISPER:

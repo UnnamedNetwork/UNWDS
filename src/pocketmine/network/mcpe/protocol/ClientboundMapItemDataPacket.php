@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\DimensionIds;
@@ -71,8 +71,8 @@ class ClientboundMapItemDataPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->mapId = $this->getEntityUniqueId();
 		$this->type = $this->getUnsignedVarInt();
-		$this->dimensionId = (\ord($this->get(1)));
-		$this->isLocked = (($this->get(1) !== "\x00"));
+		$this->dimensionId = $this->getByte();
+		$this->isLocked = $this->getBool();
 
 		if(($this->type & 0x08) !== 0){
 			$count = $this->getUnsignedVarInt();
@@ -82,13 +82,13 @@ class ClientboundMapItemDataPacket extends DataPacket{
 		}
 
 		if(($this->type & (0x08 | self::BITFLAG_DECORATION_UPDATE | self::BITFLAG_TEXTURE_UPDATE)) !== 0){ //Decoration bitflag or colour bitflag
-			$this->scale = (\ord($this->get(1)));
+			$this->scale = $this->getByte();
 		}
 
 		if(($this->type & self::BITFLAG_DECORATION_UPDATE) !== 0){
 			for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 				$object = new MapTrackedObject();
-				$object->type = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+				$object->type = $this->getLInt();
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
 					$this->getBlockPosition($object->x, $object->y, $object->z);
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
@@ -100,10 +100,10 @@ class ClientboundMapItemDataPacket extends DataPacket{
 			}
 
 			for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-				$icon = (\ord($this->get(1)));
-				$rotation = (\ord($this->get(1)));
-				$xOffset = (\ord($this->get(1)));
-				$yOffset = (\ord($this->get(1)));
+				$icon = $this->getByte();
+				$rotation = $this->getByte();
+				$xOffset = $this->getByte();
+				$yOffset = $this->getByte();
 				$label = $this->getString();
 				$color = Color::fromABGR($this->getUnsignedVarInt());
 				$this->decorations[] = new MapDecoration($icon, $rotation, $xOffset, $yOffset, $label, $color);
@@ -144,8 +144,8 @@ class ClientboundMapItemDataPacket extends DataPacket{
 		}
 
 		$this->putUnsignedVarInt($type);
-		($this->buffer .= \chr($this->dimensionId));
-		($this->buffer .= ($this->isLocked ? "\x01" : "\x00"));
+		$this->putByte($this->dimensionId);
+		$this->putBool($this->isLocked);
 
 		if(($type & 0x08) !== 0){ //TODO: find out what these are for
 			$this->putUnsignedVarInt($eidsCount);
@@ -155,13 +155,13 @@ class ClientboundMapItemDataPacket extends DataPacket{
 		}
 
 		if(($type & (0x08 | self::BITFLAG_TEXTURE_UPDATE | self::BITFLAG_DECORATION_UPDATE)) !== 0){
-			($this->buffer .= \chr($this->scale));
+			$this->putByte($this->scale);
 		}
 
 		if(($type & self::BITFLAG_DECORATION_UPDATE) !== 0){
 			$this->putUnsignedVarInt(count($this->trackedEntities));
 			foreach($this->trackedEntities as $object){
-				($this->buffer .= (\pack("V", $object->type)));
+				$this->putLInt($object->type);
 				if($object->type === MapTrackedObject::TYPE_BLOCK){
 					$this->putBlockPosition($object->x, $object->y, $object->z);
 				}elseif($object->type === MapTrackedObject::TYPE_ENTITY){
@@ -173,10 +173,10 @@ class ClientboundMapItemDataPacket extends DataPacket{
 
 			$this->putUnsignedVarInt($decorationCount);
 			foreach($this->decorations as $decoration){
-				($this->buffer .= \chr($decoration->getIcon()));
-				($this->buffer .= \chr($decoration->getRotation()));
-				($this->buffer .= \chr($decoration->getXOffset()));
-				($this->buffer .= \chr($decoration->getYOffset()));
+				$this->putByte($decoration->getIcon());
+				$this->putByte($decoration->getRotation());
+				$this->putByte($decoration->getXOffset());
+				$this->putByte($decoration->getYOffset());
 				$this->putString($decoration->getLabel());
 				$this->putUnsignedVarInt($decoration->getColor()->toABGR());
 			}

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -49,19 +49,19 @@ class MobEffectPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->eventId = (\ord($this->get(1)));
+		$this->eventId = $this->getByte();
 		$this->effectId = $this->getVarInt();
 		$this->amplifier = $this->getVarInt();
-		$this->particles = (($this->get(1) !== "\x00"));
+		$this->particles = $this->getBool();
 		$this->duration = $this->getVarInt();
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		($this->buffer .= \chr($this->eventId));
+		$this->putByte($this->eventId);
 		$this->putVarInt($this->effectId);
 		$this->putVarInt($this->amplifier);
-		($this->buffer .= ($this->particles ? "\x01" : "\x00"));
+		$this->putBool($this->particles);
 		$this->putVarInt($this->duration);
 	}
 

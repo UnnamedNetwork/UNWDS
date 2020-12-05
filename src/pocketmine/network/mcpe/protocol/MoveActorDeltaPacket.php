@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -59,7 +59,7 @@ class MoveActorDeltaPacket extends DataPacket{
 
 	private function maybeReadCoord(int $flag) : float{
 		if(($this->flags & $flag) !== 0){
-			return ((\unpack("g", $this->get(4))[1]));
+			return $this->getLFloat();
 		}
 		return 0;
 	}
@@ -73,7 +73,7 @@ class MoveActorDeltaPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->flags = ((\unpack("v", $this->get(2))[1]));
+		$this->flags = $this->getLShort();
 		$this->xPos = $this->maybeReadCoord(self::FLAG_HAS_X);
 		$this->yPos = $this->maybeReadCoord(self::FLAG_HAS_Y);
 		$this->zPos = $this->maybeReadCoord(self::FLAG_HAS_Z);
@@ -84,7 +84,7 @@ class MoveActorDeltaPacket extends DataPacket{
 
 	private function maybeWriteCoord(int $flag, float $val) : void{
 		if(($this->flags & $flag) !== 0){
-			($this->buffer .= (\pack("g", $val)));
+			$this->putLFloat($val);
 		}
 	}
 
@@ -96,7 +96,7 @@ class MoveActorDeltaPacket extends DataPacket{
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		($this->buffer .= (\pack("v", $this->flags)));
+		$this->putLShort($this->flags);
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xPos);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yPos);
 		$this->maybeWriteCoord(self::FLAG_HAS_Z, $this->zPos);

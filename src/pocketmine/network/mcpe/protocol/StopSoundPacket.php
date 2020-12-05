@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -37,12 +37,12 @@ class StopSoundPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->soundName = $this->getString();
-		$this->stopAll = (($this->get(1) !== "\x00"));
+		$this->stopAll = $this->getBool();
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->soundName);
-		($this->buffer .= ($this->stopAll ? "\x01" : "\x00"));
+		$this->putBool($this->stopAll);
 	}
 
 	public function handle(NetworkSession $session) : bool{

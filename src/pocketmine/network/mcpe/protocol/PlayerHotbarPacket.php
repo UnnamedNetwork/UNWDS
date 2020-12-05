@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\ContainerIds;
@@ -43,14 +43,14 @@ class PlayerHotbarPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->selectedHotbarSlot = $this->getUnsignedVarInt();
-		$this->windowId = (\ord($this->get(1)));
-		$this->selectHotbarSlot = (($this->get(1) !== "\x00"));
+		$this->windowId = $this->getByte();
+		$this->selectHotbarSlot = $this->getBool();
 	}
 
 	protected function encodePayload(){
 		$this->putUnsignedVarInt($this->selectedHotbarSlot);
-		($this->buffer .= \chr($this->windowId));
-		($this->buffer .= ($this->selectHotbarSlot ? "\x01" : "\x00"));
+		$this->putByte($this->windowId);
+		$this->putBool($this->selectHotbarSlot);
 	}
 
 	public function handle(NetworkSession $session) : bool{

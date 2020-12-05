@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\Experiments;
@@ -48,7 +48,7 @@ class ResourcePackStackPacket extends DataPacket{
 	public $experiments;
 
 	protected function decodePayload(){
-		$this->mustAccept = (($this->get(1) !== "\x00"));
+		$this->mustAccept = $this->getBool();
 		$behaviorPackCount = $this->getUnsignedVarInt();
 		while($behaviorPackCount-- > 0){
 			$this->getString();
@@ -68,7 +68,7 @@ class ResourcePackStackPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= ($this->mustAccept ? "\x01" : "\x00"));
+		$this->putBool($this->mustAccept);
 
 		$this->putUnsignedVarInt(count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){

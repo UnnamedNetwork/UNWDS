@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\CommandOriginData;
@@ -41,13 +41,13 @@ class CommandRequestPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->command = $this->getString();
 		$this->originData = $this->getCommandOriginData();
-		$this->isInternal = (($this->get(1) !== "\x00"));
+		$this->isInternal = $this->getBool();
 	}
 
 	protected function encodePayload(){
 		$this->putString($this->command);
 		$this->putCommandOriginData($this->originData);
-		($this->buffer .= ($this->isInternal ? "\x01" : "\x00"));
+		$this->putBool($this->isInternal);
 	}
 
 	public function handle(NetworkSession $session) : bool{

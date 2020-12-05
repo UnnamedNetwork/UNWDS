@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\WindowTypes;
@@ -55,29 +55,29 @@ class UpdateTradePacket extends DataPacket{
 	public $offers;
 
 	protected function decodePayload(){
-		$this->windowId = (\ord($this->get(1)));
-		$this->windowType = (\ord($this->get(1)));
+		$this->windowId = $this->getByte();
+		$this->windowType = $this->getByte();
 		$this->windowSlotCount = $this->getVarInt();
 		$this->tradeTier = $this->getVarInt();
 		$this->traderEid = $this->getEntityUniqueId();
 		$this->playerEid = $this->getEntityUniqueId();
 		$this->displayName = $this->getString();
-		$this->isV2Trading = (($this->get(1) !== "\x00"));
-		$this->isWilling = (($this->get(1) !== "\x00"));
+		$this->isV2Trading = $this->getBool();
+		$this->isWilling = $this->getBool();
 		$this->offers = $this->getRemaining();
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->windowId));
-		($this->buffer .= \chr($this->windowType));
+		$this->putByte($this->windowId);
+		$this->putByte($this->windowType);
 		$this->putVarInt($this->windowSlotCount);
 		$this->putVarInt($this->tradeTier);
 		$this->putEntityUniqueId($this->traderEid);
 		$this->putEntityUniqueId($this->playerEid);
 		$this->putString($this->displayName);
-		($this->buffer .= ($this->isV2Trading ? "\x01" : "\x00"));
-		($this->buffer .= ($this->isWilling ? "\x01" : "\x00"));
-		($this->buffer .= $this->offers);
+		$this->putBool($this->isV2Trading);
+		$this->putBool($this->isWilling);
+		$this->put($this->offers);
 	}
 
 	public function handle(NetworkSession $session) : bool{

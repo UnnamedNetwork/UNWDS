@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
@@ -58,7 +58,7 @@ class PositionTrackingDBServerBroadcastPacket extends DataPacket/* implements Cl
 	public function getNbt() : CompoundTag{ return $this->nbt; }
 
 	protected function decodePayload() : void{
-		$this->action = (\ord($this->get(1)));
+		$this->action = $this->getByte();
 		$this->trackingId = $this->getVarInt();
 		$offset = $this->getOffset();
 		$nbt = (new NetworkLittleEndianNBTStream())->read($this->getBuffer(), false, $offset);
@@ -70,9 +70,9 @@ class PositionTrackingDBServerBroadcastPacket extends DataPacket/* implements Cl
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= \chr($this->action));
+		$this->putByte($this->action);
 		$this->putVarInt($this->trackingId);
-		($this->buffer .= (new NetworkLittleEndianNBTStream())->write($this->nbt));
+		$this->put((new NetworkLittleEndianNBTStream())->write($this->nbt));
 	}
 
 	public function handle(NetworkSession $handler) : bool{

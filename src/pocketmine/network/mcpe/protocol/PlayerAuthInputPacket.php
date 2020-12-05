@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -138,12 +138,12 @@ class PlayerAuthInputPacket extends DataPacket/* implements ServerboundPacket*/{
 	public function getDelta() : Vector3{ return $this->delta; }
 
 	protected function decodePayload() : void{
-		$this->pitch = ((\unpack("g", $this->get(4))[1]));
-		$this->yaw = ((\unpack("g", $this->get(4))[1]));
+		$this->pitch = $this->getLFloat();
+		$this->yaw = $this->getLFloat();
 		$this->position = $this->getVector3();
-		$this->moveVecX = ((\unpack("g", $this->get(4))[1]));
-		$this->moveVecZ = ((\unpack("g", $this->get(4))[1]));
-		$this->headYaw = ((\unpack("g", $this->get(4))[1]));
+		$this->moveVecX = $this->getLFloat();
+		$this->moveVecZ = $this->getLFloat();
+		$this->headYaw = $this->getLFloat();
 		$this->inputFlags = $this->getUnsignedVarLong();
 		$this->inputMode = $this->getUnsignedVarInt();
 		$this->playMode = $this->getUnsignedVarInt();
@@ -155,12 +155,12 @@ class PlayerAuthInputPacket extends DataPacket/* implements ServerboundPacket*/{
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= (\pack("g", $this->pitch)));
-		($this->buffer .= (\pack("g", $this->yaw)));
+		$this->putLFloat($this->pitch);
+		$this->putLFloat($this->yaw);
 		$this->putVector3($this->position);
-		($this->buffer .= (\pack("g", $this->moveVecX)));
-		($this->buffer .= (\pack("g", $this->moveVecZ)));
-		($this->buffer .= (\pack("g", $this->headYaw)));
+		$this->putLFloat($this->moveVecX);
+		$this->putLFloat($this->moveVecZ);
+		$this->putLFloat($this->headYaw);
 		$this->putUnsignedVarLong($this->inputFlags);
 		$this->putUnsignedVarInt($this->inputMode);
 		$this->putUnsignedVarInt($this->playMode);

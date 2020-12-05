@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -44,17 +44,17 @@ class LecternUpdatePacket extends DataPacket/* implements ServerboundPacket*/{
 	public $dropBook;
 
 	protected function decodePayload() : void{
-		$this->page = (\ord($this->get(1)));
-		$this->totalPages = (\ord($this->get(1)));
+		$this->page = $this->getByte();
+		$this->totalPages = $this->getByte();
 		$this->getBlockPosition($this->x, $this->y, $this->z);
-		$this->dropBook = (($this->get(1) !== "\x00"));
+		$this->dropBook = $this->getBool();
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= \chr($this->page));
-		($this->buffer .= \chr($this->totalPages));
+		$this->putByte($this->page);
+		$this->putByte($this->totalPages);
 		$this->putBlockPosition($this->x, $this->y, $this->z);
-		($this->buffer .= ($this->dropBook ? "\x01" : "\x00"));
+		$this->putBool($this->dropBook);
 	}
 
 	public function handle(NetworkSession $session) : bool{

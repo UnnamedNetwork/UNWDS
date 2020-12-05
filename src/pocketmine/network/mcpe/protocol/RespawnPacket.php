@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -44,13 +44,13 @@ class RespawnPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->position = $this->getVector3();
-		$this->respawnState = (\ord($this->get(1)));
+		$this->respawnState = $this->getByte();
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 	}
 
 	protected function encodePayload(){
 		$this->putVector3($this->position);
-		($this->buffer .= \chr($this->respawnState));
+		$this->putByte($this->respawnState);
 		$this->putEntityRuntimeId($this->entityRuntimeId);
 	}
 

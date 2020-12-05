@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -55,15 +55,15 @@ class CameraShakePacket extends DataPacket/* implements ClientboundPacket*/{
 	public function getShakeType() : int{ return $this->shakeType; }
 
 	protected function decodePayload() : void{
-		$this->intensity = ((\unpack("g", $this->get(4))[1]));
-		$this->duration = ((\unpack("g", $this->get(4))[1]));
-		$this->shakeType = (\ord($this->get(1)));
+		$this->intensity = $this->getLFloat();
+		$this->duration = $this->getLFloat();
+		$this->shakeType = $this->getByte();
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= (\pack("g", $this->intensity)));
-		($this->buffer .= (\pack("g", $this->duration)));
-		($this->buffer .= \chr($this->shakeType));
+		$this->putLFloat($this->intensity);
+		$this->putLFloat($this->duration);
+		$this->putByte($this->shakeType);
 	}
 
 	public function handle(NetworkSession $handler) : bool{

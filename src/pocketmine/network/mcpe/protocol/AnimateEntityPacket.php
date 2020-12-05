@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use function count;
@@ -83,7 +83,7 @@ class AnimateEntityPacket extends DataPacket/* implements ClientboundPacket*/{
 		$this->nextState = $this->getString();
 		$this->stopExpression = $this->getString();
 		$this->controller = $this->getString();
-		$this->blendOutTime = ((\unpack("g", $this->get(4))[1]));
+		$this->blendOutTime = $this->getLFloat();
 		$this->actorRuntimeIds = [];
 		for($i = 0, $len = $this->getUnsignedVarInt(); $i < $len; ++$i){
 			$this->actorRuntimeIds[] = $this->getEntityRuntimeId();
@@ -95,7 +95,7 @@ class AnimateEntityPacket extends DataPacket/* implements ClientboundPacket*/{
 		$this->putString($this->nextState);
 		$this->putString($this->stopExpression);
 		$this->putString($this->controller);
-		($this->buffer .= (\pack("g", $this->blendOutTime)));
+		$this->putLFloat($this->blendOutTime);
 		$this->putUnsignedVarInt(count($this->actorRuntimeIds));
 		foreach($this->actorRuntimeIds as $id){
 			$this->putEntityRuntimeId($id);

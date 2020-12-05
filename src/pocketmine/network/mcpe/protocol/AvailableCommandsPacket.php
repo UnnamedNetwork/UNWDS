@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\CommandData;
@@ -210,21 +210,21 @@ class AvailableCommandsPacket extends DataPacket{
 	 */
 	protected function getEnumValueIndex(int $valueCount) : int{
 		if($valueCount < 256){
-			return (\ord($this->get(1)));
+			return $this->getByte();
 		}elseif($valueCount < 65536){
-			return ((\unpack("v", $this->get(2))[1]));
+			return $this->getLShort();
 		}else{
-			return ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+			return $this->getLInt();
 		}
 	}
 
 	protected function putEnumValueIndex(int $index, int $valueCount) : void{
 		if($valueCount < 256){
-			($this->buffer .= \chr($index));
+			$this->putByte($index);
 		}elseif($valueCount < 65536){
-			($this->buffer .= (\pack("v", $index)));
+			$this->putLShort($index);
 		}else{
-			($this->buffer .= (\pack("V", $index)));
+			$this->putLInt($index);
 		}
 	}
 
@@ -234,11 +234,11 @@ class AvailableCommandsPacket extends DataPacket{
 	 */
 	protected function getEnumConstraint(array $enums, array $enumValues) : CommandEnumConstraint{
 		//wtf, what was wrong with an offset inside the enum? :(
-		$valueIndex = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		$valueIndex = $this->getLInt();
 		if(!isset($enumValues[$valueIndex])){
 			throw new \UnexpectedValueException("Enum constraint refers to unknown enum value index $valueIndex");
 		}
-		$enumIndex = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+		$enumIndex = $this->getLInt();
 		if(!isset($enums[$enumIndex])){
 			throw new \UnexpectedValueException("Enum constraint refers to unknown enum index $enumIndex");
 		}
@@ -250,7 +250,7 @@ class AvailableCommandsPacket extends DataPacket{
 
 		$constraintIds = [];
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
-			$constraintIds[] = (\ord($this->get(1)));
+			$constraintIds[] = $this->getByte();
 		}
 
 		return new CommandEnumConstraint($enum, $valueOffset, $constraintIds);
@@ -261,11 +261,11 @@ class AvailableCommandsPacket extends DataPacket{
 	 * @param int[]                 $enumValueIndexes string value -> int index
 	 */
 	protected function putEnumConstraint(CommandEnumConstraint $constraint, array $enumIndexes, array $enumValueIndexes) : void{
-		($this->buffer .= (\pack("V", $enumValueIndexes[$constraint->getAffectedValue()])));
-		($this->buffer .= (\pack("V", $enumIndexes[$constraint->getEnum()->enumName])));
+		$this->putLInt($enumValueIndexes[$constraint->getAffectedValue()]);
+		$this->putLInt($enumIndexes[$constraint->getEnum()->enumName]);
 		$this->putUnsignedVarInt(count($constraint->getConstraints()));
 		foreach($constraint->getConstraints() as $v){
-			($this->buffer .= \chr($v));
+			$this->putByte($v);
 		}
 	}
 
@@ -280,18 +280,18 @@ class AvailableCommandsPacket extends DataPacket{
 		$retval = new CommandData();
 		$retval->commandName = $this->getString();
 		$retval->commandDescription = $this->getString();
-		$retval->flags = (\ord($this->get(1)));
-		$retval->permission = (\ord($this->get(1)));
-		$retval->aliases = $enums[((\unpack("V", $this->get(4))[1] << 32 >> 32))] ?? null;
+		$retval->flags = $this->getByte();
+		$retval->permission = $this->getByte();
+		$retval->aliases = $enums[$this->getLInt()] ?? null;
 
 		for($overloadIndex = 0, $overloadCount = $this->getUnsignedVarInt(); $overloadIndex < $overloadCount; ++$overloadIndex){
 			$retval->overloads[$overloadIndex] = [];
 			for($paramIndex = 0, $paramCount = $this->getUnsignedVarInt(); $paramIndex < $paramCount; ++$paramIndex){
 				$parameter = new CommandParameter();
 				$parameter->paramName = $this->getString();
-				$parameter->paramType = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
-				$parameter->isOptional = (($this->get(1) !== "\x00"));
-				$parameter->flags = (\ord($this->get(1)));
+				$parameter->paramType = $this->getLInt();
+				$parameter->isOptional = $this->getBool();
+				$parameter->flags = $this->getByte();
 
 				if(($parameter->paramType & self::ARG_FLAG_ENUM) !== 0){
 					$index = ($parameter->paramType & 0xffff);
@@ -323,13 +323,13 @@ class AvailableCommandsPacket extends DataPacket{
 	protected function putCommandData(CommandData $data, array $enumIndexes, array $postfixIndexes) : void{
 		$this->putString($data->commandName);
 		$this->putString($data->commandDescription);
-		($this->buffer .= \chr($data->flags));
-		($this->buffer .= \chr($data->permission));
+		$this->putByte($data->flags);
+		$this->putByte($data->permission);
 
 		if($data->aliases !== null){
-			($this->buffer .= (\pack("V", $enumIndexes[$data->aliases->enumName] ?? -1)));
+			$this->putLInt($enumIndexes[$data->aliases->enumName] ?? -1);
 		}else{
-			($this->buffer .= (\pack("V", -1)));
+			$this->putLInt(-1);
 		}
 
 		$this->putUnsignedVarInt(count($data->overloads));
@@ -351,9 +351,9 @@ class AvailableCommandsPacket extends DataPacket{
 					$type = $parameter->paramType;
 				}
 
-				($this->buffer .= (\pack("V", $type)));
-				($this->buffer .= ($parameter->isOptional ? "\x01" : "\x00"));
-				($this->buffer .= \chr($parameter->flags));
+				$this->putLInt($type);
+				$this->putBool($parameter->isOptional);
+				$this->putByte($parameter->flags);
 			}
 		}
 	}

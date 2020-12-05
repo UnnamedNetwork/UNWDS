@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -100,13 +100,13 @@ class ActorEventPacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->event = (\ord($this->get(1)));
+		$this->event = $this->getByte();
 		$this->data = $this->getVarInt();
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		($this->buffer .= \chr($this->event));
+		$this->putByte($this->event);
 		$this->putVarInt($this->data);
 	}
 

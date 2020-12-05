@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\NetworkSession;
@@ -45,17 +45,17 @@ class MobEquipmentPacket extends DataPacket{
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		$this->item = $this->getSlot();
-		$this->inventorySlot = (\ord($this->get(1)));
-		$this->hotbarSlot = (\ord($this->get(1)));
-		$this->windowId = (\ord($this->get(1)));
+		$this->inventorySlot = $this->getByte();
+		$this->hotbarSlot = $this->getByte();
+		$this->windowId = $this->getByte();
 	}
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
 		$this->putSlot($this->item);
-		($this->buffer .= \chr($this->inventorySlot));
-		($this->buffer .= \chr($this->hotbarSlot));
-		($this->buffer .= \chr($this->windowId));
+		$this->putByte($this->inventorySlot);
+		$this->putByte($this->hotbarSlot);
+		$this->putByte($this->windowId);
 	}
 
 	public function handle(NetworkSession $session) : bool{

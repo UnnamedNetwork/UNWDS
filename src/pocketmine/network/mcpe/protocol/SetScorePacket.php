@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
@@ -41,14 +41,14 @@ class SetScorePacket extends DataPacket{
 	public $entries = [];
 
 	protected function decodePayload(){
-		$this->type = (\ord($this->get(1)));
+		$this->type = $this->getByte();
 		for($i = 0, $i2 = $this->getUnsignedVarInt(); $i < $i2; ++$i){
 			$entry = new ScorePacketEntry();
 			$entry->scoreboardId = $this->getVarLong();
 			$entry->objectiveName = $this->getString();
-			$entry->score = ((\unpack("V", $this->get(4))[1] << 32 >> 32));
+			$entry->score = $this->getLInt();
 			if($this->type !== self::TYPE_REMOVE){
-				$entry->type = (\ord($this->get(1)));
+				$entry->type = $this->getByte();
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:
@@ -66,14 +66,14 @@ class SetScorePacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->type));
+		$this->putByte($this->type);
 		$this->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
 			$this->putVarLong($entry->scoreboardId);
 			$this->putString($entry->objectiveName);
-			($this->buffer .= (\pack("V", $entry->score)));
+			$this->putLInt($entry->score);
 			if($this->type !== self::TYPE_REMOVE){
-				($this->buffer .= \chr($entry->type));
+				$this->putByte($entry->type);
 				switch($entry->type){
 					case ScorePacketEntry::TYPE_PLAYER:
 					case ScorePacketEntry::TYPE_ENTITY:

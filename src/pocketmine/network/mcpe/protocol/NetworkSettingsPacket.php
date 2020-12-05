@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -47,11 +47,11 @@ class NetworkSettingsPacket extends DataPacket/* implements ClientboundPacket*/{
 	}
 
 	protected function decodePayload() : void{
-		$this->compressionThreshold = ((\unpack("v", $this->get(2))[1]));
+		$this->compressionThreshold = $this->getLShort();
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= (\pack("v", $this->compressionThreshold)));
+		$this->putLShort($this->compressionThreshold);
 	}
 
 	public function handle(NetworkSession $handler) : bool{

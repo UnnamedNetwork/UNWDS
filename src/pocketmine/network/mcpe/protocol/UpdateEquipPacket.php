@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -42,19 +42,19 @@ class UpdateEquipPacket extends DataPacket{
 	public $namedtag;
 
 	protected function decodePayload(){
-		$this->windowId = (\ord($this->get(1)));
-		$this->windowType = (\ord($this->get(1)));
+		$this->windowId = $this->getByte();
+		$this->windowType = $this->getByte();
 		$this->windowSlotCount = $this->getVarInt();
 		$this->entityUniqueId = $this->getEntityUniqueId();
 		$this->namedtag = $this->getRemaining();
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= \chr($this->windowId));
-		($this->buffer .= \chr($this->windowType));
+		$this->putByte($this->windowId);
+		$this->putByte($this->windowType);
 		$this->putVarInt($this->windowSlotCount);
 		$this->putEntityUniqueId($this->entityUniqueId);
-		($this->buffer .= $this->namedtag);
+		$this->put($this->namedtag);
 	}
 
 	public function handle(NetworkSession $session) : bool{

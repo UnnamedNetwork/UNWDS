@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -63,12 +63,12 @@ class AnvilDamagePacket extends DataPacket/* implements ServerboundPacket*/{
 	}
 
 	protected function decodePayload() : void{
-		$this->damageAmount = (\ord($this->get(1)));
+		$this->damageAmount = $this->getByte();
 		$this->getBlockPosition($this->x, $this->y, $this->z);
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= \chr($this->damageAmount));
+		$this->putByte($this->damageAmount);
 		$this->putBlockPosition($this->x, $this->y, $this->z);
 	}
 

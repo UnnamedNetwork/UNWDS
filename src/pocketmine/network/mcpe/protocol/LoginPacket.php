@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\utils\BinaryStream;
@@ -82,7 +82,7 @@ class LoginPacket extends DataPacket{
 	}
 
 	protected function decodePayload(){
-		$this->protocol = ((\unpack("N", $this->get(4))[1] << 32 >> 32));
+		$this->protocol = $this->getInt();
 
 		try{
 			$this->decodeConnectionRequest();

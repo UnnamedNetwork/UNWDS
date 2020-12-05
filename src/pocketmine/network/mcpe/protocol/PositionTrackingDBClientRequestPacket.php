@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -49,12 +49,12 @@ class PositionTrackingDBClientRequestPacket extends DataPacket/* implements Serv
 	public function getTrackingId() : int{ return $this->trackingId; }
 
 	protected function decodePayload() : void{
-		$this->action = (\ord($this->get(1)));
+		$this->action = $this->getByte();
 		$this->trackingId = $this->getVarInt();
 	}
 
 	protected function encodePayload() : void{
-		($this->buffer .= \chr($this->action));
+		$this->putByte($this->action);
 		$this->putVarInt($this->trackingId);
 	}
 

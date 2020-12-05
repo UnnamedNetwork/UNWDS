@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -74,24 +74,24 @@ class EducationSettingsPacket extends DataPacket{
 	protected function decodePayload() : void{
 		$this->codeBuilderDefaultUri = $this->getString();
 		$this->codeBuilderTitle = $this->getString();
-		$this->canResizeCodeBuilder = (($this->get(1) !== "\x00"));
-		if((($this->get(1) !== "\x00"))){
+		$this->canResizeCodeBuilder = $this->getBool();
+		if($this->getBool()){
 			$this->codeBuilderOverrideUri = $this->getString();
 		}else{
 			$this->codeBuilderOverrideUri = null;
 		}
-		$this->hasQuiz = (($this->get(1) !== "\x00"));
+		$this->hasQuiz = $this->getBool();
 	}
 
 	protected function encodePayload() : void{
 		$this->putString($this->codeBuilderDefaultUri);
 		$this->putString($this->codeBuilderTitle);
-		($this->buffer .= ($this->canResizeCodeBuilder ? "\x01" : "\x00"));
-		($this->buffer .= ($this->codeBuilderOverrideUri !== null ? "\x01" : "\x00"));
+		$this->putBool($this->canResizeCodeBuilder);
+		$this->putBool($this->codeBuilderOverrideUri !== null);
 		if($this->codeBuilderOverrideUri !== null){
 			$this->putString($this->codeBuilderOverrideUri);
 		}
-		($this->buffer .= ($this->hasQuiz ? "\x01" : "\x00"));
+		$this->putBool($this->hasQuiz);
 	}
 
 	public function handle(NetworkSession $handler) : bool{

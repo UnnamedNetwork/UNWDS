@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\network\mcpe\NetworkSession;
 
@@ -34,11 +34,11 @@ class SetCommandsEnabledPacket extends DataPacket{
 	public $enabled;
 
 	protected function decodePayload(){
-		$this->enabled = (($this->get(1) !== "\x00"));
+		$this->enabled = $this->getBool();
 	}
 
 	protected function encodePayload(){
-		($this->buffer .= ($this->enabled ? "\x01" : "\x00"));
+		$this->putBool($this->enabled);
 	}
 
 	public function handle(NetworkSession $session) : bool{

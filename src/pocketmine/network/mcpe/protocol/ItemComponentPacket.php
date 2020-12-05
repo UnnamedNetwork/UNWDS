@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\network\mcpe\NetworkSession;
@@ -68,7 +68,7 @@ class ItemComponentPacket extends DataPacket/* implements ClientboundPacket*/{
 		$this->putUnsignedVarInt(count($this->entries));
 		foreach($this->entries as $entry){
 			$this->putString($entry->getName());
-			($this->buffer .= (new NetworkLittleEndianNBTStream())->write($entry->getComponentNbt()));
+			$this->put((new NetworkLittleEndianNBTStream())->write($entry->getComponentNbt()));
 		}
 	}
 

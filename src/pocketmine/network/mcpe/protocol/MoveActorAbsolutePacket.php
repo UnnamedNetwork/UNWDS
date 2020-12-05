@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\utils\Binary;
+#include <rules/DataPacket.h>
 
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
@@ -50,7 +50,7 @@ class MoveActorAbsolutePacket extends DataPacket{
 
 	protected function decodePayload(){
 		$this->entityRuntimeId = $this->getEntityRuntimeId();
-		$this->flags = (\ord($this->get(1)));
+		$this->flags = $this->getByte();
 		$this->position = $this->getVector3();
 		$this->xRot = $this->getByteRotation();
 		$this->yRot = $this->getByteRotation();
@@ -59,7 +59,7 @@ class MoveActorAbsolutePacket extends DataPacket{
 
 	protected function encodePayload(){
 		$this->putEntityRuntimeId($this->entityRuntimeId);
-		($this->buffer .= \chr($this->flags));
+		$this->putByte($this->flags);
 		$this->putVector3($this->position);
 		$this->putByteRotation($this->xRot);
 		$this->putByteRotation($this->yRot);
