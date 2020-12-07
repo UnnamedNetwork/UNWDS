@@ -1322,6 +1322,12 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
+			$this->logger->info("Starting UNWDS...\n\n");
+			$this->logger->info("§aUNWDS §fis a fork of PocketMine-MP, made by and for §2UnnamedNetwork.");
+			$this->logger->info("§fVersion: §b" . $this->getUNWDSVersion() . "§7 (" . $this->getCodename() . ")");
+			$this->logger->info("§fTarget Bedrock version: §d" . $this->getVersion());
+			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
+
 			$this->logger->info("Loading pocketmine.yml...");
 			if(!file_exists($this->dataPath . "pocketmine.yml")){
 				$content = file_get_contents(\pocketmine\RESOURCE_PATH . "pocketmine.yml");
@@ -1517,6 +1523,8 @@ class Server{
 			$this->craftingManager = new CraftingManager();
 
 			$this->resourceManager = new ResourcePackManager($this->getDataPath() . "resource_packs" . DIRECTORY_SEPARATOR, $this->logger);
+
+			$this->logger->info("§6SpoonMask enabled. You will not be notified by detector but support for plugins by these authors §nWON'T BE ACCEPTED if you run them on UNWDS.");
 
 			$this->pluginManager = new PluginManager($this, $this->commandMap, ((bool) $this->getProperty("plugins.legacy-data-dir", true)) ? null : $this->getDataPath() . "plugin_data" . DIRECTORY_SEPARATOR);
 			$this->profilingTickRate = (float) $this->getProperty("settings.profile-report-trigger", 20);
