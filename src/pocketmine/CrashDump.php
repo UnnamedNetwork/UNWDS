@@ -361,11 +361,15 @@ class CrashDump{
 		$this->data["general"]["os"] = Utils::getOS();
 		$this->data["general"]["composer_libraries"] = $composerLibraries;
 		$this->addLine($this->server->getDistroName() . " version: " . $this->server->getUNWDSVersion() . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
-		$this->addLine("Emulating: " . $this->server->getName() . " version: " . $this->server->getApiVersion());
+		$this->addLine("Implementing: " . $this->server->getName() . " API " . $this->server->getApiVersion());
 		$this->addLine("uname -a: " . php_uname("a"));
 		$this->addLine("PHP Version: " . phpversion());
 		$this->addLine("Zend version: " . zend_version());
 		$this->addLine("OS : " . PHP_OS . ", " . Utils::getOS());
+		$this->addLine("Composer libraries: ");
+		foreach($composerLibraries as $library => $libraryVersion){
+			$this->addLine("- $library $libraryVersion");
+		}
 	}
 
 	/**
