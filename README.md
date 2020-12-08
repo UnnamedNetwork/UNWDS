@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/UnnamedNetwork/UNWDS.svg?branch=stable)](https://travis-ci.com/UnnamedNetwork/UNWDS)
 
 A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of [PocketMine-MP](https://github.com/pmmp/PocketMine-MP).
+You can test lastest version of UNWDS in: play.dtcg.xyz:19132
 
 ## Documentation
 - [Documentation](DOCUMENT.md)
