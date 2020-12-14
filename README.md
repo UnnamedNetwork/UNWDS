@@ -15,9 +15,10 @@ You can test lastest version of UNWDS in: play.dtcg.xyz:19132
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
 
 ## About UNWDS source code update:
-+ UNWDS is just a PocketMine-MP distro with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except Submodules), that changes will go directly into UNWDS (stable) within 24-48 hours
++ UNWDS is just a PocketMine-MP distro with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except Major updates, Submodules), that changes will go directly into UNWDS (stable) within 24-48 hours
 + If the newer source commit run tests fail, we will stop the update and will working at that commit. After that, the commit auto-update function will continue.
 + Submodules and test configs update will be tested manually. If submodules is OK, we will push an update into that submodules.
++ If a major API updates released, we don't gurantee anything with you. We need to change the SpoonMask and the base source code, optimize it,... So we don't gurantee for the time we release the final version, but the source code will be upload ASAP.
 
 ## About plugins:
 + UNWDS is a PocketMine-MP bypass SpoonDetector distro. I don't modified into the PocketMine-MP important cores (just modified for software's behaviour after adding some constants like the distro name or custom version.)
