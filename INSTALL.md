@@ -43,22 +43,22 @@ $ wget https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.sh &&
 ```
 + Next, download the UNWDS phar file:
 
-If you want to use Stable release, use this:
+If you want to use Stable releases, use this:
 ```sh
 
 $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar
 
 ```
-Lastest Stable version: v2.1.0
+Latest Stable version: v2.2.0
 
-If you want to use Alpha release, use this:
+If you want to use stable development releases, use this:
 ```sh
 
 $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}%2Bdev.{BUILD_NUMBER}/UNWDS.phar
 
 ```
 
-Lastest Alpha version: v2.0.4%2Bdev.19 ("PREFERRED_VERSION" is v2.0.4, "BUILD_NUMBER" is 19)
+Latest stable development version: v2.0.4%2Bdev.19 ("PREFERRED_VERSION" is v2.0.4, "BUILD_NUMBER" is 19)
 
 
 + Check release and version number [here](https://github.com/UnnamedNetwork/UNWDS)
