@@ -4,3 +4,9 @@
 [submodule "src/pocketmine/lang/locale"]
 	path = src/pocketmine/lang/locale
 	url = https://github.com/UnnamedNetwork/Language.git
+[submodule "build/php"]
+	path = build/php
+	url = https://github.com/pmmp/php-build-scripts.git
+[submodule "build/preprocessor"]
+	path = build/preprocessor
+	url = https://github.com/pmmp/PreProcessor.git
