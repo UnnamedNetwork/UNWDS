@@ -49,8 +49,8 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --prefer-dist --no-interaction
 
-      - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyze --no-progress --memory-limit=2G
+      - name: Fund Composer dependencies
+        run: php composer.phar fund
       
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
