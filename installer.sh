@@ -314,7 +314,7 @@ rm compile.sh
 rm PocketMine-MP.phar
 rm start.sh
 wget -q https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.sh && chmod +x ./start.sh
-wget -q https://github.com/UnnamedNetwork/UNWDS/releases/download/v2.1.0/UNWDS.phar
+wget -q --no-check-certificate --content-disposition https://github.com/UnnamedNetwork/UNWDS/releases/latest/download/UNWDS.phar
 
 echo "[*] Everything done! Run ./start.sh to start UNWDS"
 exit 0
