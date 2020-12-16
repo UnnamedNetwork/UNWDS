@@ -4,7 +4,7 @@ cd /d %~dp0
 :UNWS2
 if exist UNWDS.phar (
 	set UNWDS_FILE=UNWDS.phar
-    echo =========================
+        echo =========================
 	echo = Server software found =
 	echo = Server starting...    =
 	echo =========================
