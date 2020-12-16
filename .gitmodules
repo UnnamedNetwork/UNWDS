@@ -10,3 +10,6 @@
 [submodule "build/preprocessor"]
 	path = build/preprocessor
 	url = https://github.com/pmmp/PreProcessor.git
+[submodule "src/pocketmine/resources/vanilla"]
+	path = src/pocketmine/resources/vanilla
+	url = https://github.com/pmmp/BedrockData.git
