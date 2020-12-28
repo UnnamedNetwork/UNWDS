@@ -27,7 +27,6 @@ use pocketmine\level\format\ChunkException;
 use pocketmine\level\format\io\exception\CorruptedChunkException;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Binary;
-use pocketmine\utils\MainLogger;
 use function assert;
 use function ceil;
 use function chr;
@@ -160,10 +159,7 @@ class RegionLoader{
 		}
 
 		if($length > ($this->locationTable[$index]->getSectorCount() << 12)){ //Invalid chunk, bigger than defined number of sectors
-			MainLogger::getLogger()->error("Chunk x=$x,z=$z length mismatch (expected " . ($this->locationTable[$index]->getSectorCount() << 12) . " sectors, got $length sectors)");
-			$old = $this->locationTable[$index];
-			$this->locationTable[$index] = new RegionLocationTableEntry($old->getFirstSector(), $length >> 12, time());
-			$this->writeLocationIndex($index);
+			throw new CorruptedChunkException("Chunk length mismatch (expected " . ($this->locationTable[$index]->getSectorCount() << 12) . " sectors, got $length sectors)");
 		}
 
 		$chunkData = fread($this->filePointer, $length);
@@ -184,6 +180,23 @@ class RegionLoader{
 	 */
 	public function chunkExists(int $x, int $z) : bool{
 		return $this->isChunkGenerated(self::getChunkOffset($x, $z));
+	}
+
+	private function disposeGarbageArea(RegionLocationTableEntry $oldLocation) : void{
+		/* release the area containing the old copy to the garbage pool */
+		$this->garbageTable->add($oldLocation);
+
+		$endGarbage = $this->garbageTable->end();
+		$nextSector = $this->nextSector;
+		for(; $endGarbage !== null and $endGarbage->getLastSector() + 1 === $nextSector; $endGarbage = $this->garbageTable->end()){
+			$nextSector = $endGarbage->getFirstSector();
+			$this->garbageTable->remove($endGarbage);
+		}
+
+		if($nextSector !== $this->nextSector){
+			$this->nextSector = $nextSector;
+			ftruncate($this->filePointer, $this->nextSector << 12);
+		}
 	}
 
 	/**
@@ -230,20 +243,7 @@ class RegionLoader{
 		$this->writeLocationIndex($index);
 
 		if($oldLocation !== null){
-			/* release the area containing the old copy to the garbage pool */
-			$this->garbageTable->add($oldLocation);
-
-			$endGarbage = $this->garbageTable->end();
-			$nextSector = $this->nextSector;
-			for(; $endGarbage !== null and $endGarbage->getLastSector() + 1 === $nextSector; $endGarbage = $this->garbageTable->end()){
-				$nextSector = $endGarbage->getFirstSector();
-				$this->garbageTable->remove($endGarbage);
-			}
-
-			if($nextSector !== $this->nextSector){
-				$this->nextSector = $nextSector;
-				ftruncate($this->filePointer, $this->nextSector << 12);
-			}
+			$this->disposeGarbageArea($oldLocation);
 		}
 	}
 
@@ -253,8 +253,12 @@ class RegionLoader{
 	 */
 	public function removeChunk(int $x, int $z){
 		$index = self::getChunkOffset($x, $z);
+		$oldLocation = $this->locationTable[$index];
 		$this->locationTable[$index] = null;
 		$this->writeLocationIndex($index);
+		if($oldLocation !== null){
+			$this->disposeGarbageArea($oldLocation);
+		}
 	}
 
 	/**

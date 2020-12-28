@@ -25,7 +25,6 @@ namespace pocketmine\build\server_phar;
 
 use function array_map;
 use function count;
-use function defined;
 use function dirname;
 use function file_exists;
 use function getcwd;
@@ -134,6 +133,7 @@ function main() : void{
 		exit(1);
 	}
 
+	$opts = getopt("", ["out:", "git:"]);
 	foreach(buildPhar(
 		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
@@ -141,8 +141,8 @@ function main() : void{
 			'src',
 			'vendor'
 		],
-		[
-		],
+                [
+                ],
 		<<<'STUB'
 <?php
 
@@ -165,6 +165,4 @@ STUB
 	}
 }
 
-if(!defined('pocketmine\_PHPSTAN_ANALYSIS')){
-	main();
-}
+main();
