@@ -1522,8 +1522,7 @@ class Server{
 			$this->craftingManager = new CraftingManager();
 
 			$this->resourceManager = new ResourcePackManager($this->getDataPath() . "resource_packs" . DIRECTORY_SEPARATOR, $this->logger);
-
-			$this->logger->info("§6SpoonMask enabled. You will not be notified by detector but support for plugins by these authors §nWON'T BE ACCEPTED if you run them on UNWDS.");
+			$this->logger->info($this->getLanguage()->translateString("pocketmine.spoonmask.enabled"));
 
 			$this->pluginManager = new PluginManager($this, $this->commandMap, ((bool) $this->getProperty("plugins.legacy-data-dir", true)) ? null : $this->getDataPath() . "plugin_data" . DIRECTORY_SEPARATOR);
 			$this->profilingTickRate = (float) $this->getProperty("settings.profile-report-trigger", 20);
