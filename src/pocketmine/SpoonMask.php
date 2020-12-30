@@ -26,4 +26,3 @@ use function defined;
 const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
 const UNWDS_VERSION = "2.2.2";
-const BUILD_NUMBER = 0040;
