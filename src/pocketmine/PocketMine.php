@@ -207,7 +207,7 @@ namespace pocketmine {
 		}
 
 		define('pocketmine\GIT_COMMIT', $gitHash);
-		$composerGitHash = InstalledVersions::getReference('unnamednetwork/unwds');
+		$composerGitHash = InstalledVersions::getReference('pocketmine\pocketmine-mp');
 		if($composerGitHash !== null){
 			$currentGitHash = explode("-", \pocketmine\GIT_COMMIT)[0];
 			if($currentGitHash !== $composerGitHash){
