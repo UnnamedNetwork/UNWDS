@@ -22,7 +22,8 @@
 declare(strict_types=1);
 
 namespace pocketmine {
-
+	use Composer\InstalledVersions;
+	use pocketmine\utils\Git;
 	use pocketmine\utils\MainLogger;
 	use pocketmine\utils\Process;
 	use pocketmine\utils\ServerKiller;
@@ -193,6 +194,31 @@ namespace pocketmine {
 		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
+		$gitHash = str_repeat("00", 20);
+
+		if(\Phar::running(true) === ""){
+			$gitHash = Git::getRepositoryStatePretty(\pocketmine\PATH);
+		}else{
+			$phar = new \Phar(\Phar::running(false));
+			$meta = $phar->getMetadata();
+			if(isset($meta["git"])){
+				$gitHash = $meta["git"];
+			}
+		}
+
+		define('pocketmine\GIT_COMMIT', $gitHash);
+		$composerGitHash = InstalledVersions::getReference('unnamednetwork/unwds');
+		if($composerGitHash !== null){
+			$currentGitHash = explode("-", \pocketmine\GIT_COMMIT)[0];
+			if($currentGitHash !== $composerGitHash){
+				critical_error("Composer dependencies and/or autoloader are out of sync.");
+				critical_error("- Current revision is $currentGitHash");
+				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");
+				critical_error("Out-of-sync Composer dependencies may result in crashes and classes not being found.");
+				critical_error("Please synchronize Composer dependencies before running the server.");
+				exit(1);
+			}
+		}
 
 
 		$opts = getopt("", ["data:", "plugins:", "no-wizard", "enable-ansi", "disable-ansi"]);
