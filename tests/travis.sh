@@ -38,6 +38,8 @@ if [ "$output" == "" ]; then
 	echo TesterPlugin failed to run tests, check the logs
 	echo Showing data on working folder and then exit
 	ls
+	echo Debugging vendor InstalledVersion then exit
+	cat vendor/composer/InstalledVersions.php
 	exit 1
 fi
 
