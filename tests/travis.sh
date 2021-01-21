@@ -12,7 +12,7 @@ done
 #Run-the-server tests
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
-
+sudo apt-get install -y expect
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
 mkdir "$DATA_DIR"
