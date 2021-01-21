@@ -12,7 +12,7 @@ done
 #Run-the-server tests
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
-sudo apt-get install -y expect
+
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
 mkdir "$DATA_DIR"
@@ -53,21 +53,18 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 	exit 1
 else
 	echo All tests passed
-	sudo chmod -R 777 UNWDS.phar
-              expect -c " 
-              spawn sftp $SFUSER@frs.sourceforge.net
-              expect \"yes/no\"
-              send \"yes\r\"
-              expect \"Password\"        
-              send \"$SFPASS\r\"
-              expect \"sftp> \"
-              send \"cd $SFDIR\r\"
-              set timeout -1
-              send \"put UNWDS.phar\r\"
-              expect \"Uploading\"
-              expect \"100%\"
-              expect \"sftp>\"
-              send \"bye\r\"
-              interact"   
-	echo Server phar uploaded to SourceForge.
+	dateAndMonth=`date "+%b %Y"`
+	chmod 777 UNWDS.phar
+    git clone https://github.com/dtcu0ng/UNWDS_Output.git
+	cd UNWDS_Output
+	git checkout master
+	cd ..
+	cp UNWDS.phar UNWDS_Output/ci_auto_output
+	cd UNWDS_Output
+	git add -A
+	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)" -m "[skip ci]"
+	git remote rm origin
+  # Add new "origin" with access token in the git URL for authentication
+    git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
+    git push origin master --quiet
 fi
