@@ -54,20 +54,20 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 else
 	echo All tests passed
 	sudo chmod -R 777 UNWDS.phar
-	expect -c " 
-    spawn sftp ${{ SFUSER }}@frs.sourceforge.net
-    expect \"yes/no\"
-    send \"yes\r\"
-    expect \"Password\"        
-    send \"${{ SFPASS }}\r\"
-    expect \"sftp> \"
-    send \"cd ${{ SFDIR }}\r\"
-    set timeout -1
-    send \"put UNWDS.phar\r\"
-    expect \"Uploading\"
-    expect \"100%\"
-    expect \"sftp>\"
-    send \"bye\r\"
-    interact" 
+              expect -c " 
+              spawn sftp $SFUSER@frs.sourceforge.net
+              expect \"yes/no\"
+              send \"yes\r\"
+              expect \"Password\"        
+              send \"$SFPASS\r\"
+              expect \"sftp> \"
+              send \"cd $SFDIR\r\"
+              set timeout -1
+              send \"put UNWDS.phar\r\"
+              expect \"Uploading\"
+              expect \"100%\"
+              expect \"sftp>\"
+              send \"bye\r\"
+              interact"   
 	echo Server phar uploaded to SourceForge.
 fi
