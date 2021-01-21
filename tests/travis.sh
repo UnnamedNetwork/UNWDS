@@ -53,4 +53,5 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 	exit 1
 else
 	echo All tests passed
+	echo $testsecret
 fi
