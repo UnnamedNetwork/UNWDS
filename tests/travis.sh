@@ -63,6 +63,8 @@ if [ "$BUILDPHPV" = "$NBPHPV" ]; then
     echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
 else
     echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
+	git config --global user.name "Cuong Tien Dinh"
+    git config --global user.email "deptteam.cuong@gmail.com"
 	chmod 777 UNWDS.phar
     git clone https://github.com/dtcu0ng/UNWDS_Output.git
 	cd UNWDS_Output
@@ -73,7 +75,7 @@ else
 	cp UNWDS.phar UNWDS_Output/ci_build_output/$TRAVIS_BUILD_NUMBER
 	cd UNWDS_Output
 	git add -A
-	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)" -m "$GTI_COMMIT"
+	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)"
 	git remote rm origin
   # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
