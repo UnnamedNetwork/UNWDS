@@ -16,6 +16,7 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 NBPHPV="7.3.25"
+OLDBLD=$(expr $TRAVIS_BUILD_NUMBER - 1)
 
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
@@ -70,9 +71,10 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-	mkdir $TRAVIS_BUILD_NUMBER
+	mkdir $OLDBLD
+	cp latest/UNWDS.phar $OLDBLD
     cd ../../
-	cp UNWDS.phar UNWDS_Output/ci_build_output/$TRAVIS_BUILD_NUMBER
+	cp UNWDS.phar UNWDS_Output/ci_build_output/latest
 	cd UNWDS_Output
 	git add -A
 	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)"
