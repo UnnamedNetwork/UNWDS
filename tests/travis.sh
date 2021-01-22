@@ -71,8 +71,8 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-	mkdir $OLDBLD
-	cp latest/UNWDS.phar $OLDBLD
+	mkdir old/$OLDBLD
+	cp latest/UNWDS.phar old/$OLDBLD
     cd ../../
 	cp UNWDS.phar UNWDS_Output/ci_build_output/latest
 	cd UNWDS_Output
