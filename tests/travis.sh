@@ -80,5 +80,5 @@ else
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 	git pull origin master --rebase
     git push origin master --quiet
-	echo Push completed with 0 or more error(s)
+	echo Push completed with 0 or more errors
 fi
