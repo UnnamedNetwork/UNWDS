@@ -69,8 +69,7 @@ else
 	git checkout master
 	cd UNWDS_Output/ci_build_output
 	mkdir $TRAVIS_BUILD_NUMBER
-	cd ..
-	cd ..
+    cd ../../../
 	cp UNWDS.phar UNWDS_Output/ci_build_output/$TRAVIS_BUILD_NUMBER
 	cd UNWDS_Output
 	git add -A
