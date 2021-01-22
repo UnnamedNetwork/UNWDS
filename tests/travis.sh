@@ -13,6 +13,10 @@ done
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
+dateAndMonth=`date "+%b %Y"`
+BUILDPHPV=$(php -r 'echo PHP_VERSION;')
+NBPHPV="7.3.25"
+
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
 mkdir "$DATA_DIR"
@@ -52,14 +56,22 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 	echo Server log contains error messages, changing build status to failed
 	exit 1
 else
-	echo All tests passed
-	dateAndMonth=`date "+%b %Y"`
+	echo All tests passed.
+fi
+
+if [ "$BUILDPHPV" = "$NBPHPV" ]; then
+    echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
+else
+    echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
 	chmod 777 UNWDS.phar
     git clone https://github.com/dtcu0ng/UNWDS_Output.git
 	cd UNWDS_Output
 	git checkout master
+	cd UNWDS_Output/ci_build_output
+	mkdir $TRAVIS_BUILD_NUMBER
 	cd ..
-	cp UNWDS.phar UNWDS_Output/ci_auto_output
+	cd ..
+	cp UNWDS.phar UNWDS_Output/ci_build_output/$TRAVIS_BUILD_NUMBER
 	cd UNWDS_Output
 	git add -A
 	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)" -m "[skip ci]"
@@ -68,5 +80,5 @@ else
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 	git pull origin master --rebase
     git push origin master --quiet
-	exit 0
+	echo Push completed with 0 or more error(s)
 fi
