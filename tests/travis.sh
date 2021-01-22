@@ -13,7 +13,7 @@ done
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
-dateAndMonth=`date "+%b %Y"`
+dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 NBPHPV="7.3.25"
 
@@ -73,7 +73,7 @@ else
 	cp UNWDS.phar UNWDS_Output/ci_build_output/$TRAVIS_BUILD_NUMBER
 	cd UNWDS_Output
 	git add -A
-	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)" -m "[skip ci]"
+	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)" -m "$GTI_COMMIT"
 	git remote rm origin
   # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
