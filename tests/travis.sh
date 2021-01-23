@@ -22,8 +22,7 @@ rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
 mkdir "$DATA_DIR"
 mkdir "$PLUGINS_DIR"
-#Rename phar build number to the same as Travis build number
-sed -i 's/333/'$TRAVIS_BUILD_NUMBER'/g' src/pocketmine/VersionInfo.php
+
 
 cd tests/plugins/DevTools
 php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
