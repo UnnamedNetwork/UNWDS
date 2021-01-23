@@ -71,13 +71,13 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-	mkdir old/$OLDBLD
-	cp latest/UNWDS.phar old/$OLDBLD
+	mkdir stable/old/$OLDBLD
+	cp stable/latest/UNWDS.phar old/$OLDBLD
     cd ../../
-	cp UNWDS.phar UNWDS_Output/ci_build_output/latest
+	cp UNWDS.phar UNWDS_Output/ci_build_output/stable/latest
 	cd UNWDS_Output
 	git add -A
-	git commit -m "Build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)"
+	git commit -m "Stable build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)"
 	git remote rm origin
   # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
