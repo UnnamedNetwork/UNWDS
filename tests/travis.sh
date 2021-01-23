@@ -72,7 +72,7 @@ else
 	git checkout master
 	cd ci_build_output
 	mkdir stable/old/$OLDBLD
-	cp stable/latest/UNWDS.phar old/$OLDBLD
+	cp stable/latest/UNWDS.phar stable/old/$OLDBLD
     cd ../../
 	cp UNWDS.phar UNWDS_Output/ci_build_output/stable/latest
 	cd UNWDS_Output
