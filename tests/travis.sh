@@ -16,7 +16,7 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 NBPHPV="7.3.25"
-OLDBLD=$(expr $TRAVIS_BUILD_NUMBER - 1)
+OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
 
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
@@ -64,9 +64,9 @@ fi
 if [ "$BUILDPHPV" = "$NBPHPV" ]; then
     echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
 else
+     git config --global user.email "deptteam.cuong@gmail.com"
+     git config --global user.name "dtcu0ng"
     echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
-	git config --global user.name "Cuong Tien Dinh"
-    git config --global user.email "deptteam.cuong@gmail.com"
 	chmod 777 UNWDS.phar
     git clone https://github.com/dtcu0ng/UNWDS_Output.git
 	cd UNWDS_Output
@@ -78,11 +78,12 @@ else
 	cp UNWDS.phar UNWDS_Output/ci_build_output/stable/latest
 	cd UNWDS_Output
 	git add -A
-	git commit -m "Stable build update: $dateAndMonth (Build $TRAVIS_BUILD_NUMBER)"
+	git commit -m "Stable build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
 	git remote rm origin
   # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 	git pull origin master --rebase
     git push origin master --quiet
 	echo Push completed with 0 or more errors
+	ls
 fi
