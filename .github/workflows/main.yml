@@ -23,13 +23,10 @@ jobs:
         with:
           path: "./bin"
           key: "php-build-generic-${{ matrix.php }}-${{ matrix.image }}-${{ hashFiles('./tests/gh-actions/build.sh') }}"
-          
-      - name: chmod
-        run: chmod +x ./tests/gh-actions/build.sh
-
+ 
       - name: Compile PHP
         if: steps.php-build-cache.outputs.cache-hit != 'true'
-        run: ./tests/gh-actions/build.sh "${{ matrix.php }}"
+        run: chmod +x ./tests/gh-actions/build.sh && ./tests/gh-actions/build.sh "${{ matrix.php }}"
 
   phpunit:
     name: PHPUnit tests
@@ -133,4 +130,4 @@ jobs:
       - name: Tests
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
-        run: ./tests/travis.sh -t4
+        run: chmod +x ./tests/travis.sh && ./tests/travis.sh -t4
