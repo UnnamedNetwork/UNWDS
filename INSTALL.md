@@ -5,7 +5,7 @@ This will follow the PocketMine-MP install guide.
 + Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
 + Start the server!
 
-## Linux/MacOS (use github.dtcg.xyz/UNWDS/installer.sh)
+## Linux/MacOS (use dtcu0ng.github.io/UNWDS/scripts/installer.sh)
 + Create a directory which you want to install PocketMine-MP into, and cd into it.
 + Then use `curl` to install PocketMine-MP using the following command:
 ```sh
@@ -49,22 +49,31 @@ If you want to use Stable releases, use this:
 $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar
 
 ```
-Latest Stable version: v2.2.0
 
 If you want to use stable development releases, use this:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}%2Bdev.{BUILD_NUMBER}/UNWDS.phar
+$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/latest/UNWDS.phar
 
 ```
 
-Latest stable development version: v2.0.4%2Bdev.19 ("PREFERRED_VERSION" is v2.0.4, "BUILD_NUMBER" is 19)
+or you want to download specific build, use this:
+```sh
 
+$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/old/<action-run-number>/UNWDS.phar
 
-+ Check release and version number [here](https://github.com/UnnamedNetwork/UNWDS)
+```
 
++ Check action-run-number [here](https://github.com/UnnamedNetwork/UNWDS/actions)
++ action-run-number is the number begin with # and it next to [CI]
++ Replace these to command above to download the server software phar file (don't include #)
++ Example: You want to download CI #91, you need this command:
+```sh
 
-Replace these to command above to download the server software phar file
+$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/old/91/UNWDS.phar
+
+```
+
 + Now, type ./start.sh to run the server!
 
 ## Fix Linux/MacOS permission issues
@@ -86,12 +95,12 @@ try use these commands:
 
  ```sh
 
-$ chmod 600 ./start.sh
+$ chmod +x ./start.sh
 
 ```
  ```sh
 
-$ chmod 600 ./UNWDS.phar
+$ chmod +x ./UNWDS.phar
 
 ```
 
