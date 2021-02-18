@@ -36,5 +36,5 @@ const _VERSION_INFO_INCLUDED = true;
   // PocketMine-MP's default version constants, this will bypass the Spoon detector
 const NAME = "PocketMine-MP";
 const BASE_VERSION = "3.17.5";
-const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0333;
+const IS_DEVELOPMENT_BUILD = false;
+const BUILD_NUMBER = 0;
