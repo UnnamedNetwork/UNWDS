@@ -1662,7 +1662,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 				$this->teleport($ev->getTo());
 				return;
 			}
-			
+
 			$this->lastX = $to->x;
 			$this->lastY = $to->y;
 			$this->lastZ = $to->z;
