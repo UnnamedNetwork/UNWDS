@@ -72,18 +72,18 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-	mkdir $GITHUB_REF/old/$OLDBLD
-	cp $GITHUB_REF/latest/UNWDS.phar $GITHUB_REF/old/$OLDBLD
+	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
+	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
     cd ../../
-	cp UNWDS.phar UNWDS_Output/ci_build_output/$GITHUB_REF/latest
+	cp UNWDS.phar UNWDS_Output/ci_build_output/${GITHUB_REF##*/}/latest
 	cd UNWDS_Output
 	git add -A
-	git commit -m "$GITHUB_REF build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
+	git commit -m "${GITHUB_REF##*/} build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
 	git remote rm origin
   # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 	git pull origin master --rebase
     git push origin master --quiet
 	echo Push completed with 0 or more errors
-	echo Branch: $GITHUB_REF
+	echo Branch: ${GITHUB_REF##*/}
 fi
