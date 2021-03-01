@@ -72,9 +72,10 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-    [ ! -d "${GITHUB_REF##*/}" ] && echo "Directory ${GITHUB_REF##*/} DOES NOT exists. Creating ${GITHUB_REF##*/}" && mkdir ${GITHUB_REF##*/}
-    [ ! -d "${GITHUB_REF##*/}/latest" ] && echo "Directory ${GITHUB_REF##*/}/latest DOES NOT exists. Creating ${GITHUB_REF##*/}/latest" && mkdir ${GITHUB_REF##*/}/latest
-	[ ! -d "${GITHUB_REF##*/}/old" ] && echo "Directory ${GITHUB_REF##*/}/old DOES NOT exists. Creating ${GITHUB_REF##*/}/old" && mkdir ${GITHUB_REF##*/}/old
+	# Checking if output branch folder exist.
+    [ ! -d "${GITHUB_REF##*/}" ] && mkdir ${GITHUB_REF##*/}
+    [ ! -d "${GITHUB_REF##*/}/latest" ] && mkdir ${GITHUB_REF##*/}/latest
+	[ ! -d "${GITHUB_REF##*/}/old" ] && mkdir ${GITHUB_REF##*/}/old
 	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
 	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
     cd ../../
