@@ -72,34 +72,9 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
-fi
-if [ -d "${GITHUB_REF##*/}" ] 
-then
-    echo "Directory ${GITHUB_REF##*/} exists." 
-else
-    echo "Error: Directory ${GITHUB_REF##*/} does not exists."
-	echo "Creating ${GITHUB_REF##*/}"
-	mkdir ${GITHUB_REF##*/}
-fi
-if [ -d "${GITHUB_REF##*/}/latest" ] 
-then
-    echo "Directory ${GITHUB_REF##*/}/latest exists." 
-else
-    echo "Error: Directory ${GITHUB_REF##*/}/old does not exists."
-	echo "Creating ${GITHUB_REF##*/}/latest"
-	mkdir ${GITHUB_REF##*/}/latest
-fi
-if [ -d "${GITHUB_REF##*/}/old" ] 
-then
-    echo "Directory ${GITHUB_REF##*/}/old exists." 
-else
-    echo "Error: Directory ${GITHUB_REF##*/}/old does not exists."
-	echo "Creating ${GITHUB_REF##*/}/old"
-	mkdir ${GITHUB_REF##*/}/old
-fi
-if [ "$BUILDPHPV" = "$NBPHPV" ]; then
-    echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
-else
+    [ ! -d "${GITHUB_REF##*/}" ] && echo "Directory ${GITHUB_REF##*/} DOES NOT exists. Creating ${GITHUB_REF##*/}" && mkdir ${GITHUB_REF##*/}
+    [ ! -d "${GITHUB_REF##*/}/latest" ] && echo "Directory ${GITHUB_REF##*/}/latest DOES NOT exists. Creating ${GITHUB_REF##*/}/latest" && mkdir ${GITHUB_REF##*/}/latest
+	[ ! -d "${GITHUB_REF##*/}/old" ] && echo "Directory ${GITHUB_REF##*/}/old DOES NOT exists. Creating ${GITHUB_REF##*/}/old" && mkdir ${GITHUB_REF##*/}/old
 	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
 	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
     cd ../../
