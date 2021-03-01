@@ -72,6 +72,30 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
+if [ -d "${GITHUB_REF##*/}" ] 
+then
+    echo "Directory ${GITHUB_REF##*/} exists." 
+else
+    echo "Error: Directory ${GITHUB_REF##*/} does not exists."
+	echo "Creating ${GITHUB_REF##*/}"
+	mkdir ${GITHUB_REF##*/}
+fi
+if [ -d "${GITHUB_REF##*/}/latest" ] 
+then
+    echo "Directory ${GITHUB_REF##*/}/latest exists." 
+else
+    echo "Error: Directory ${GITHUB_REF##*/}/old does not exists."
+	echo "Creating ${GITHUB_REF##*/}/latest"
+	mkdir ${GITHUB_REF##*/}/latest
+fi
+if [ -d "${GITHUB_REF##*/}/old" ] 
+then
+    echo "Directory ${GITHUB_REF##*/}/old exists." 
+else
+    echo "Error: Directory ${GITHUB_REF##*/}/old does not exists."
+	echo "Creating ${GITHUB_REF##*/}/old"
+	mkdir ${GITHUB_REF##*/}/old
+fi
 	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
 	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
     cd ../../
