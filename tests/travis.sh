@@ -72,6 +72,7 @@ else
 	cd UNWDS_Output
 	git checkout master
 	cd ci_build_output
+fi
 if [ -d "${GITHUB_REF##*/}" ] 
 then
     echo "Directory ${GITHUB_REF##*/} exists." 
@@ -96,6 +97,9 @@ else
 	echo "Creating ${GITHUB_REF##*/}/old"
 	mkdir ${GITHUB_REF##*/}/old
 fi
+if [ "$BUILDPHPV" = "$NBPHPV" ]; then
+    echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
+else
 	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
 	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
     cd ../../
