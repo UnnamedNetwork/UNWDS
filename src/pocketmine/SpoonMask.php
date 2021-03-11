@@ -25,4 +25,4 @@ use function defined;
 
 const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
-const UNWDS_VERSION = "2.2.7";
+const UNWDS_VERSION = "2.2.8";
