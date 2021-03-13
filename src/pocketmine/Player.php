@@ -156,6 +156,8 @@ use pocketmine\network\mcpe\protocol\types\inventory\UIInventorySlotOffset;
 use pocketmine\network\mcpe\protocol\types\NetworkInventoryAction;
 use pocketmine\network\mcpe\protocol\types\PersonaPieceTintColor;
 use pocketmine\network\mcpe\protocol\types\PersonaSkinPiece;
+use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
+use pocketmine\network\mcpe\protocol\types\PlayerMovementType;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
 use pocketmine\network\mcpe\protocol\types\SkinAdapterSingleton;
 use pocketmine\network\mcpe\protocol\types\SkinAnimation;
@@ -1107,10 +1109,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 		$this->spawnToAll();
 
-		if($this->server->getUpdater()->hasUpdate() and $this->hasPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE) and $this->server->getProperty("auto-updater.on-update.warn-ops", true)){
-			$this->server->getUpdater()->showPlayerUpdate($this);
-		}
-
 		if($this->getHealth() <= 0){
 			$this->respawn();
 		}
@@ -1957,6 +1955,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 		$skinData = new SkinData(
 			$packet->clientData["SkinId"],
+			$packet->clientData["PlayFabId"],
 			base64_decode($packet->clientData["SkinResourcePatch"] ?? "", true),
 			new SkinImage(
 				$packet->clientData["SkinImageHeight"],
@@ -2268,6 +2267,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		$pk->worldName = $this->server->getMotd();
 		$pk->experiments = new Experiments([], false);
 		$pk->itemTable = ItemTypeDictionary::getInstance()->getEntries();
+		$pk->playerMovementSettings = new PlayerMovementSettings(PlayerMovementType::LEGACY, 0, false);
 		$this->dataPacket($pk);
 
 		$this->sendDataPacket(new AvailableActorIdentifiersPacket());
@@ -2975,7 +2975,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 			case PlayerActionPacket::ACTION_START_GLIDE:
 			case PlayerActionPacket::ACTION_STOP_GLIDE:
 				break; //TODO
-			case PlayerActionPacket::ACTION_CONTINUE_BREAK:
+			case PlayerActionPacket::ACTION_CRACK_BREAK:
 				$block = $this->level->getBlock($pos);
 				$this->level->broadcastLevelEvent($pos, LevelEventPacket::EVENT_PARTICLE_PUNCH_BLOCK, $block->getRuntimeId() | ($packet->face << 24));
 				//TODO: destroy-progress level event
