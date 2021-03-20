@@ -373,7 +373,7 @@ class CrashDump{
 		$this->data["general"]["php_os"] = PHP_OS;
 		$this->data["general"]["os"] = Utils::getOS();
 		$this->data["general"]["composer_libraries"] = $composerLibraries;
-		$this->addLine($this->server->getDistroName() . " version: " . $this->server->getUNWDSVersion() . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
+		$this->addLine($this->server->getDistroName() . " version: " . $this->server->getDistroVersion() . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
 		$this->addLine("Implementing: " . $this->server->getName() . " API " . $this->server->getApiVersion());
 		$this->addLine("uname -a: " . php_uname("a"));
 		$this->addLine("PHP Version: " . phpversion());

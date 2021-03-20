@@ -44,7 +44,7 @@ use const PHP_EOL;
 use const STDIN;
 
 class SetupWizard{
-	public const DEFAULT_NAME = \pocketmine\DISTRO_NAME . " Server";
+	public const DEFAULT_NAME = \pocketmine\NAME . " Server";
 	public const DEFAULT_PORT = 19132;
 	public const DEFAULT_PLAYERS = 20;
 	public const DEFAULT_GAMEMODE = Player::SURVIVAL;
@@ -57,7 +57,7 @@ class SetupWizard{
 	}
 
 	public function run() : bool{
-		$this->message(\pocketmine\DISTRO_NAME . " set-up wizard");
+		$this->message(\pocketmine\NAME . " set-up wizard");
 
 		$langs = BaseLang::getLanguageList();
 		if(count($langs) === 0){
@@ -103,13 +103,14 @@ class SetupWizard{
 
 		$this->networkFunctions();
 		$this->printIpDetails();
+
 		$this->endWizard();
 
 		return true;
 	}
 
 	private function showLicense() : bool{
-		$this->message($this->lang->translateString("welcome_to_pocketmine", [\pocketmine\DISTRO_NAME]));
+		$this->message($this->lang->translateString("welcome_to_pocketmine", [\pocketmine\NAME]));
 		echo <<<LICENSE
 
   This program is free software: you can redistribute it and/or modify
@@ -120,7 +121,7 @@ class SetupWizard{
 LICENSE;
 		$this->writeLine();
 		if(strtolower($this->getInput($this->lang->get("accept_license"), "n", "y/N")) !== "y"){
-			$this->error($this->lang->translateString("you_have_to_accept_the_license", [\pocketmine\DISTRO_NAME]));
+			$this->error($this->lang->translateString("you_have_to_accept_the_license", [\pocketmine\NAME]));
 			sleep(5);
 
 			return false;
@@ -219,11 +220,9 @@ LICENSE;
 		}
 
 		$config->save();
-
 	}
-
+	
 	private function printIpDetails() : void{
-
 		$this->message($this->lang->get("ip_get"));
 
 		$externalIP = Internet::getIP();
@@ -244,7 +243,7 @@ LICENSE;
 	private function endWizard() : void{
 		$this->message($this->lang->get("you_have_finished"));
 		$this->message($this->lang->get("pocketmine_plugins"));
-		$this->message($this->lang->translateString("pocketmine_will_start", [\pocketmine\DISTRO_NAME]));
+		$this->message($this->lang->translateString("pocketmine_will_start", [\pocketmine\NAME]));
 
 		$this->writeLine();
 		$this->writeLine();

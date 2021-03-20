@@ -63,7 +63,6 @@ use pocketmine\command\defaults\TitleCommand;
 use pocketmine\command\defaults\TransferServerCommand;
 use pocketmine\command\defaults\VanillaCommand;
 use pocketmine\command\defaults\VersionCommand;
-use pocketmine\command\defaults\BuildInfoCommand;
 use pocketmine\command\defaults\WhitelistCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\Server;

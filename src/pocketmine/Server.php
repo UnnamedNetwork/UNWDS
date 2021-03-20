@@ -349,10 +349,6 @@ class Server{
 		return \pocketmine\NAME;
 	}
 
-	public function getDistroName() : string{
-		return \pocketmine\DISTRO_NAME;
-	}
-
 	public function isRunning() : bool{
 		return $this->isRunning;
 	}
@@ -361,20 +357,24 @@ class Server{
 		return \pocketmine\VERSION;
 	}
 
-	public function getCodename() : string{
-		return \pocketmine\CODENAME;
-	}
-
 	public function getVersion() : string{
 		return ProtocolInfo::MINECRAFT_VERSION;
 	}
 
-	public function getUNWDSVersion() : string{
-		return \pocketmine\UNWDS_VERSION;
-	}
-
 	public function getApiVersion() : string{
 		return \pocketmine\BASE_VERSION;
+	}
+
+	public function getDistroName() : string{
+		return \pocketmine\DISTRO_NAME;
+	}
+
+	public function getDistroVersion() : string{
+		return \pocketmine\DISTRO_VERSION;
+	}
+
+	public function getCodename() : string{
+		return \pocketmine\CODENAME;
 	}
 
 	public function getFilePath() : string{
@@ -1034,7 +1034,7 @@ class Server{
 				$distance = $X ** 2 + $Z ** 2;
 				$chunkX = $X + $centerX;
 				$chunkZ = $Z + $centerZ;
-				$index = ((($chunkX) & 0xFFFFFFFF) << 32) | (( $chunkZ) & 0xFFFFFFFF);
+				$index = Level::chunkHash($chunkX, $chunkZ);
 				$order[$index] = $distance;
 			}
 		}
@@ -1042,7 +1042,7 @@ class Server{
 		asort($order);
 
 		foreach($order as $index => $distance){
-			 $chunkX = ($index >> 32);  $chunkZ = ($index & 0xFFFFFFFF) << 32 >> 32;
+			Level::getXZ($index, $chunkX, $chunkZ);
 			$level->populateChunk($chunkX, $chunkZ, true);
 		}
 
@@ -1321,9 +1321,9 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
-			$this->logger->info("Starting UNWDS...\n\n");
-			$this->logger->info("§aUNWDS §fis a fork of PocketMine-MP, made by and for §2UnnamedNetwork.");
-			$this->logger->info("§fVersion: §b" . $this->getUNWDSVersion() . "§7 (" . $this->getCodename() . ")");
+			$this->logger->info("Starting ". $this->getDistroName() ."...\n\n");
+			$this->logger->info("§a". $this->getDistroName() ." §fis a fork of PocketMine-MP.");
+			$this->logger->info("§fVersion: §b" . $this->getDistroVersion() . "§7 (" . $this->getCodename() . ")");
 			$this->logger->info("§fTarget Bedrock version: §d" . $this->getVersion());
 			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
 
@@ -1339,7 +1339,7 @@ class Server{
 
 			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
-				"motd" => \pocketmine\DISTRO_NAME . "-based server",
+				"motd" => \pocketmine\DISTRO_NAME . " Server",
 				"server-port" => 19132,
 				"white-list" => false,
 				"announce-player-achievements" => true,
@@ -1480,7 +1480,7 @@ class Server{
 			}
 
 			if(\pocketmine\DEBUG >= 0){
-				@cli_set_process_title($this->getDistroName() . " " . $this->getUNWDSVersion());
+				@cli_set_process_title($this->getDistroName() . " " . $this->getDistroVersion());
 			}
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.networkStart", [$this->getIp(), $this->getPort()]));
@@ -1495,7 +1495,7 @@ class Server{
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.info", [
 				$this->getDistroName(),
-				(\pocketmine\IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : "") . $this->getUNWDSVersion() . TextFormat::RESET
+				(\pocketmine\IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : "") . $this->getDistroVersion() . TextFormat::RESET
 			]));
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getDistroName()]));
 
@@ -1521,8 +1521,7 @@ class Server{
 			$this->craftingManager = new CraftingManager();
 
 			$this->resourceManager = new ResourcePackManager($this->getDataPath() . "resource_packs" . DIRECTORY_SEPARATOR, $this->logger);
-			$this->logger->info($this->getLanguage()->translateString("pocketmine.spoonmask.enabled"));
-
+			$this->logger->warning($this->getLanguage()->translateString("pocketmine.spoonmask.enabled"));
 			$this->pluginManager = new PluginManager($this, $this->commandMap, ((bool) $this->getProperty("plugins.legacy-data-dir", true)) ? null : $this->getDataPath() . "plugin_data" . DIRECTORY_SEPARATOR);
 			$this->profilingTickRate = (float) $this->getProperty("settings.profile-report-trigger", 20);
 			$this->pluginManager->registerInterface(new PharPluginLoader($this->autoloader));
@@ -1531,6 +1530,7 @@ class Server{
 			register_shutdown_function([$this, "crashDump"]);
 
 			$this->queryRegenerateTask = new QueryRegenerateEvent($this);
+		
 
 			$this->pluginManager->loadPlugins($this->pluginPath);
 			$this->enablePlugins(PluginLoadOrder::STARTUP);
@@ -2092,13 +2092,18 @@ class Server{
 					$report = false;
 				}
 
+				if(strrpos(\pocketmine\GIT_COMMIT, "-dirty") !== false or \pocketmine\GIT_COMMIT === str_repeat("00", 20)){
+					$this->logger->debug("Not sending crashdump due to locally modified");
+					$report = false; //Don't send crashdumps for locally modified builds
+				}
+
 				if($report){
-					$url = ((bool) $this->getProperty("auto-report.use-https", true) ? "https" : "http") . "://" . $this->getProperty("auto-report.host", "swcrash.dtcg.xyz") . "/submit/api";
+					$url = ((bool) $this->getProperty("auto-report.use-https", true) ? "https" : "http") . "://" . $this->getProperty("auto-report.host", "crashhole.unwds.net") . "/submit/api";
 					$postUrlError = "Unknown error";
 					$reply = Internet::postURL($url, [
 						"report" => "yes",
-						"name" => $this->getDistroName() . " " . $this->getUNWDSVersion(),
-						"email" => "crash@dtcg.xyz",
+						"name" => $this->getDistroName() . " " . $this->getDistroVersion(),
+						"email" => "crashhold@unwds.net",
 						"reportPaste" => base64_encode($dump->getEncodedData())
 					], 10, [], $postUrlError);
 
@@ -2131,7 +2136,7 @@ class Server{
 			echo "--- Waiting $spacing seconds to throttle automatic restart (you can kill the process safely now) ---" . PHP_EOL;
 			sleep($spacing);
 		}
-                @Process::kill(Process::pid());
+		@Process::kill(Process::pid());
 		exit(1);
 	}
 
@@ -2338,7 +2343,7 @@ class Server{
 		$usage = sprintf("%g/%g/%g/%g MB @ %d threads", round(($u[0] / 1024) / 1024, 2), round(($d[0] / 1024) / 1024, 2), round(($u[1] / 1024) / 1024, 2), round(($u[2] / 1024) / 1024, 2), Process::getThreadCount());
 
 		echo "\x1b]0;" . $this->getDistroName() . " " .
-			$this->getUNWDSVersion() .
+			$this->getDistroVersion() .
 			" | Online " . count($this->players) . "/" . $this->getMaxPlayers() .
 			" | Memory " . $usage .
 			" | U " . round($this->network->getUpload() / 1024, 2) .

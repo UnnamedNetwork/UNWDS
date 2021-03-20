@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace pocketmine {
+
 	use Composer\InstalledVersions;
 	use pocketmine\utils\Git;
 	use pocketmine\utils\MainLogger;
@@ -37,7 +38,7 @@ namespace pocketmine {
 	require_once __DIR__ . '/SpoonMask.php';
 
 	const MIN_PHP_VERSION = "7.3.0";
-	
+
 	/**
 	 * @param string $message
 	 * @return void
@@ -138,8 +139,7 @@ namespace pocketmine {
 		}
 		if(\Phar::running(true) === ""){
 			$logger->warning("Non-packaged UNWDS installation detected. This will degrade autoloading speed and make startup times longer.");
-			$logger->warning("Download the stable pre-packaged version at: https://github.com/UnnamedNetwork/UNWDS/releases");
-		
+			$logger->warning("Download the stable, pre-packaged UNWDS in: https://github.com/UnnamedNetwork/UNWDS/releases");
 		}
 	}
 
@@ -191,7 +191,7 @@ namespace pocketmine {
 
 		set_error_handler([Utils::class, 'errorExceptionHandler']);
 
-		$version = new VersionString(\pocketmine\UNWDS_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER, \pocketmine\BASE_VERSION);
+		$version = new VersionString(\pocketmine\BASE_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
 		$gitHash = str_repeat("00", 20);
@@ -205,8 +205,9 @@ namespace pocketmine {
 				$gitHash = $meta["git"];
 			}
 		}
-
+	
 		define('pocketmine\GIT_COMMIT', $gitHash);
+
 		$composerGitHash = InstalledVersions::getReference('unnamednetwork/unwds');
 		if($composerGitHash !== null){
 			$currentGitHash = explode("-", \pocketmine\GIT_COMMIT)[0];
@@ -319,5 +320,6 @@ namespace pocketmine {
 
 		exit($exitCode);
 	}
-		\pocketmine\server();
+
+	\pocketmine\server();
 }
