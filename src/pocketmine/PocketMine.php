@@ -217,7 +217,7 @@ namespace pocketmine {
 				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");
 				critical_error("Out-of-sync Composer dependencies may result in crashes and classes not being found.");
 				critical_error("Please synchronize Composer dependencies before running the server.");
-				exit(1);
+				#exit(1);
 			}
 		}
 

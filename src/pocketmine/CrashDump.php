@@ -127,7 +127,7 @@ class CrashDump{
 		$this->data["format_version"] = self::FORMAT_VERSION;
 		$this->data["time"] = $this->time;
 		$this->data["uptime"] = $this->time - \pocketmine\START_TIME;
-		$this->addLine($this->server->getDistroName() . " Crash Dump " . date("D M j H:i:s T Y", (int) $this->time));
+		$this->addLine($this->server->getName() . " Crash Dump " . date("D M j H:i:s T Y", (int) $this->time));
 		$this->addLine();
 		$this->baseCrash();
 		$this->generalData();
@@ -363,10 +363,12 @@ class CrashDump{
 
 		$this->data["general"] = [];
 		$this->data["general"]["name"] = $this->server->getDistroName();
+		$this->data["general"]["distro_version"] = $this->server->getDistroVersion();
 		$this->data["general"]["base_version"] = \pocketmine\BASE_VERSION;
 		$this->data["general"]["build"] = \pocketmine\BUILD_NUMBER;
 		$this->data["general"]["is_dev"] = \pocketmine\IS_DEVELOPMENT_BUILD;
 		$this->data["general"]["protocol"] = ProtocolInfo::CURRENT_PROTOCOL;
+		$this->data["general"]["git"] = \pocketmine\GIT_COMMIT;
 		$this->data["general"]["uname"] = php_uname("a");
 		$this->data["general"]["php"] = phpversion();
 		$this->data["general"]["zend"] = zend_version();
@@ -375,6 +377,7 @@ class CrashDump{
 		$this->data["general"]["composer_libraries"] = $composerLibraries;
 		$this->addLine($this->server->getDistroName() . " version: " . $this->server->getDistroVersion() . " [Protocol " . ProtocolInfo::CURRENT_PROTOCOL . "]");
 		$this->addLine("Implementing: " . $this->server->getName() . " API " . $this->server->getApiVersion());
+		$this->addLine("Git commit: " . \pocketmine\GIT_COMMIT);
 		$this->addLine("uname -a: " . php_uname("a"));
 		$this->addLine("PHP Version: " . phpversion());
 		$this->addLine("Zend version: " . zend_version());

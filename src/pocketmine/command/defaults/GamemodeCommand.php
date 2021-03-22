@@ -38,8 +38,7 @@ class GamemodeCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.gamemode.description",
-			"%commands.gamemode.usage",
-			["gm", "gamemode"]
+			"%commands.gamemode.usage"
 		);
 		$this->setPermission("pocketmine.command.gamemode");
 	}
