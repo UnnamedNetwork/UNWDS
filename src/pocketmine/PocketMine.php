@@ -217,8 +217,8 @@ namespace pocketmine {
 				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");
 				critical_error("Out-of-sync Composer dependencies may result in crashes and classes not being found.");
 				critical_error("You should synchronize Composer dependencies before running the server.");
-				critical_error("In UNWDS, we removed the function that kill the server if the composer dependencies is not match or not up-to-date.");
-				critical_error("We do not accept any issues or take any responsible if your server's dependencies is not up-to-date.");
+				critical_error("In UNWDS, we removed the function that kill the server if the Composer dependencies are not match or not are up-to-date.");
+				critical_error("We do not accept any issues or take any responsible if your server's dependencies are not up-to-date.");
 				#exit(1)
 			}
 		}
