@@ -369,6 +369,10 @@ class Server{
 		return \pocketmine\DISTRO_NAME;
 	}
 
+	public function getCommit() : string{
+		return \pocketmine\GIT_COMMIT;
+	}
+
 	public function getDistroVersion() : string{
 		return \pocketmine\DISTRO_VERSION;
 	}
@@ -1320,7 +1324,9 @@ class Server{
 
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
-
+			if(\pocketmine\IS_DEVELOPMENT_BUILD){
+				$this->logger->warning("Git commit of this build is:" . $this->getCommit() . "");
+			}
 			$this->logger->info("Starting ". $this->getDistroName() ."...\n\n");
 			$this->logger->info("§a". $this->getDistroName() ." §fis a fork of PocketMine-MP.");
 			$this->logger->info("§fVersion: §b" . $this->getDistroVersion() . "§7 (" . $this->getCodename() . ")");
