@@ -64,8 +64,8 @@ fi
 if [ "$BUILDPHPV" = "$NBPHPV" ]; then
     echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
 else
-     git config --global user.email "deptteam.cuong@gmail.com"
-     git config --global user.name "dtcu0ng"
+     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+     git config --global user.name "github-actions[bot]"
     echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
 	chmod 777 UNWDS.phar
     git clone https://github.com/dtcu0ng/UNWDS_Output.git
