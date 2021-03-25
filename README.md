@@ -11,7 +11,7 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
 ## For developers
  * [Building and running from source](BUILDING.md)
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
- * [Latest source commit built](https://github.com/dtcu0ng/UNWDS_Output/tree/master/ci_build_output/stable/latest/) - for who want to get latest 'stable' branch development commit, it may have some unexpected errors. I do not recommend you to use this version.
+ * [Latest source commit built](https://github.com/dtcu0ng/UNWDS_Output/tree/master/ci_build_output/stable/latest/) - for who want to get latest some supported branch development commit build, it may have some unexpected errors. I do not recommend you to use this version. These server software are processed by PreProcessor and it's like live preview...
  
 ## About UNWDS source code update:
 + UNWDS is just a PocketMine-MP distro with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except Major updates, Submodules), that changes will go directly into UNWDS (stable) within 24-48 hours
