@@ -35,33 +35,29 @@ else
 	exit 1
 fi
 
-if [ "$BUILDPHPV" = "$NBPHPV" ]; then
-    echo "PHP $BUILDPHPV detected. Ignore the phar push and then exit..."
-else
-     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-     git config --global user.name "github-actions[bot]"
-    echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
-	chmod 777 UNWDS.phar
-    git clone https://github.com/dtcu0ng/UNWDS_Output.git
-	cd UNWDS_Output
-	git checkout master
-	cd ci_build_output
-	# Checking if output branch folder exist.
-    [ ! -d "${GITHUB_REF##*/}" ] && mkdir ${GITHUB_REF##*/}
-    [ ! -d "${GITHUB_REF##*/}/latest" ] && mkdir ${GITHUB_REF##*/}/latest
-	[ ! -d "${GITHUB_REF##*/}/old" ] && mkdir ${GITHUB_REF##*/}/old
-	mkdir ${GITHUB_REF##*/}/old/$OLDBLD
-	cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
-    cd ../../
-	cp UNWDS.phar UNWDS_Output/ci_build_output/${GITHUB_REF##*/}/latest
-	cd UNWDS_Output
-	git add -A
-	git commit -m "${GITHUB_REF##*/} build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
-	git remote rm origin
-  # Add new "origin" with access token in the git URL for authentication
-    git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
-	git pull origin master --rebase
-    git push origin master --quiet
-	echo Push completed with 0 or more errors
-	echo Branch: ${GITHUB_REF##*/}
-fi
+git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+git config --global user.name "github-actions[bot]"
+echo "PHP $BUILDPHPV detected. Pushing the phar into output repo..."
+chmod 777 UNWDS.phar
+git clone https://github.com/dtcu0ng/UNWDS_Output.git
+cd UNWDS_Output
+git checkout master
+cd ci_build_output
+# Checking if output branch folder exist.
+[ ! -d "${GITHUB_REF##*/}" ] && mkdir ${GITHUB_REF##*/}
+[ ! -d "${GITHUB_REF##*/}/latest" ] && mkdir ${GITHUB_REF##*/}/latest
+[ ! -d "${GITHUB_REF##*/}/old" ] && mkdir ${GITHUB_REF##*/}/old
+mkdir ${GITHUB_REF##*/}/old/$OLDBLD
+cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
+cd ../../
+cp UNWDS.phar UNWDS_Output/ci_build_output/${GITHUB_REF##*/}/latest
+cd UNWDS_Output
+git add -A
+git commit -m "${GITHUB_REF##*/} build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
+git remote rm origin
+# Add new "origin" with access token in the git URL for authentication
+git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
+git pull origin master --rebase
+git push origin master --quiet
+echo Push completed with 0 or more errors
+echo Branch: ${GITHUB_REF##*/}
