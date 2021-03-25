@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.15]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2 #needed for build.sh
@@ -36,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.15]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -86,7 +86,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.15]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2
