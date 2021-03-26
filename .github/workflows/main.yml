@@ -131,7 +131,7 @@ jobs:
         run: chmod +x ./tests/travis.sh && ./tests/travis.sh -t4
 
   preprocessor:
-    name: Preprocessor tests
+    name: PreProcessor tests
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -179,7 +179,7 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction
 
-      - name: Run preprocessor
+      - name: Run PreProcessor
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
@@ -204,7 +204,7 @@ jobs:
             fi
           done
 
-      - name: Upload preprocessor diffs
+      - name: Upload PreProcessor diffs
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -212,7 +212,7 @@ jobs:
           path: ${{ github.workspace }}/preprocessor_diff*.patch
 
   output_push:
-    name: Git push phar
+    name: Build & Push
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -260,32 +260,18 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --classmap-authoritative
 
-      - name: Run preprocessor
+      - name: Run PreProcessor
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-
-          #dump the diff of preprocessor replacements to a patch in case it has bugs
-          git diff > preprocessor_diff.patch
-
           VENDOR_PM="$GITHUB_WORKSPACE/vendor"
           VENDOR_PM_BACKUP="$GITHUB_WORKSPACE/vendor-before-preprocess"
           cp -r "$VENDOR_PM" "$VENDOR_PM_BACKUP"
           for f in $(ls $VENDOR_PM/pocketmine); do
             echo "Processing directory \"$f\"..."
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-            echo "Checking for changes in \"$f\"..."
-            DIFF=$(git diff --no-index "$VENDOR_PM_BACKUP/pocketmine/$f" "$VENDOR_PM/pocketmine/$f" || true)
-            if [ "$DIFF" != "" ]; then
-              PATCH="$GITHUB_WORKSPACE/preprocessor_diff_$f.patch"
-              echo "$DIFF" > "$PATCH"
-              echo "Generated patch file \"$PATCH\""
-            else
-              echo "No diff generated for \"$f\" (preprocessor made no changes)"
-            fi
-          done
           
-      - name: Push
+      - name: Build and push
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./tests/push_output.sh && ./tests/push_output.sh
