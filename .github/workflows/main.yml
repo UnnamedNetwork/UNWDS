@@ -270,6 +270,7 @@ jobs:
           for f in $(ls $VENDOR_PM/pocketmine); do
             echo "Processing directory \"$f\"..."
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
+          done
           
       - name: Build and push
         env: 
