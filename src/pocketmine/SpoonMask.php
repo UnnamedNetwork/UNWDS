@@ -15,4 +15,4 @@ namespace pocketmine;
 
 const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
-const DISTRO_VERSION = "2.3.1";
+const DISTRO_VERSION = "2.3.2";
