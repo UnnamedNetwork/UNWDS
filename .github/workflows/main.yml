@@ -294,3 +294,10 @@ jobs:
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./tests/push_output.sh && ./tests/push_output.sh
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: UNWDS_${{ GITHUB_RUN_NUMBER }}
+          path: ${{ github.workspace }}/UNWDS.phar
