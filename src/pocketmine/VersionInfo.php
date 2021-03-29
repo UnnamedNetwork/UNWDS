@@ -33,6 +33,9 @@ if(defined('pocketmine\_VERSION_INFO_INCLUDED')){
 const _VERSION_INFO_INCLUDED = true;
 
 const NAME = "PocketMine-MP";
+const DISTRO_NAME = "UNWDS";
+const CODENAME = "Twee";
 const BASE_VERSION = "3.18.2";
+const DISTRO_VERSION = "2.3.2";
 const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0333;
