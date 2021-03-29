@@ -86,7 +86,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.16]
+        php: [7.4.16, 8.0.3]
 
     steps:
       - uses: actions/checkout@v2
@@ -148,7 +148,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: UNWDS
+          name: UNWDS_${{ matrix.php }}
           path: ${{ github.workspace }}/UNWDS.phar
 
   integration:
