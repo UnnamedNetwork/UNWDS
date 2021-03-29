@@ -299,5 +299,5 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: UNWDS_${{ GITHUB_RUN_NUMBER }}
+          name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
