@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace pocketmine;
 
-use function defined;
 // The custom version strings
 
 const DISTRO_NAME = "UNWDS";
