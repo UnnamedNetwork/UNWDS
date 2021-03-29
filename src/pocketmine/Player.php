@@ -2933,6 +2933,16 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 					break;
 				}
 
+				$tile = $this->level->getTile($pos);
+				if($tile instanceof ItemFrame and $tile->hasItem()){
+					if (lcg_value() <= $tile->getItemDropChance()){
+						$this->level->dropItem($tile->getBlock(), $tile->getItem());
+					}
+					$tile->setItem(null);
+					$tile->setItemRotation(0);
+					break;
+				}
+
 				$block = $target->getSide($packet->face);
 				if($block->getId() === Block::FIRE){
 					$this->level->setBlock($block, BlockFactory::get(Block::AIR));
