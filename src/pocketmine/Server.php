@@ -1323,8 +1323,8 @@ class Server{
 			if(\pocketmine\IS_DEVELOPMENT_BUILD){
 				$this->logger->warning("Git commit of this build is: " . \pocketmine\GIT_COMMIT . "");
 			}
-			$this->logger->info("Starting ". $this->getDistroName() ."...\n\n");
-			$this->logger->info("§a". $this->getDistroName() ." §fis a fork of PocketMine-MP.");
+			$this->logger->info("Starting " . $this->getDistroName() . "...\n\n");
+			$this->logger->info("§a" . $this->getDistroName() . " §fis a fork of PocketMine-MP.");
 			$this->logger->info("§fVersion: §b" . $this->getDistroVersion() . "§7 (" . $this->getCodename() . ")");
 			$this->logger->info("§fTarget Bedrock version: §d" . $this->getVersion());
 			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
@@ -1532,7 +1532,6 @@ class Server{
 			register_shutdown_function([$this, "crashDump"]);
 
 			$this->queryRegenerateTask = new QueryRegenerateEvent($this);
-		
 
 			$this->pluginManager->loadPlugins($this->pluginPath);
 			$this->enablePlugins(PluginLoadOrder::STARTUP);
