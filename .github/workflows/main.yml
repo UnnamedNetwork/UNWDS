@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16, 8.0.3]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2 #needed for build.sh
@@ -36,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16, 8.0.3]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -79,14 +79,14 @@ jobs:
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
 
   output_push:
-    name: Build & Push
+    name: Build optimised & Push
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.16, 8.0.3]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -127,7 +127,7 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --classmap-authoritative
 
-      - name: Run PreProcessor
+      - name: Optimise server software
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
@@ -139,7 +139,7 @@ jobs:
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
           done
           
-      - name: Build and push
+      - name: Build & push
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./tests/push_output.sh && ./tests/push_output.sh
@@ -148,7 +148,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: UNWDS_${{ matrix.php }}
+          name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
 
   integration:
@@ -159,7 +159,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16, 8.0.3]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -211,7 +211,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16, 8.0.3]
+        php: [7.3.27, 7.4.16]
 
     steps:
       - uses: actions/checkout@v2
