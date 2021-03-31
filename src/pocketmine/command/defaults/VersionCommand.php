@@ -61,7 +61,7 @@ class VersionCommand extends VanillaCommand{
 			));
 			$sender->sendMessage(new TranslationContainer("pocketmine.mask.info", [
 				$sender->getServer()->getName(),
-				$sender->getServer()->getAPIVersion(),
+				$sender->getServer()->getApiVersion(),
 			]
 			));
 		}else{
