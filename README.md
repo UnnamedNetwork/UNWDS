@@ -14,18 +14,16 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
  * [Latest API documentation](https://jenkins.pmmp.io/job/PocketMine-MP-doc/doxygen/) - Doxygen documentation generated from development
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
  * [Latest Actions server software artifacts](https://nightly.link/UnnamedNetwork/UNWDS/workflows/main/stable/UNWDS.zip) - Where you can get the latest 'stable' development server phar on current commit. This is not recommended.
- * [Commit build history](https://github.com/dtcu0ng/UNWDS_Output/tree/master/ci_build_output/stable/) - Like artifacts link above, but contain older builds.
+ * [Commit build history](https://github.com/dtcu0ng/UNWDS_Output/tree/master/ci_build_output/stable/) - Like artifacts link above, also contain older builds.
  
 ## About UNWDS source code update:
-+ UNWDS is just a PocketMine-MP distro with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except Major updates, Submodules), that changes will go directly into UNWDS (stable) within 24-48 hours
-+ If the newer source commit run tests fail, we will stop the update and will working at that commit. After that, the commit auto-update function will continue.
-+ Submodules and test configs update will be tested manually. If submodules is OK, we will push an update into that submodules.
-+ If a major API updates released, we don't gurantee anything with you. We need to change the SpoonMask and the base source code, optimize it,... So we don't gurantee for the time we release the final version, but the source code will be upload ASAP.
++ UNWDS is just a PocketMine-MP distribution with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except API major changes), that changes will go directly into UNWDS (stable) within 24-48 hours
++ If the newer source commit run tests fail (very rare), we will stop the update and will working at that commit. After we fixed that, the commit auto-update function will continue.
 
 ## About plugins:
-+ UNWDS is a modifiled PocketMine-MP to bypass SpoonDetector. I don't modified into the PocketMine-MP important cores (just modified for software's behaviour after adding some constants like the distro name or custom version.)
-+ Read [this](https://github.com/dtcu0ng/UNWDS/releases/tag/2.0.1-RC2) release note to get more info (if you're running version <2.0.1-RC2).
-+ Read [this](https://github.com/dtcu0ng/UNWDS/releases/tag/2.0.4%2Bdev.19) release note to get more info with the Spoon included plugins.
++ UNWDS is a modifiled PocketMine-MP distrobution to bypass the SpoonDetector. UNWDS is not heavily modified or touch into any PocketMine-MP API (just modified into server software's behaviour after adding some constants like the distro name or custom version number.)
++ Because PocketMine-MP consider the version number is the API version, so we need to make a fake version number. This fake number just displayed on the console, some messages player can get when use '/version' command, not affect the API system or something else.
++ This changes not affected with API or Plugins for PocketMine-MP.
 
 ## Contribution:
 + Feel free to open the issues, PR, etc...
