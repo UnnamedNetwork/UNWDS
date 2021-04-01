@@ -21,8 +21,8 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
 + If the newer source commit run tests fail (very rare), we will stop the update and will working at that commit. After we fixed that, the commit auto-update function will continue.
 
 ## About API & plugins
-+ UNWDS is a modifiled PocketMine-MP distrobution to bypass the SpoonDetector. UNWDS is not heavily modified or touch into any PocketMine-MP API (just modified into server software's behaviour after adding some constants like the distro name or custom version number.)
-+ Because PocketMine-MP consider the version number is the API version, so we need to make a fake version number. This fake number just displayed on the console, some messages player can get when use '/version' command, not affect the API system or something else.
++ UNWDS is a modified PocketMine-MP distrobution to bypass the SpoonDetector. UNWDS is not heavily modified or touch into any PocketMine-MP API (just modified into server software's behaviour after adding some constants like the distro name or custom version number.)
++ Because PocketMine-MP consider the version number is the API version, so we need to make a fake (custom) version number. This fake (custom) number just displayed on the console, some messages player can get when use '/version' command, not affect the API system or something else.
 + This changes not affected with API or Plugins for PocketMine-MP.
 
 ## Contribution:
