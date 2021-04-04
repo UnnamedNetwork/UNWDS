@@ -2830,15 +2830,11 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		if(!$this->spawned or !$this->isAlive()){
 			return true;
 		}
-		if($packet->action === InteractPacket::ACTION_MOUSEOVER and $packet->target === 0){
-			//TODO HACK: silence useless spam (MCPE 1.8)
-			//this packet is EXPECTED to only be sent when interacting with an entity, but due to some messy Mojang
-			//hacks, it also sends it when changing the held item now, which causes us to think the inventory was closed
-			//when it wasn't.
-			return true;
-		}
 
-		$this->doCloseInventory();
+		if($packet->action !== InteractPacket::ACTION_MOUSEOVER){
+			//mouseover fires when the player swaps their held itemstack in the inventory menu
+			$this->doCloseInventory();
+		}
 
 		$target = $this->level->getEntity($packet->target);
 		if($target === null){
@@ -3112,7 +3108,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		}
 		if(isset($this->windowIndex[$packet->windowId])){
 			$this->closingWindowId = $packet->windowId;
-			(new InventoryCloseEvent($this->windowIndex[$packet->windowId], $this))->call();
 			$this->removeWindow($this->windowIndex[$packet->windowId]);
 			$this->closingWindowId = null;
 			//removeWindow handles sending the appropriate
@@ -3130,11 +3125,12 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		$handled = false;
 
 		$isFlying = $packet->getFlag(AdventureSettingsPacket::FLYING);
-		if($isFlying and !$this->allowFlight){
-			$this->kick($this->server->getLanguage()->translateString("kick.reason.cheat", ["%ability.flight"]));
-			return true;
-		}elseif($isFlying !== $this->isFlying()){
+		if($isFlying !== $this->isFlying()){
 			$ev = new PlayerToggleFlightEvent($this, $isFlying);
+			if($isFlying and !$this->allowFlight){
+				$ev->setCancelled();
+			}
+
 			$ev->call();
 			if($ev->isCancelled()){
 				$this->sendSettings();
@@ -4135,6 +4131,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		}
 
 		if($id !== null){
+			(new InventoryCloseEvent($inventory, $this))->call();
 			$inventory->close($this);
 			unset($this->windows[$hash], $this->windowIndex[$id], $this->permanentWindows[$id]);
 		}
