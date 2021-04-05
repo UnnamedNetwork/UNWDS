@@ -127,7 +127,7 @@ class CrashDump{
 		$this->data["format_version"] = self::FORMAT_VERSION;
 		$this->data["time"] = $this->time;
 		$this->data["uptime"] = $this->time - \pocketmine\START_TIME;
-		$this->addLine($this->server->getName() . " Crash Dump " . date("D M j H:i:s T Y", (int) $this->time));
+		$this->addLine($this->server->getDistroName() . " Crash Dump " . date("D M j H:i:s T Y", (int) $this->time));
 		$this->addLine();
 		$this->baseCrash();
 		$this->generalData();
