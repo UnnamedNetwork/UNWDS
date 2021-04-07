@@ -23,12 +23,20 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 
 class TestPacket extends DataPacket{
 	public const NETWORK_ID = 1023;
 
-	public function handle(NetworkSession $handler) : bool{
+	protected function decodePayload(PacketSerializer $in) : void{
+
+	}
+
+	protected function encodePayload(PacketSerializer $out) : void{
+
+	}
+
+	public function handle(PacketHandlerInterface $handler) : bool{
 		return false;
 	}
 }

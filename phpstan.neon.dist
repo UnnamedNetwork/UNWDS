@@ -2,6 +2,7 @@ includes:
 	- tests/phpstan/configs/actual-problems.neon
 	- tests/phpstan/configs/check-explicit-mixed-baseline.neon
 	- tests/phpstan/configs/gc-hacks.neon
+	- tests/phpstan/configs/impossible-generics.neon
 	- tests/phpstan/configs/l7-baseline.neon
 	- tests/phpstan/configs/l8-baseline.neon
 	- tests/phpstan/configs/php-bugs.neon
@@ -13,6 +14,10 @@ includes:
 	- vendor/phpstan/phpstan-phpunit/rules.neon
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 
+rules:
+	- pocketmine\phpstan\rules\DisallowEnumComparisonRule
+#	- pocketmine\phpstan\rules\ThreadedSupportedTypesRule
+
 parameters:
 	level: 8
 	checkExplicitMixed: true
@@ -22,19 +27,22 @@ parameters:
 	scanDirectories:
 	    - tests/plugins/TesterPlugin
 	scanFiles:
-		- src/pocketmine/PocketMine.php
+		- src/PocketMine.php
+		- build/make-release.php
 		- build/server-phar.php
 	paths:
 		- src
+		- tests/phpstan/rules
+		- build/make-release.php
 		- build/server-phar.php
 		- tests/phpunit
 		- tests/plugins/TesterPlugin
 	dynamicConstantNames:
-		- pocketmine\IS_DEVELOPMENT_BUILD
+		- pocketmine\VersionInfo::IS_DEVELOPMENT_BUILD
 		- pocketmine\DEBUG
 	stubFiles:
+		- tests/phpstan/stubs/JsonMapper.stub
 		- tests/phpstan/stubs/pthreads.stub
-		- tests/phpstan/stubs/chunkutils.stub
 		- tests/phpstan/stubs/leveldb.stub
 	reportUnmatchedIgnoredErrors: false #no other way to silence platform-specific non-warnings
 	staticReflectionClassNamePatterns:

@@ -15,7 +15,6 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
-NBPHPV="7.3.27"
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
 
 rm -rf "$DATA_DIR"

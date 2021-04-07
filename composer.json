@@ -1,18 +1,24 @@
 {
-   "name": "unnamednetwork/unwds",
+   "name": "dtcu0ng/unwds-alpha",
    "description": "Software for Minecraft: BE server making, powered by PocketMine-MP",
    "type": "project",
-   "homepage": "https://github.com/unnamednetwork/unwds",
+   "homepage": "https://github.com/dtcu0ng/unwds-alpha",
    "license": "LGPL-3.0",
    "require": {
-      "php": "^7.3 || ^8.0",
+      "php": "^7.4 || ^8.0",
       "php-64bit": "*",
+      "ext-chunkutils2": "^0.2.0",
+      "ext-crypto": "^0.3.1",
       "ext-ctype": "*",
       "ext-curl": "*",
       "ext-date": "*",
+      "ext-gmp": "*",
       "ext-hash": "*",
+      "ext-igbinary": "^3.0.1",
       "ext-json": "*",
+      "ext-leveldb": "^0.2.1",
       "ext-mbstring": "*",
+      "ext-morton": "^0.1.0",
       "ext-openssl": "*",
       "ext-pcre": "*",
       "ext-phar": "*",
@@ -25,42 +31,47 @@
       "ext-zip": "*",
       "ext-zlib": ">=1.2.11",
       "composer-runtime-api": "^2.0",
-      "adhocore/json-comment": "^1.1.0",
-      "pocketmine/binaryutils": "^0.1.9",
+      "adhocore/json-comment": "^0.1.0",
+      "mdanter/ecc": "^1.0",
+      "netresearch/jsonmapper": "^4.0",
+      "pocketmine/binaryutils": "dev-master",
       "pocketmine/callback-validator": "^1.0.2",
-      "pocketmine/classloader": "^0.1.0",
-      "pocketmine/log": "^0.2.0",
-      "pocketmine/log-pthreads": "^0.1.0",
-      "pocketmine/math": "^0.2.0",
-      "pocketmine/nbt": "^0.2.18",
-      "pocketmine/raklib": "^0.12.7",
+      "pocketmine/classloader": "dev-master",
+      "pocketmine/color": "^0.2.0",
+      "pocketmine/errorhandler": "^0.2.0",
+      "pocketmine/log": "dev-master",
+      "pocketmine/log-pthreads": "dev-master",
+      "pocketmine/math": "dev-master",
+      "pocketmine/nbt": "dev-master",
+      "pocketmine/raklib": "dev-master",
       "pocketmine/snooze": "^0.1.0",
-      "pocketmine/spl": "^0.4.0"
+      "pocketmine/spl": "dev-master",
+      "ramsey/uuid": "^4.1",
+      "respect/validation": "^2.0"
    },
    "require-dev": {
-      "phpstan/phpstan": "0.12.83",
+      "phpstan/phpstan": "0.12.82",
       "phpstan/phpstan-phpunit": "^0.12.6",
       "phpstan/phpstan-strict-rules": "^0.12.2",
       "phpunit/phpunit": "^9.2"
    },
    "autoload": {
       "psr-4": {
-         "": ["src"]
+         "pocketmine\\": "src/"
       },
       "files": [
-         "src/pocketmine/CoreConstants.php",
-         "src/pocketmine/GlobalConstants.php",
-         "src/pocketmine/VersionInfo.php"
+         "src/CoreConstants.php"
       ]
    },
    "autoload-dev": {
       "psr-4": {
-         "pocketmine\\": "tests/phpunit/"
+         "pocketmine\\": "tests/phpunit/",
+         "pocketmine\\phpstan\\rules\\": "tests/phpstan/rules"
       }
    },
    "config": {
       "platform": {
-         "php": "7.3.0"
+         "php": "7.4.0"
       },
       "sort-packages": true
    },

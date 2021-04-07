@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2 #needed for build.sh
@@ -23,7 +23,7 @@ jobs:
         with:
           path: "./bin"
           key: "php-build-generic-${{ matrix.php }}-${{ matrix.image }}-${{ hashFiles('./tests/gh-actions/build.sh') }}"
- 
+
       - name: Compile PHP
         if: steps.php-build-cache.outputs.cache-hit != 'true'
         run: chmod +x ./tests/gh-actions/build.sh && ./tests/gh-actions/build.sh "${{ matrix.php }}"
@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -87,10 +87,12 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Restore PHP build cache
         id: php-build-cache
@@ -201,7 +203,7 @@ jobs:
         with:
           name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
-
+          
   integration:
     name: Integration tests
     needs: build-php
@@ -210,7 +212,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -251,18 +253,18 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction
 
-      - name: Run tests
+      - name: Run integration tests
         run: chmod +x ./tests/travis.sh && ./tests/travis.sh -t4
 
   preprocessor:
-    name: PreProcessor tests
+    name: Preprocessor tests
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.3.27, 7.4.16]
+        php: [7.4.16]
 
     steps:
       - uses: actions/checkout@v2
@@ -303,7 +305,7 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction
 
-      - name: Run PreProcessor
+      - name: Run preprocessor
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
@@ -328,7 +330,7 @@ jobs:
             fi
           done
 
-      - name: Upload PreProcessor diffs
+      - name: Upload preprocessor diffs
         uses: actions/upload-artifact@v2
         if: always()
         with:

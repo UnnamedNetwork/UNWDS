@@ -43,11 +43,7 @@ class Main extends PluginBase implements Listener{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getScheduler()->scheduleRepeatingTask(new CheckTestCompletionTask($this), 10);
 
-		$this->waitingTests = [
-			new tests\AsyncTaskMemoryLeakTest($this),
-			new tests\AsyncTaskMainLoggerTest($this),
-			new tests\AsyncTaskPublishProgressRaceTest($this)
-		];
+		$this->waitingTests = [];
 	}
 
 	public function onServerCommand(CommandEvent $event) : void{
@@ -56,7 +52,7 @@ class Main extends PluginBase implements Listener{
 		//be asynchronous tests running. Instead we cancel this and stop the server of our own accord once all tests
 		//have completed.
 		if($event->getCommand() === "stop"){
-			$event->setCancelled();
+			$event->cancel();
 		}
 	}
 

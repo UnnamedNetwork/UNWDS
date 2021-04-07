@@ -3,32 +3,37 @@ parameters:
 		-
 			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
 			count: 3
-			path: ../../../src/pocketmine/command/CommandReader.php
+			path: ../../../src/command/CommandReader.php
 
 		-
 			message: "#^Call to function assert\\(\\) with false and 'unknown hit type' will always evaluate to false\\.$#"
 			count: 1
-			path: ../../../src/pocketmine/entity/projectile/Projectile.php
+			path: ../../../src/entity/projectile/Projectile.php
 
 		-
-			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
-			count: 2
-			path: ../../../src/pocketmine/level/format/io/region/RegionLoader.php
-
-		-
-			message: "#^Call to function method_exists\\(\\) with pocketmine\\\\network\\\\mcpe\\\\CachedEncapsulatedPacket and '__toString' will always evaluate to true\\.$#"
+			message: "#^Method pocketmine\\\\crafting\\\\CraftingManager\\:\\:getDestructorCallbacks\\(\\) should return pocketmine\\\\utils\\\\ObjectSet\\<Closure\\(\\)\\: void\\> but returns pocketmine\\\\utils\\\\ObjectSet\\<Closure\\(\\)\\: void\\>\\|pocketmine\\\\utils\\\\ObjectSet\\<object\\>\\.$#"
 			count: 1
-			path: ../../../src/pocketmine/network/mcpe/protocol/DataPacket.php
+			path: ../../../src/crafting/CraftingManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$ of closure expects TMemberType, TMemberType given\\.$#"
+			message: "#^Property pocketmine\\\\crafting\\\\CraftingManager\\:\\:\\$destructorCallbacks \\(pocketmine\\\\utils\\\\ObjectSet\\<Closure\\(\\)\\: void\\>\\|null\\) does not accept pocketmine\\\\utils\\\\ObjectSet\\<object\\>\\.$#"
 			count: 1
-			path: ../../../src/pocketmine/utils/Utils.php
+			path: ../../../src/crafting/CraftingManager.php
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between string and false will always evaluate to false\\.$#"
 			count: 1
-			path: ../../../src/pocketmine/utils/Utils.php
+			path: ../../../src/utils/Utils.php
+
+		-
+			message: "#^Parameter \\#1 \\$ of closure expects TMemberType, TMemberType given\\.$#"
+			count: 1
+			path: ../../../src/utils/Utils.php
+
+		-
+			message: "#^Call to function is_resource\\(\\) with resource will always evaluate to true\\.$#"
+			count: 2
+			path: ../../../src/world/format/io/region/RegionLoader.php
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotNull\\(\\) with int and string will always evaluate to true\\.$#"

@@ -1,15 +1,16 @@
-[submodule "src/pocketmine/lang/locale"]
-	path = src/pocketmine/lang/locale
-	url = https://github.com/UnnamedNetwork/Language.git
-[submodule "build/php"]
-	path = build/php
-	url = https://github.com/pmmp/php-build-scripts.git
-[submodule "src/pocketmine/resources/vanilla"]
-	path = src/pocketmine/resources/vanilla
-	url = https://github.com/pmmp/BedrockData.git
+
 [submodule "tests/plugins/DevTools"]
 	path = tests/plugins/DevTools
-	url = https://github.com/pmmp/DevTools.git
+	url = https://github.com/pmmp/DevTools/
+[submodule "resources/locale"]
+	path = resources/locale
+	url = https://github.com/UnnamedNetwork/Language
+[submodule "build/php"]
+	path = build/php
+	url = https://github.com/pmmp/php-build-scripts/
 [submodule "build/preprocessor"]
 	path = build/preprocessor
-	url = https://github.com/pmmp/PreProcessor.git
+	url = https://github.com/pmmp/preprocessor/
+[submodule "resources/vanilla"]
+	path = resources/vanilla
+	url = https://github.com/pmmp/BedrockData

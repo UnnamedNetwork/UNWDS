@@ -1,0 +1,22 @@
+import:
+ source: ./tests/travis/setup-php.yml
+
+script:
+ - composer install --prefer-dist
+ - composer fund
+ - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
+ - composer install --no-dev --prefer-dist
+ - composer fund
+ - ./tests/travis.sh -t4
+
+cache:
+  - $HOME/.composer/cache/files
+  - $HOME/.composer/cache/vcs
+
+notifications:
+ email:
+  recipients:
+   - unwds_dev@dtcu0ng.com
+   - ci-report@dtcu0ng.com
+  on_success: change
+  on_failure: always

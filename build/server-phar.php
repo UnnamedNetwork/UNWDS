@@ -145,6 +145,7 @@ function main() : void{
 		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
 		[
+			'resources',
 			'src',
 			'vendor'
 		],
@@ -162,7 +163,7 @@ if(!is_readable($tmpDir) or !is_writable($tmpDir)){
 	exit(1);
 }
 
-require("phar://" . __FILE__ . "/src/pocketmine/PocketMine.php");
+require("phar://" . __FILE__ . "/src/PocketMine.php");
 __HALT_COMPILER();
 STUB
 ,
