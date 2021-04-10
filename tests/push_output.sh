@@ -54,7 +54,7 @@ cd ../../
 cp UNWDS.phar $OUTPUT_REPO/${GITHUB_REF##*/}/latest
 cd UNWDS_Output
 git add -A
-git commit -m "${GITHUB_REF##*/} build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
+git commit -m "${GITHUB_REF##*/} build: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
 git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
