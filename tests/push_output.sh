@@ -17,6 +17,7 @@ dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 NBPHPV="7.3.27"
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
+OUTPUT_REPO="UNWDS_Output/branch"
 
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
@@ -42,7 +43,7 @@ chmod 777 UNWDS.phar
 git clone https://github.com/dtcu0ng/UNWDS_Output.git
 cd UNWDS_Output
 git checkout master
-cd ci_build_output
+cd branch
 # Checking if output branch folder exist.
 [ ! -d "${GITHUB_REF##*/}" ] && mkdir ${GITHUB_REF##*/}
 [ ! -d "${GITHUB_REF##*/}/latest" ] && mkdir ${GITHUB_REF##*/}/latest
@@ -50,7 +51,7 @@ cd ci_build_output
 mkdir ${GITHUB_REF##*/}/old/$OLDBLD
 cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
 cd ../../
-cp UNWDS.phar UNWDS_Output/ci_build_output/${GITHUB_REF##*/}/latest
+cp UNWDS.phar $OUTPUT_REPO/${GITHUB_REF##*/}/latest
 cd UNWDS_Output
 git add -A
 git commit -m "${GITHUB_REF##*/} build update: $dateAndMonth (Build $GITHUB_RUN_NUMBER)"
