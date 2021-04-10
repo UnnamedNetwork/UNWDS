@@ -10,6 +10,7 @@ crashdumps/*
 *.phar
 server.properties
 /pocketmine.yml
+/plugins.yml
 memory_dumps/*
 resource_packs/
 server.lock
