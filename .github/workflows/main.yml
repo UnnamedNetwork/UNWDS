@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.3.27, 7.4.16]
 
     steps:
@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.3.27, 7.4.16]
 
     steps:
@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.3.27, 7.4.16]
 
     steps:
@@ -136,7 +136,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.4.16]
 
     steps:
@@ -209,7 +209,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.3.27, 7.4.16]
 
     steps:
@@ -261,7 +261,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: [ubuntu-20.04]
+        image: [self-hosted]
         php: [7.3.27, 7.4.16]
 
     steps:
@@ -337,7 +337,7 @@ jobs:
 
   codestyle:
     name: Code Style checks
-    runs-on: ubuntu-20.04
+    runs-on: self-hosted
     strategy:
       fail-fast: false
 
