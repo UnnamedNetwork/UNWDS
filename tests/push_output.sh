@@ -1,14 +1,19 @@
 #!/bin/bash
 CURRENT_BRANCH="${GITHUB_REF##*/}"
+BUILD_TOKEN="$GHTOKEN"
 # Checking if this workflows run on allowed branch
 
 if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH". Build & push now...
+    echo Branch detected: "$CURRENT_BRANCH" 
+	echo OK.
 else
 	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH". Build & push now...
+		echo Branch detected: "$CURRENT_BRANCH"
+		echo OK.
 	else
-		echo Found unsupported branch: "$CURRENT_BRANCH". Exitting
+		echo Found unsupported branch: "$CURRENT_BRANCH"
+		echo DENIED.
+        BUILD_TOKEN=0
 		exit 0
 	fi
 fi
@@ -70,7 +75,7 @@ git add -A
 git commit -m "Build from $CURRENT_BRANCH: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
-git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
+git remote add origin https://dtcu0ng:$BUILD_TOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 git pull origin master --rebase
 git push origin master --quiet
 echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
