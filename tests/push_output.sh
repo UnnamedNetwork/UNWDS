@@ -1,18 +1,5 @@
 #!/bin/bash
 CURRENT_BRANCH="${GITHUB_REF##*/}"
-# Checking if this workflows run on allowed branch
-
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH". Build & push now...
-else
-	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH". Build & push now...
-	else
-		echo Found unsupported branch: "$CURRENT_BRANCH". Exitting
-		exit 0
-	fi
-fi
-
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
