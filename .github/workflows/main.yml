@@ -190,7 +190,7 @@ jobs:
       - name: Build & push
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
-        run: chmod +x ./tests/push_output.sh && ./tests/push_output.sh
+        run: chmod +x ./build/build-phar.sh && ./build/build-phar.sh
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
