@@ -1,4 +1,4 @@
-name: CI for Push
+name: Tests
 
 on: [push, workflow_dispatch]
 
@@ -191,16 +191,7 @@ jobs:
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./build/build-phar.sh && ./build/build-phar.sh
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GHTK2 }}"
-          automatic_release_tag: "dev-latest"
-          prerelease: true
-          title: "UNWDS Development Build"
-          files: |
-            UNWDS.phar
-
+        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         if: always()
