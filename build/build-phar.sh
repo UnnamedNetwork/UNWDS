@@ -75,7 +75,7 @@ git add -A
 git commit -m "Build from $CURRENT_BRANCH: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
-git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/dtcu0ng/unwds-builds.git > /dev/null 2>&1
+git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/UnnamedNetwork/unwds-builds.git > /dev/null 2>&1
 git pull origin master --rebase
 git push origin master --quiet
 echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
