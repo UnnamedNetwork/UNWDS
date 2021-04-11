@@ -1,4 +1,18 @@
 #!/bin/bash
+CURRENT_BRANCH="${GITHUB_REF##*/}"
+# Checking if this workflows run on allowed branch
+
+if [ "$CURRENT_BRANCH" = "stable" ]; then
+    echo Branch detected: "$CURRENT_BRANCH". Build & push now...
+else
+	if ["$CURRENT_BRANCH" = "master"]; then
+		echo Branch detected: "$CURRENT_BRANCH". Build & push now...
+	else
+		echo Found unsupported branch: "$CURRENT_BRANCH". Exitting
+		exit 0
+	fi
+fi
+
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
@@ -17,6 +31,7 @@ dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
 OUTPUT_REPO="UNWDS_Output/branch"
+CURRENT_BRANCH="${GITHUB_REF##*/}"
 
 rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
@@ -43,19 +58,19 @@ cd UNWDS_Output
 git checkout master
 cd branch
 # Checking if output branch folder exist.
-[ ! -d "${GITHUB_REF##*/}" ] && mkdir ${GITHUB_REF##*/}
-[ ! -d "${GITHUB_REF##*/}/latest" ] && mkdir ${GITHUB_REF##*/}/latest
-[ ! -d "${GITHUB_REF##*/}/old" ] && mkdir ${GITHUB_REF##*/}/old
-mkdir ${GITHUB_REF##*/}/old/$OLDBLD
-cp ${GITHUB_REF##*/}/latest/UNWDS.phar ${GITHUB_REF##*/}/old/$OLDBLD
+[ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
+[ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
+[ ! -d "$CURRENT_BRANCH/old" ] && mkdir $CURRENT_BRANCH/old
+mkdir $CURRENT_BRANCH/old/$OLDBLD
+cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../
-cp UNWDS.phar $OUTPUT_REPO/${GITHUB_REF##*/}/latest
+cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
 cd UNWDS_Output
 git add -A
-git commit -m "Build from ${GITHUB_REF##*/}: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
+git commit -m "Build from $CURRENT_BRANCH: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
 git remote add origin https://dtcu0ng:$GHTOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
 git pull origin master --rebase
 git push origin master --quiet
-echo Branch: ${GITHUB_REF##*/}
+echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
