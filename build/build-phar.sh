@@ -3,21 +3,6 @@ CURRENT_BRANCH="${GITHUB_REF##*/}"
 BUILD_TOKEN="$GHTOKEN"
 # Checking if this workflows run on allowed branch
 
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH" 
-	echo OK.
-else
-	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH"
-		echo OK.
-	else
-		echo Found unsupported branch: "$CURRENT_BRANCH"
-		echo DENIED.
-        BUILD_TOKEN=0
-		exit 0
-	fi
-fi
-
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
