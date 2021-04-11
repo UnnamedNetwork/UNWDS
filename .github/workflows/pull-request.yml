@@ -1,6 +1,6 @@
-name: CI for Push
+name: CI for PR
 
-on: [push, workflow_dispatch]
+on: [pull_request]
 
 jobs:
   build-php:
