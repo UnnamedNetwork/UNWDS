@@ -35,7 +35,7 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
-OUTPUT_REPO="UNWDS_Output/branch"
+OUTPUT_REPO="unwds-builds/branch"
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
 rm -rf "$DATA_DIR"
@@ -58,8 +58,8 @@ fi
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
 chmod 777 UNWDS.phar
-git clone https://github.com/dtcu0ng/UNWDS_Output.git
-cd UNWDS_Output
+git clone https://github.com/UnnamedNetwork/unwds-builds.git
+cd unwds-builds
 git checkout master
 cd branch
 # Checking if output branch folder exist.
@@ -70,12 +70,12 @@ mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../
 cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
-cd UNWDS_Output
+cd unwds-builds
 git add -A
 git commit -m "Build from $CURRENT_BRANCH: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
-git remote add origin https://dtcu0ng:$BUILD_TOKEN@github.com/dtcu0ng/UNWDS_Output.git > /dev/null 2>&1
+git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/dtcu0ng/unwds-builds.git > /dev/null 2>&1
 git pull origin master --rebase
 git push origin master --quiet
 echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
