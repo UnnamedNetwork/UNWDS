@@ -199,7 +199,6 @@ jobs:
         if: always()
         with:
           name: UNWDS
-          path: ${{ github.workspace }}/UNWDS.phar
           path: |
             ${{ github.workspace }}/UNWDS.phar
             ${{ github.workspace }}/bin/
