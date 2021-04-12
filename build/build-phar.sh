@@ -97,11 +97,7 @@ fi
 
 # Checking if this workflows run on allowed branch
 
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH" 
-	echo OK.
-	build_official
-else
+function check_master {
 	if ["$CURRENT_BRANCH" = "master"]; then
 		echo Branch detected: "$CURRENT_BRANCH"
 		echo OK.
@@ -112,4 +108,12 @@ else
 		BUILD_TOKEN=0 # still need this for secure our token?
 		build_artifact
 	fi
+}
+
+if [ "$CURRENT_BRANCH" = "stable" ]; then
+    echo Branch detected: "$CURRENT_BRANCH" 
+	echo OK.
+	build_official
+else
+check_master
 fi
