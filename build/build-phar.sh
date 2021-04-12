@@ -108,7 +108,7 @@ else
 	else
 		echo Found unsupported branch: "$CURRENT_BRANCH"
 		echo DENIED. # this prevent push on unexpected branch, like tags build, but still build and upload server software to artifact
-        BUILD_TOKEN=0 # still need this for secure our token?
+		BUILD_TOKEN=0 # still need this for secure our token?
 		build_artifact
 	fi
 fi
