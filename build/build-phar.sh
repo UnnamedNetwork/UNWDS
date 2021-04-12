@@ -1,39 +1,4 @@
 #!/bin/bash
-CURRENT_BRANCH="${GITHUB_REF##*/}"
-BUILD_TOKEN="$GHTOKEN"
-# Checking if this workflows run on allowed branch
-
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH" 
-	echo OK.
-else
-	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH"
-		echo OK.
-	else
-		echo Found unsupported branch: "$CURRENT_BRANCH"
-		echo DENIED. # this prevent push on unexpected branch, but still build and upload to artifact
-          	BUILD_TOKEN=0
-		rm -rf "$DATA_DIR"
-		rm UNWDS.phar 2> /dev/null
-		mkdir "$DATA_DIR"
-		mkdir "$PLUGINS_DIR"
-
-		cd tests/plugins/DevTools
-		php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
-		cd ../../..
-		composer make-server
-
-		if [ -f UNWDS.phar ]; then
-			echo Server phar created successfully.
-		else
-			echo Server phar was not created!
-		exit 1
-		fi
-	exit 0
-	fi
-fi
-
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
@@ -44,6 +9,10 @@ while getopts "t:" OPTION 2> /dev/null; do
 	esac
 done
 
+CURRENT_BRANCH="${GITHUB_REF##*/}"
+BUILD_TOKEN="$GHTOKEN"
+
+function build_official {
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
@@ -96,3 +65,49 @@ git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/UnnamedNetwork/unw
 git pull origin master --rebase
 git push origin master --quiet
 echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
+}
+
+function build_artifact {
+DATA_DIR="$(pwd)/test_data"
+PLUGINS_DIR="$DATA_DIR/plugins"
+
+dateAndMonth=`date`
+BUILDPHPV=$(php -r 'echo PHP_VERSION;')
+OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
+OUTPUT_REPO="unwds-builds/branch"
+CURRENT_BRANCH="${GITHUB_REF##*/}"
+
+rm -rf "$DATA_DIR"
+rm UNWDS.phar 2> /dev/null
+mkdir "$DATA_DIR"
+mkdir "$PLUGINS_DIR"
+
+cd tests/plugins/DevTools
+php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
+cd ../../..
+composer make-server
+
+if [ -f UNWDS.phar ]; then
+	echo Server phar created successfully.
+else
+	echo Server phar was not created!
+	exit 1
+fi
+}
+
+# Checking if this workflows run on allowed branch
+
+if [ "$CURRENT_BRANCH" = "stable" ]; then
+    echo Branch detected: "$CURRENT_BRANCH" 
+	echo OK.
+	build_official
+else
+	if ["$CURRENT_BRANCH" = "master"]; then
+		echo Branch detected: "$CURRENT_BRANCH"
+		echo OK.
+	else
+		echo Found unsupported branch: "$CURRENT_BRANCH"
+		echo DENIED. # this prevent push on unexpected branch, like tags build, but still build and upload server software to artifact
+        BUILD_TOKEN=0 # still need this for secure our token?
+		build_artifact
+fi
