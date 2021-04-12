@@ -54,7 +54,6 @@ mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../
 rm -rf /unwds-builds/UNWDS.phar
-cp UNWDS.phar unwds-builds
 cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
 cd unwds-builds
 git add -A
@@ -97,13 +96,9 @@ fi
 
 # Checking if this workflows run on allowed branch
 
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH" 
-	echo OK.
-	build_official
-else
-	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH"
+function check_master {
+	if [ "$CURRENT_BRANCH" = "master" ]; then
+    	echo Branch detected: "$CURRENT_BRANCH" 
 		echo OK.
 		build_official
 	else
@@ -112,4 +107,12 @@ else
 		BUILD_TOKEN=0 # still need this for secure our token?
 		build_artifact
 	fi
+}
+
+if [ "$CURRENT_BRANCH" = "stable" ]; then
+    echo Branch detected: "$CURRENT_BRANCH" 
+	echo OK.
+	build_official
+else
+check_master
 fi
