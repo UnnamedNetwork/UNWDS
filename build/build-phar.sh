@@ -12,9 +12,25 @@ else
 		echo OK.
 	else
 		echo Found unsupported branch: "$CURRENT_BRANCH"
-		echo DENIED.
-        BUILD_TOKEN=0
-		exit 0
+		echo DENIED. # this prevent push on unexpected branch, but still build and upload to artifact
+          	BUILD_TOKEN=0
+		rm -rf "$DATA_DIR"
+		rm UNWDS.phar 2> /dev/null
+		mkdir "$DATA_DIR"
+		mkdir "$PLUGINS_DIR"
+
+		cd tests/plugins/DevTools
+		php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
+		cd ../../..
+		composer make-server
+
+		if [ -f UNWDS.phar ]; then
+			echo Server phar created successfully.
+		else
+			echo Server phar was not created!
+		exit 1
+		fi
+	exit 0
 	fi
 fi
 
@@ -28,7 +44,6 @@ while getopts "t:" OPTION 2> /dev/null; do
 	esac
 done
 
-#Run-the-server tests
 DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
