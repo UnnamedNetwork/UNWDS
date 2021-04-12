@@ -54,7 +54,6 @@ mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../
 rm -rf /unwds-builds/UNWDS.phar
-cp UNWDS.phar unwds-builds
 cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
 cd unwds-builds
 git add -A
