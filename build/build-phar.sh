@@ -98,8 +98,8 @@ fi
 # Checking if this workflows run on allowed branch
 
 function check_master {
-	if ["$CURRENT_BRANCH" = "master"]; then
-		echo Branch detected: "$CURRENT_BRANCH"
+	if [ "$CURRENT_BRANCH" = "master" ]; then
+    	echo Branch detected: "$CURRENT_BRANCH" 
 		echo OK.
 		build_official
 	else
