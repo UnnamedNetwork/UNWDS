@@ -35,7 +35,7 @@ and
 $ rm start.sh
 
 ```
-+ Then, download the UNWDS phar file and startup file by:
++ Then, download the UNWDS startup file by:
 ```sh
 
 $ wget https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.sh && chmod +x ./start.sh
@@ -50,19 +50,21 @@ $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED
 
 ```
 
-If you want to use stable development releases, use this:
+If you want to use latest stable development releases, use this:
 ```sh
 
-$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/latest/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/unwds-builds/releases/download/stable-build/UNWDS.phar
+
 
 ```
 
-or you want to download specific build, use this:
+or you want to download specific build, use this link:
 ```sh
 
-$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/old/<action-run-number>/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/unwds-builds/tree/master/branch/stable/old/<action-run-number>/UNWDS.phar
 
 ```
+
 
 + Check action-run-number [here](https://github.com/UnnamedNetwork/UNWDS/actions)
 + action-run-number is the number begin with # and it next to [CI]
@@ -70,7 +72,7 @@ $ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable
 + Example: You want to download CI #91, you need this command:
 ```sh
 
-$ wget https://github.com/dtcu0ng/UNWDS_Output/raw/master/ci_build_output/stable/old/91/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/unwds-builds/tree/master/branch/stable/old/91/UNWDS.phar
 
 ```
 
