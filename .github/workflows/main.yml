@@ -201,7 +201,6 @@ jobs:
           name: UNWDS
           path: |
             ${{ github.workspace }}/UNWDS.phar
-            ${{ github.workspace }}/bin/
 
   integration:
     name: Integration tests
