@@ -1,9 +1,15 @@
 # UNWDS Installation Guide:
 This will follow the PocketMine-MP install guide.
-## Windows:
+## Windows (manually):
 + Follow the instruction from PocketMine-MP [here](https://pmmp.readthedocs.io/en/rtfd/installation.html)
 + Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
 + Start the server!
+
+## Windows (using PowerShell script): faster, but for advanced user
++ Requirement: Windows PowerShell v5.1 or above installed (Windows 10/Server version 1607 or above have already pre-installed).
++ Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-<version>-win-x64.msi. Once downloaded, install it.
++ Download [installer.ps1](https://github.com/UnnamedNetwork/UNWDS/blob/stable/installer.ps1)
++ Run [installer.ps1](https://github.com/UnnamedNetwork/UNWDS/blob/stable/installer.ps1) in your PowerShell and follow the installation.
 
 ## Linux/MacOS (use dtcu0ng.github.io/UNWDS/scripts/installer.sh)
 + Create a directory which you want to install PocketMine-MP into, and cd into it.

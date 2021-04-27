@@ -1,5 +1,5 @@
 #Requires -Version 5.1
-# require PowerShell v5.1 or above to prevent errors. Windows 10/Server version 1607 or above already have PowerShell v5.1 built-in.
+# Require PowerShell v5.1 or above to prevent errors. Windows 10/Server version 1607 or newer have already pre-installed.
 
 # First, set PS's security protocol to TLS1.2 to avoid Github Releases download problems.
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
