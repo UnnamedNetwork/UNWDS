@@ -21,6 +21,7 @@ settings:
   #Whether to allow running development builds. Dev builds might crash, break your plugins, corrupt your world and more.
   #It is recommended to avoid using development builds where possible.
   enable-dev-builds: false
+
 memory:
   #Global soft memory limit in megabytes. Set to 0 to disable
   #This will trigger low-memory-triggers and fire an event to free memory when the usage goes over this
@@ -86,7 +87,7 @@ network:
   compression-level: 6
   #Use AsyncTasks for compression. Adds half/one tick delay, less CPU load on main thread
   async-compression: false
-  #Experimental, only for Windows. Tries to use UPnP to automatically port forward
+  #Experimental. Use UPnP to automatically port forward
   upnp-forwarding: false
   #Maximum size in bytes of packets sent over the network (default 1492 bytes). Packets larger than this will be
   #fragmented or split into smaller parts. Clients can request MTU sizes up to but not more than this number.
