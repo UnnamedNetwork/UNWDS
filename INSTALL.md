@@ -11,16 +11,14 @@ This will follow the PocketMine-MP install guide.
 + On PowerShell window use this command:
 ```sh
 
-Invoke-WebRequest -Uri "https://dtcu0ng.github.io/UNWDS/scripts/installer.ps1" -OutFile "installer.ps1"; ./installer.ps1
+Invoke-WebRequest -Uri "https://unnamednetwork.github.io/UNWDS/scripts/installer.ps1" -OutFile "installer.ps1"; powershell -ExecutionPolicy Bypass -File .\installer.ps1
 
 ```
 + Now, type ./start.cmd to run the server!
 
 + Error fix: 
 ```
-
 "Invoke-WebRequest : The request was aborted: Could not create SSL/TLS secure channel."
-
 ```
 to fix that, you just need use this command and re-run the installer:
 ```sh
@@ -29,18 +27,18 @@ to fix that, you just need use this command and re-run the installer:
 
 ```
 
-## Linux/MacOS (use dtcu0ng.github.io/UNWDS/scripts/installer.sh)
+## Linux/MacOS (use unnamednetwork.github.io/UNWDS/scripts/installer.sh)
 + Create a directory which you want to install PocketMine-MP into, and cd into it.
 + Then use `curl` to install PocketMine-MP using the following command:
 ```sh
 
-$ curl -sL https://dtcu0ng.github.io/UNWDS/scripts/installer.sh | bash -s -
+$ curl -sL https://unnamednetwork.github.io/UNWDS/scripts/installer.sh | bash -s -
 
 ```
 or, if you don’t have `curl`, try `wget`:
 ```sh
 
-$ wget -q -O - https://dtcu0ng.github.io/UNWDS/scripts/installer.sh | bash -s -
+$ wget -q -O - https://unnamednetwork.github.io/UNWDS/scripts/installer.sh | bash -s -
 
 ```
 + Now, type ./start.sh to run the server!
