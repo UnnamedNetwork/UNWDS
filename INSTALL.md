@@ -7,7 +7,7 @@ This will follow the PocketMine-MP install guide.
 
 ## Windows (using PowerShell script): faster, but for advanced user
 + Requirement: Windows PowerShell v5.1 or above installed (Windows 10/Server version 1607 or above have already pre-installed).
-+ Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-<version>-win-x64.msi. Once downloaded, install it.
++ Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-version-win-x64.msi. Once downloaded, install it.
 + On PowerShell window use this command:
 ```sh
 
@@ -26,6 +26,8 @@ to fix that, you just need use this command and re-run the installer:
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 ```
+
++ Note: Do not remove either `current_version.info` or `remote_version.info` (if present). These files for update function.
 
 ## Linux/MacOS (use unnamednetwork.github.io/UNWDS/scripts/installer.sh)
 + Create a directory which you want to install PocketMine-MP into, and cd into it.
