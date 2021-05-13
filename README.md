@@ -14,7 +14,21 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
  * [Latest Actions server software artifacts](https://nightly.link/UnnamedNetwork/UNWDS/workflows/main/stable/UNWDS.zip) - Where you can get the latest 'stable' development server phar on current commit. This is not recommended.
  * [Commit build history](https://github.com/UnnamedNetwork/unwds-builds/tree/master/branch/stable/) - Like artifacts link above, also contain older builds.
- 
+
+## Compatibility Mode notes
++ You must agree these note before you can run UNWDS. It's also included in UNWDS setup wizard.
+```
+
+Some plugin authors does not provide support for third-party builds of PocketMine-MP (spoons), included this version of UNWDS. Some spoons detract from the overall quality of the MCPE plugin environment, which is already lacking in quality. They force plugin developers to waste time trying to support conflicting APIs.
+
+In order to begin using this server software you must understand that you will be offered no support for plugins.
+
+Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
+
+If you have read and agree the above, then if you point your finger at us for embarrassing you when you open a plugin issue on Github while running UNWDS, we will laugh at you.
+
+```
+
 ## About source code update & bugs
 + UNWDS is a PocketMine-MP distribution which have own Compatibility Mode built into it, so when the PocketMine-MP (stable) have new source changes (except API major changes), that changes will go directly into UNWDS-alt (stable) within 24-48 hours
 + UNWDS built from the original PocketMine-MP, but that's not mean UNWDS don't have own error, bugs,... Feel free to open issues, we will investigate that to fix as soon as possible.
