@@ -59,7 +59,7 @@ class VersionCommand extends VanillaCommand{
 				ProtocolInfo::CURRENT_PROTOCOL
 			]
 			));
-			$sender->sendMessage(new TranslationContainer("pocketmine.mask.info", [
+			$sender->sendMessage(new TranslationContainer("pocketmine.compatibilitymode.info.extended", [
 				$sender->getServer()->getName(),
 				$sender->getServer()->getApiVersion(),
 			]

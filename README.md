@@ -6,7 +6,6 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
 ## Documentation
 - [Documentation](DOCUMENT.md)
 - [How to install](INSTALL.md)
-- [SpoonMask documentation](https://github.com/dtcu0ng/SpoonMask/blob/main/DOCUMENT.md)
 
 ## For developers
  * [Building and running from source](BUILDING.md)
@@ -17,11 +16,11 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
  * [Commit build history](https://github.com/UnnamedNetwork/unwds-builds/tree/master/branch/stable/) - Like artifacts link above, also contain older builds.
  
 ## About source code update & bugs
-+ UNWDS is a PocketMine-MP distribution with pre-packaged SpoonMask into it, so when the PocketMine-MP (stable) have new source changes (except API major changes), that changes will go directly into UNWDS-alt (stable) within 24-48 hours
++ UNWDS is a PocketMine-MP distribution which have own Compatibility Mode built into it, so when the PocketMine-MP (stable) have new source changes (except API major changes), that changes will go directly into UNWDS-alt (stable) within 24-48 hours
 + UNWDS built from the original PocketMine-MP, but that's not mean UNWDS don't have own error, bugs,... Feel free to open issues, we will investigate that to fix as soon as possible.
 
 ## About API & plugins
-+ UNWDS is a modified PocketMine-MP distribution to bypass the SpoonDetector. UNWDS is not heavily modified or touch into any PocketMine-MP API (just modified into server software's behaviour after adding some constants like the distro name or codename.)
++ UNWDS is a modified PocketMine-MP distribution to bypass the SpoonDetector by Compatibility Mode. UNWDS is not heavily modified or touch into any PocketMine-MP API (just modified into server software's behaviour after adding some constants like the distro name or codename.)
 + This changes not affected with API or Plugins for PocketMine-MP. 
 + And of course, no plugins developer will give you support when you run on UNWDS (like any other PocketMine-MP Spoons). Developers just support when you run their plugins on the original PocketMine-MP and encountered errors.
 
