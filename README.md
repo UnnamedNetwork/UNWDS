@@ -25,7 +25,7 @@ In order to begin using this server software you must understand that you will b
 
 Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
 
-If you have read and agree the above, then if you point your finger at us for embarrassing you when you open a plugin issue on Github while running UNWDS, we will laugh at you.
+If you have read and agree the above, then you point your finger at us for embarrassing you when you open a plugin issue on Github while running UNWDS, we will laugh at you.
 
 ```
 
