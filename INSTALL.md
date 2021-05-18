@@ -77,7 +77,7 @@ $ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED
 If you want to use latest stable development releases, use this:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/unwds-builds/releases/download/stable-build/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/build-repo/releases/download/stable-build/UNWDS.phar
 
 
 ```
@@ -85,7 +85,7 @@ $ wget https://github.com/UnnamedNetwork/unwds-builds/releases/download/stable-b
 or you want to download specific build, use this link:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/unwds-builds/raw/master/branch/stable/old/<action-run-number>/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/old/<action-run-number>/UNWDS.phar
 
 ```
 
@@ -96,7 +96,7 @@ $ wget https://github.com/UnnamedNetwork/unwds-builds/raw/master/branch/stable/o
 + Example: You want to download CI #91, you need this command:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/unwds-builds/raw/master/branch/stable/old/91/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/old/91/UNWDS.phar
 
 ```
 
