@@ -45,7 +45,7 @@ chmod 777 UNWDS.phar
 git clone https://github.com/UnnamedNetwork/build-repo.git
 cd build-repo
 git checkout master
-cd branch
+cd UNWDS/branch
 # Checking if output branch folder exist.
 [ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
 [ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
