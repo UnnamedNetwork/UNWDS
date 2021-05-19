@@ -19,7 +19,7 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
-OUTPUT_REPO="build-repo/branch"
+OUTPUT_REPO="build-repo/UNWDS/branch"
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
 rm -rf "$DATA_DIR"
@@ -73,7 +73,6 @@ PLUGINS_DIR="$DATA_DIR/plugins"
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
-OUTPUT_REPO="build-repo/branch"
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
 rm -rf "$DATA_DIR"
