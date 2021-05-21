@@ -57,7 +57,7 @@ rm -rf /build-repo/UNWDS.phar
 cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
 cd build-repo
 git add -A
-git commit -m "Build from $CURRENT_BRANCH: $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
+git commit -m "Build from UNWDS ($CURRENT_BRANCH): $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
 git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/UnnamedNetwork/build-repo.git > /dev/null 2>&1
