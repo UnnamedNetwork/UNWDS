@@ -198,6 +198,13 @@ jobs:
         with:
           name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
+          
+      - name: Upload vendor
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: UNWDS_vendor
+          path: ${{ github.workspace }}/vendor/*
 
   integration:
     name: Integration tests
