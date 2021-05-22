@@ -1,6 +1,8 @@
 name: CI
 
-on: [push, workflow_dispatch]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   build-php:
@@ -126,8 +128,8 @@ jobs:
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
         
-  output_push:
-    name: Build optimised & Push
+  build-prod:
+    name: Build production artifact
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -187,7 +189,7 @@ jobs:
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
           done
           
-      - name: Build & push
+      - name: Build
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./build/build-phar.sh && ./build/build-phar.sh
@@ -198,16 +200,9 @@ jobs:
         with:
           name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
-          
-      - name: Upload vendor
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: UNWDS_vendor
-          path: ${{ github.workspace }}/vendor/*
 
   integration:
-    name: Integration tests
+    name: Tests
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
