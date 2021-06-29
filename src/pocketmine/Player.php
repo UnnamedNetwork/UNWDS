@@ -2533,7 +2533,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 				$this->inventory->equipItem($packet->trData->getHotbarSlot());
 			}
 
-
 			switch($packet->trData->getActionType()){
 				case UseItemTransactionData::ACTION_CLICK_BLOCK:
 					//TODO: start hack for client spam bug
@@ -2786,7 +2785,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 			if($this->inventory->getHeldItemIndex() !== $packet->trData->getHotbarSlot()){
 				$this->inventory->equipItem($packet->trData->getHotbarSlot());
 			}
-			
+
 			try{
 				switch($packet->trData->getActionType()){
 					case ReleaseItemTransactionData::ACTION_RELEASE:
