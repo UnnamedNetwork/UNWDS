@@ -2435,10 +2435,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 			return false;
 		}
 
-		if($this->inventory->getHeldItemIndex() !== $packet->trData->getHotbarSlot()){
-			$this->inventory->equipItem($packet->trData->getHotbarSlot());
-		}
-
 		/** @var InventoryAction[] $actions */
 		$actions = [];
 		$isCraftingPart = false;
@@ -2689,6 +2685,10 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 			$target = $this->level->getEntity($packet->trData->getEntityRuntimeId());
 			if($target === null){
 				return false;
+			}
+
+			if($this->inventory->getHeldItemIndex() !== $packet->trData->getHotbarSlot()){
+				$this->inventory->equipItem($packet->trData->getHotbarSlot());
 			}
 
 			switch($packet->trData->getActionType()){
