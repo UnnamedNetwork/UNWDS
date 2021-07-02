@@ -1,12 +1,9 @@
 # UNWDS Installation Guide:
 This will follow the PocketMine-MP install guide.
-## Windows (manually):
-+ Follow the instruction from PocketMine-MP [here](https://pmmp.readthedocs.io/en/rtfd/installation.html)
-+ Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
-+ Start the server!
 
-## Windows (using PowerShell script): faster, but for advanced user
+## Windows (using PowerShell script): (recommended)
 + Requirement: Windows PowerShell v5.1 or above installed (Windows 10/Server version 1607 or above have already pre-installed).
++ Note: Currently unsupported Windows 11, because Windows 11 removed Internet Explorer (need for download resources)
 + Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-version-win-x64.msi. Once downloaded, install it.
 + On PowerShell window use this command:
 ```sh
@@ -28,6 +25,11 @@ to fix that, you just need use this command and re-run the installer:
 ```
 
 + Note: Do not remove either `current_version.info` or `remote_version.info` (if present). These files for update function.
+
+## Windows (manually):
++ Follow the instruction from PocketMine-MP [here](https://pmmp.readthedocs.io/en/rtfd/installation.html)
++ Download ["start.cmd"](https://github.com/UnnamedNetwork/UNWDS/blob/stable/start.cmd) and your prefered ["UNWDS.phar"](https://github.com/UnnamedNetwork/UNWDS/releases) from UNWDS repo and replace on it.
++ Start the server!
 
 ## Linux/MacOS (use unnamednetwork.github.io/UNWDS/scripts/installer.sh)
 + Create a directory which you want to install PocketMine-MP into, and cd into it.
