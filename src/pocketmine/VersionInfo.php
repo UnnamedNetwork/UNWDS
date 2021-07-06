@@ -37,8 +37,8 @@ const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
 const BASE_VERSION = "3.20.1";
 const DISTRO_VERSION = "2.5.1";
-const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0333;
+const IS_DEVELOPMENT_BUILD = false;
+const BUILD_NUMBER = 0;
 
 const UNW_API_VERSION = "2021.6";
 const IS_UNW_API_NULL = true;
