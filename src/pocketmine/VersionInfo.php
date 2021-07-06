@@ -41,5 +41,5 @@ const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0333;
 
 const UNW_API_VERSION = "2021.6";
-const IS_UNW_API_NULL = true;
+const IS_UNW_API_NOT_PRESENT = true;
 const UNW_API_DEBUG_ENABLED = false;

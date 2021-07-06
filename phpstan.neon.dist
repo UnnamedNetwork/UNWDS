@@ -31,7 +31,7 @@ parameters:
 		- tests/plugins/TesterPlugin
 	dynamicConstantNames:
 		- pocketmine\IS_DEVELOPMENT_BUILD
-		- pocketmine\IS_UNW_API_NULL
+		- pocketmine\IS_UNW_API_NOT_PRESENT
 		- pocketmine\UNW_API_DEBUG_ENABLED
 		- pocketmine\DEBUG
 	stubFiles:
