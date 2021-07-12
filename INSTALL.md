@@ -3,7 +3,6 @@ This will follow the PocketMine-MP install guide.
 
 ## Windows (using PowerShell script): (recommended)
 + Requirement: Windows PowerShell v5.1 or above installed (Windows 10/Server version 1607 or above have already pre-installed).
-+ Note: Currently unsupported Windows 11, because Windows 11 removed Internet Explorer (need for download resources)
 + Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-version-win-x64.msi. Once downloaded, install it.
 + On PowerShell window use this command:
 ```sh
