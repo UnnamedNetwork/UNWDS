@@ -35,10 +35,10 @@ const _VERSION_INFO_INCLUDED = true;
 const NAME = "PocketMine-MP";
 const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
-const BASE_VERSION = "3.21.2";
-const DISTRO_VERSION = "2.6.2";
-const IS_DEVELOPMENT_BUILD = true;
-const BUILD_NUMBER = 0333;
+const BASE_VERSION = "3.22.0";
+const DISTRO_VERSION = "2.7.0";
+const IS_DEVELOPMENT_BUILD = false;
+const BUILD_NUMBER = 0;
 
 const UNW_API_VERSION = "2021.6";
 const IS_UNW_API_NOT_PRESENT = true;
