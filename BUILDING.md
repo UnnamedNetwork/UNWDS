@@ -3,7 +3,7 @@ This will follow the PocketMine-MP Building guide.
 ## Pre-requisites
 - A bash shell (git bash is sufficient for Windows)
 - [`git`](https://git-scm.com) available in your shell
-- PHP 7.3 or newer available in your shell
+- PHP 7.4 or newer available in your shell
 
 ## Custom PHP binaries
 Because PocketMine-MP requires several non-standard PHP extensions and configuration, PMMP provides scripts to build custom binaries for running PocketMine-MP, as well as prebuilt binaries.
