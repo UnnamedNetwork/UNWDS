@@ -1321,13 +1321,8 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
-			if(\pocketmine\IS_UNW_API_NOT_PRESENT){
-				$this->logger->warning("unwAPI are not integrated to this server software. Any plugin run based on unwAPI will not work and may cause errors. Contact your server manager to get UNWDS build bundled with unwAPI.");
-				$this->logger->warning("This version of UNWDS should run with unwAPI version " . \pocketmine\UNW_API_VERSION . "");
-			}
-
 			if(\pocketmine\IS_DEVELOPMENT_BUILD){
-				$this->logger->warning("Git commit of this build is: " . \pocketmine\GIT_COMMIT . "");
+				$this->logger->warning("Hash of this build commit is: " . \pocketmine\GIT_COMMIT . "");
 			}
 			$this->logger->info("Starting " . $this->getDistroName() . "...\n\n");
 			$this->logger->info("§a" . $this->getDistroName() . " §fis a fork of PocketMine-MP.");
