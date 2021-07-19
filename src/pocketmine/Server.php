@@ -1327,6 +1327,7 @@ class Server{
 			$this->logger->info("Starting " . $this->getDistroName() . "...\n\n");
 			$this->logger->info("§a" . $this->getDistroName() . " §fis a fork of PocketMine-MP.");
 			$this->logger->info("§fVersion: §b" . $this->getDistroVersion() . "§7 (" . $this->getCodename() . ")");
+			$this->logger->info("§f" . $this->getName() . " API version: §b" . $this->getApiVersion());
 			$this->logger->info("§fTarget Bedrock version: §d" . $this->getVersion());
 			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
 
@@ -1483,7 +1484,7 @@ class Server{
 			}
 
 			if(\pocketmine\DEBUG >= 0){
-				@cli_set_process_title($this->getDistroName() . " " . $this->getDistroVersion());
+				@cli_set_process_title($this->getDistroName() . " " . $this->getDistroVersion() . " (API " . $this->getVersion() . ")");
 			}
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.networkStart", [$this->getIp(), $this->getPort()]));
@@ -2346,6 +2347,7 @@ class Server{
 
 		echo "\x1b]0;" . $this->getDistroName() . " " .
 			$this->getDistroVersion() .
+			" | API: " . $this->getVersion() .
 			" | Online " . count($this->players) . "/" . $this->getMaxPlayers() .
 			" | Memory " . $usage .
 			" | U " . round($this->network->getUpload() / 1024, 2) .
