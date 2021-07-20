@@ -12,8 +12,8 @@ A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of
  * [Developer documentation](https://devdoc.pmmp.io) - General documentation for PocketMine-MP plugin developers
  * [Latest API documentation](https://jenkins.pmmp.io/job/PocketMine-MP-doc/doxygen/) - Doxygen documentation generated from development
  * [DevTools](https://github.com/pmmp/DevTools/) - Development tools plugin for creating plugins
- * [Latest Actions server software artifacts](https://nightly.link/UnnamedNetwork/UNWDS/workflows/main/stable/UNWDS.zip) - Where you can get the latest 'stable' development server phar on current commit. This is not recommended.
- * [Commit build history](https://github.com/UnnamedNetwork/build-repo/tree/master/branch/stable/) - Like artifacts link above, also contain older builds.
+ * [Latest Actions server software artifacts](https://nightly.link/UnnamedNetwork/UNWDS/workflows/main/stable/UNWDS.zip) - Where you can get the 'stable' development server phar on latest commit. This is not recommended for making server software. Avoid using development build where possible.
+ * [Commit build history](https://github.com/UnnamedNetwork/build-repo/tree/master/UNWDS/branch/stable) - Like artifacts link above, but also contain older builds.
 
 ## Compatibility Mode notes
 + You must agree these note before you can run UNWDS. It's also included in UNWDS setup wizard.
