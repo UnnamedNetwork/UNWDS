@@ -1,24 +1,20 @@
 @echo off
-TITLE Bootstraper
+TITLE Server software for Minecraft: Bedrock Edition
 cd /d %~dp0
-:UNWS2
+:UNWDS
 if exist UNWDS.phar (
 	set UNWDS_FILE=UNWDS.phar
-        echo =========================
-	echo = Server software found =
-	echo = Server starting...    =
-	echo =========================
+	echo Server software found.
+	echo Starting server...
 	goto ServerStart
 ) else (
-	goto UNWDS
+	goto OLD_UNWDS
 )
-:UNWDS
+:OLD_UNWDS
 if exist UNWDelicatedSoftware.phar (
 	set UNWDS_FILE=UNWDelicatedSoftware.phar
-    echo =========================
-	echo = Server software found =
-	echo = Server starting...    =
-	echo =========================
+	echo Server software found.
+	echo Starting server...
 	goto ServerStart
 ) else (
 	goto PMMP
@@ -26,19 +22,15 @@ if exist UNWDelicatedSoftware.phar (
 :PMMP
 if exist PocketMine-MP.phar (
 	set UNWDS_FILE=PocketMine-MP.phar
-	echo =========================
-	echo = Server software found =
-	echo = Server starting...    =
-	echo =========================
+	echo Server software found.
+	echo Starting server...
 	goto ServerStart
 ) else (
 	cls
-    echo =================================
-	echo = Server software was not found = 
-    echo =================================
-	echo You can get the lastest build of PocketMine-MP in https://github.com/pmmp/PocketMine-MP/releases
+	echo Server software was not found.
+	echo You can get the latest build of PocketMine-MP in https://github.com/pmmp/PocketMine-MP/releases
 	echo or
-	echo You can get the lastest build of UNWDS in https://github.com/dtcu0ng/UnnamedNetwork/releases
+	echo You can get the latest build of UNWDS in https://github.com/dtcu0ng/UnnamedNetwork/releases
 	pause
 	exit
 )
@@ -55,5 +47,5 @@ if exist bin\mintty.exe (
 ) else (
 	REM
 	%PHP_BINARY% -c bin\php %UNWDS_FILE% %*
-        pause
+    pause
 )
