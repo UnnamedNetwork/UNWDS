@@ -137,8 +137,26 @@ namespace pocketmine {
 			$logger->warning("Debugging assertions are enabled. This may degrade performance. To disable them, set `zend.assertions = -1` in php.ini.");
 		}
 		if(\Phar::running(true) === ""){
-			$logger->warning("Non-packaged UNWDS installation detected. This will degrade autoloading speed and make startup times longer.");
+			$logger->warning("Non-packaged installation detected. This will degrade autoloading speed and make startup times longer.");
 			$logger->warning("Download the stable, pre-packaged UNWDS in: https://github.com/UnnamedNetwork/UNWDS/releases");
+		}
+		if(function_exists('opcache_get_status') && ($opcacheStatus = opcache_get_status(false)) !== false){
+			$jitEnabled = $opcacheStatus["jit"]["on"] ?? false;
+			if($jitEnabled !== false){
+				$logger->warning(<<<'JIT_WARNING'
+
+
+	--------------------------------------- ! WARNING ! ---------------------------------------
+	You're using PHP 8.0 with JIT enabled. This provides significant performance improvements.
+	HOWEVER, it is EXPERIMENTAL, and has already been seen to cause weird and unexpected bugs.
+	Proceed with caution.
+	If you want to report any bugs, make sure to mention that you are using PHP 8.0 with JIT.
+	To turn off JIT, change `opcache.jit` to `0` in your php.ini file.
+	-------------------------------------------------------------------------------------------
+
+JIT_WARNING
+);
+			}
 		}
 	}
 
@@ -160,10 +178,12 @@ namespace pocketmine {
 		if(count($messages = check_platform_dependencies()) > 0){
 			echo PHP_EOL;
 			$binary = version_compare(PHP_VERSION, "5.4") >= 0 ? PHP_BINARY : "unknown";
-			critical_error("Selected PHP binary ($binary) does not satisfy some requirements.");
+			critical_error("Selected PHP binary does not satisfy some requirements.");
 			foreach($messages as $m){
 				echo " - $m" . PHP_EOL;
 			}
+			critical_error("PHP binary used: " . $binary);
+			critical_error("Loaded php.ini: " . (($file = php_ini_loaded_file()) !== false ? $file : "none"));
 			critical_error("Please recompile PHP with the needed configuration, or refer to the installation instructions at http://pmmp.rtfd.io/en/rtfd/installation.html.");
 			echo PHP_EOL;
 			exit(1);
@@ -190,7 +210,7 @@ namespace pocketmine {
 
 		set_error_handler([Utils::class, 'errorExceptionHandler']);
 
-		$version = new VersionString(\pocketmine\BASE_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
+		$version = new VersionString(\pocketmine\DISTRO_VERSION, \pocketmine\IS_DEVELOPMENT_BUILD, \pocketmine\BUILD_NUMBER);
 		define('pocketmine\VERSION', $version->getFullVersion(true));
 
 		$gitHash = str_repeat("00", 20);
@@ -204,7 +224,7 @@ namespace pocketmine {
 				$gitHash = $meta["git"];
 			}
 		}
-	
+
 		define('pocketmine\GIT_COMMIT', $gitHash);
 
 		$composerGitHash = InstalledVersions::getReference('unnamednetwork/unwds');
@@ -216,12 +236,11 @@ namespace pocketmine {
 				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");
 				critical_error("Out-of-sync Composer dependencies may result in crashes and classes not being found.");
 				critical_error("You should synchronize Composer dependencies before running the server.");
-				critical_error("In UNWDS, we removed the function that kill the server if the Composer dependencies are not match or not are up-to-date.");
+				critical_error("In UNWDS, we removed the function that kill the server if the Composer dependencies are not match or not are up-to-dated.");
 				critical_error("We do not accept any issues or take any responsible if your server's dependencies are not up-to-date.");
 				#exit(1)
 			}
 		}
-
 
 		$opts = getopt("", ["data:", "plugins:", "no-wizard", "enable-ansi", "disable-ansi"]);
 
