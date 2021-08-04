@@ -1,35 +1,18 @@
 #!/bin/bash
-PM_WORKERS="auto"
-
-while getopts "t:" OPTION 2> /dev/null; do
-	case ${OPTION} in
-		t)
-			PM_WORKERS="$OPTARG"
-			;;
-	esac
-done
 
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 BUILD_TOKEN="$GHTOKEN"
 
 function build_official {
-DATA_DIR="$(pwd)/test_data"
-PLUGINS_DIR="$DATA_DIR/plugins"
-
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
 OUTPUT_REPO="build-repo/UNWDS/branch"
+
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
-rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
-mkdir "$DATA_DIR"
-mkdir "$PLUGINS_DIR"
 
-cd tests/plugins/DevTools
-php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
-cd ../../..
 composer make-server
 
 if [ -f UNWDS.phar ]; then
@@ -41,7 +24,6 @@ fi
 
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
-chmod 777 UNWDS.phar
 git clone https://github.com/UnnamedNetwork/build-repo.git
 cd build-repo
 git checkout master
@@ -67,22 +49,13 @@ echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
 }
 
 function build_artifact {
-DATA_DIR="$(pwd)/test_data"
-PLUGINS_DIR="$DATA_DIR/plugins"
-
 dateAndMonth=`date`
 BUILDPHPV=$(php -r 'echo PHP_VERSION;')
 OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
-rm -rf "$DATA_DIR"
 rm UNWDS.phar 2> /dev/null
-mkdir "$DATA_DIR"
-mkdir "$PLUGINS_DIR"
 
-cd tests/plugins/DevTools
-php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
-cd ../../..
 composer make-server
 
 if [ -f UNWDS.phar ]; then
@@ -95,23 +68,22 @@ fi
 
 # Checking if this workflows run on allowed branch
 
-function check_master {
+function CheckBranch {
 	if [ "$CURRENT_BRANCH" = "master" ]; then
-    	echo Branch detected: "$CURRENT_BRANCH" 
+    		echo Branch detected: "$CURRENT_BRANCH" 
 		echo OK.
 		build_official
 	else
-		echo Found unsupported branch: "$CURRENT_BRANCH"
-		echo DENIED. # this prevent push on unexpected branch, like tags build, but still build and upload server software to artifact
-		BUILD_TOKEN=0 # still need this for secure our token?
-		build_artifact
+		if [ "$CURRENT_BRANCH" = "stable" ]; then
+    			echo Branch detected: "$CURRENT_BRANCH" 
+			echo OK.
+			build_official
+		else
+			echo Found unsupported branch: "$CURRENT_BRANCH"
+			echo DENIED. # this prevent push on unexpected branch, like tags build, but still build and upload server software to artifact
+			build_artifact
+		fi
 	fi
 }
 
-if [ "$CURRENT_BRANCH" = "stable" ]; then
-    echo Branch detected: "$CURRENT_BRANCH" 
-	echo OK.
-	build_official
-else
-check_master
-fi
+CheckBranch
