@@ -1,8 +1,8 @@
 {
    "name": "unnamednetwork/unwds",
-   "description": "Software for Minecraft: BE server making, powered by PocketMine-MP",
+   "description": "A server software for Minecraft: Pocket Edition written in PHP",
    "type": "project",
-   "homepage": "https://github.com/unnamednetwork/unwds",
+   "homepage": "https://github.com/unnamednetwork/unwd",
    "license": "LGPL-3.0",
    "require": {
       "php": "^7.4 || ^8.0",
