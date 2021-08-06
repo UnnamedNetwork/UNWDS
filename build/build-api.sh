@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apt-get install jo
+
 #prepare variable we need.
 BUILD_TOKEN="$GHTOKEN"
 ApiRepoUrl="https://github.com/UnnamedNetwork/unnamednetwork.github.io"
