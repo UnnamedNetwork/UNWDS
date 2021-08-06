@@ -23,30 +23,30 @@ if [ "$IsDev" = "0" ]; then
 else
     IsDev="true"
 fi
-rm api.json 2> /dev/null
 
 function BuildJSON {
-git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-git config --global user.name "github-actions[bot]"
-git clone $ApiRepoUrl
-cd $ApiRepo
-git checkout main
-cd $DistroName/version_control/
+    rm $APIFile.json 2> /dev/null
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    git config --global user.name "github-actions[bot]"
+    git clone $ApiRepoUrl
+    cd $ApiRepo
+    git checkout main
+    cd $DistroName/version_control/
 
-# the work will here.
-MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar)
-echo "$MakeJSON"
-echo "$MakeJSON" >> $APIFile
+    # the work will here.
+    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar)
+    echo "$MakeJSON"
+    echo "$MakeJSON" >> $APIFile
 
-git add $APIFile
-git commit -m "$APIFile: bumped to version $DistroVersion"
-git remote rm origin
-# Add new "origin" with access token in the git URL for authentication
-git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
-git pull origin main --rebase
-git push origin main --quiet
-echo OK.
-}
+    git add $APIFile
+    git commit -m "$APIFile: bumped to version $DistroVersion"
+    git remote rm origin
+    # Add new "origin" with access token in the git URL for authentication
+    git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
+    git pull origin main --rebase
+    git push origin main --quiet
+    echo OK.
+    }
 
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
