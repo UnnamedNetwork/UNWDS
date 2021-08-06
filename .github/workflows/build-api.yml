@@ -77,7 +77,7 @@ jobs:
       - name: Run API bump script
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
-        run: chmod +x ./build/api-bump.sh && ./build/api-bump.sh
+        run: chmod +x ./build/build-api.sh && ./build/build-api.sh
         
      
 
