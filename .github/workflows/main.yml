@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.7]
 
     steps:
       - uses: actions/checkout@v2 #needed for build.sh
@@ -38,9 +38,6 @@ jobs:
         include:
           - php: 8.0.7
             config: phpstan.neon.dist
-            image: ubuntu-20.04
-          - php: 7.4.20
-            config: phpstan.php7.neon
             image: ubuntu-20.04
 
     steps:
@@ -91,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.7]
 
     steps:
       - uses: actions/checkout@v2
@@ -141,7 +138,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.7]
 
     steps:
       - uses: actions/checkout@v2
@@ -232,8 +229,17 @@ jobs:
             composer-v2-cache-
 
       - name: Install Composer dependencies
-        run: php composer.phar install --no-dev --classmap-authoritative
+        run: php composer.phar install --no-dev --prefer-dist --no-interaction --classmap-authoritative
 
+      - name: Minify BedrockData JSON files
+        run: php src/pocketmine/resources/vanilla/.minify_json.php
+
+      - name: Patch VersionInfo
+        run: |
+          BUILD_NUMBER=1000+$GITHUB_RUN_ID
+          echo "Build number: $BUILD_NUMBER"
+          sed -i "s/const BUILD_NUMBER = 0333/const BUILD_NUMBER = ${BUILD_NUMBER}/" src/pocketmine/VersionInfo.php
+        
       - name: Optimise server software
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
@@ -266,7 +272,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.7]
 
     steps:
       - uses: actions/checkout@v2
@@ -311,10 +317,8 @@ jobs:
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-
           #dump the diff of preprocessor replacements to a patch in case it has bugs
           git diff > preprocessor_diff.patch
-
           VENDOR_PM="$GITHUB_WORKSPACE/vendor"
           VENDOR_PM_BACKUP="$GITHUB_WORKSPACE/vendor-before-preprocess"
           cp -r "$VENDOR_PM" "$VENDOR_PM_BACKUP"
