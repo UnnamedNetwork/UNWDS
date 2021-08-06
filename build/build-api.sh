@@ -28,22 +28,9 @@ git checkout main
 cd $DistroName/version_control/
 
 # the work will here.
-echo "{" >> api.json
-echo "  "job": "$DistroName"" >> api.json
-echo "  "php_version": "$PhpVersion"" >> api.json
-echo "  "base_version": "$DistroVersion"" >> api.json
-echo "  "build_number": "$BuildNumber"" >> api.json
-echo "  "is_dev": "$IsDev"" >> api.json
-echo "  "branch": "$Branch"" >> api.json
-echo "  "git_commit": "$GitCommit"" >> api.json
-echo "  "mcpe_version": "$TargetVersion"" >> api.json
-echo "  "phar_name": "$DistroName.phar"" >> api.json
-echo "  "dummy": """ >> api.json
-echo "  "build": "$BuildNumber"" >> api.json
-echo "  "date": "$Date"" >> api.json
-echo "  "details_url": "https://github.com/$Org/$DistroName/releases/v$DistroVersion"" >> api.json
-echo "  "download_url": "https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar"" >> api.json
-echo "}" >> api.json >> api.json
+MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy= build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=download_url": "https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar)
+echo "$MakeJSON"
+echo "$MakeJSON" >> api.json
 
 git add api.json
 git commit -m "API: bumped to version $DistroVersion"
