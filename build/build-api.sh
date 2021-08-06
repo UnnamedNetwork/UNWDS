@@ -25,7 +25,6 @@ else
 fi
 
 function BuildJSON {
-    rm $APIFile.json
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
@@ -51,9 +50,11 @@ function BuildJSON {
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
         APIFile="api.json"
+        rm -rf $APIFile
 		BuildJSON
 	else
         APIFile="api_$Branch.json"
+        rm -rf $APIFile
         BuildJSON
 	fi
 }
