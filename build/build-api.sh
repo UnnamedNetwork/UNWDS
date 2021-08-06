@@ -18,10 +18,14 @@ TargetVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\network\
 PharName="$DistroName.phar"
 Dummy=""
 Date=$(date +"%s")
-
+if [ "$IsDev" = "0" ]; then
+    IsDev="false"
+else
+    IsDev="true"
+fi
 rm api.json 2> /dev/null
 
-function Main {
+function BuildJSON {
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
 git clone $ApiRepoUrl
@@ -32,7 +36,7 @@ cd $DistroName/version_control/
 # the work will here.
 MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar)
 echo "$MakeJSON"
-echo "$MakeJSON" >> api.json
+echo "$MakeJSON" >> $APIFile
 
 git add api.json
 git commit -m "API: bumped to version $DistroVersion"
@@ -42,5 +46,21 @@ git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /d
 git pull origin main --rebase
 git push origin main --quiet
 echo OK.
+}
+
+function Main {
+	Build
+	if [ "$Branch" = "master" ]; then
+        APIFile="api_master.json"
+		BuildJSON
+	else
+		if [ "$Branch" = "stable" ]; then
+        APIFile="api.json"
+        BuildJSON
+		else
+        APIFile="api_$Branch.json"
+        BuildJSON
+		fi
+	fi
 }
 Main
