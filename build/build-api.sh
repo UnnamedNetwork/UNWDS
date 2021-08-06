@@ -38,7 +38,7 @@ MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVer
 echo "$MakeJSON"
 echo "$MakeJSON" >> $APIFile
 
-git add api.json
+git add $APIFile
 git commit -m "API: bumped to version $DistroVersion"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
@@ -49,17 +49,12 @@ echo OK.
 }
 
 function Main {
-	if [ "$Branch" = "master" ]; then
-        APIFile="api_master.json"
+	if [ "$Branch" = "$DistroVersion" ]; then
+        APIFile="api.json"
 		BuildJSON
 	else
-		if [ "$Branch" = "stable" ]; then
-        APIFile="api.json"
-        BuildJSON
-		else
         APIFile="api_$Branch.json"
         BuildJSON
-		fi
 	fi
 }
 Main
