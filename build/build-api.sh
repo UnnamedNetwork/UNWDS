@@ -25,7 +25,7 @@ else
 fi
 
 function BuildJSON {
-    rm $APIFile.json 2> /dev/null
+    rm $APIFile.json
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
