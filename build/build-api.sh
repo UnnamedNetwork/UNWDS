@@ -17,7 +17,7 @@ Date=$(date +"%s")
 
 rm api.json 2> /dev/null
 
-function Main{
+function Main {
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
 git clone https://github.com/UnnamedNetwork/
