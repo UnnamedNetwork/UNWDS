@@ -31,6 +31,7 @@ function BuildJSON {
     cd $ApiRepo
     git checkout main
     cd $DistroName/version_control/
+    rm -rf $APIFile
 
     # the work will here.
     MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=https://github.com/$Org/$DistroName/releases/downloads/v$DistroVersion/$DistroName.phar)
@@ -50,11 +51,9 @@ function BuildJSON {
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
         APIFile="api.json"
-        rm -rf $APIFile
-		BuildJSON
+	BuildJSON
 	else
         APIFile="api_$Branch.json"
-        rm -rf $APIFile
         BuildJSON
 	fi
 }
