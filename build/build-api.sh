@@ -23,7 +23,7 @@ git config --global user.email "41898282+github-actions[bot]@users.noreply.githu
 git config --global user.name "github-actions[bot]"
 git clone $ApiRepoUrl
 cd $ApiRepo
-git checkout master
+git checkout main
 cd $DistroName/version_control/
 
 # the work will here.
@@ -48,7 +48,7 @@ git add api.json
 git commit -m "API: bumped to version $DistroVersion"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
-git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo.git > /dev/null 2>&1
+git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
 git pull origin master --rebase
 git push origin master --quiet
 echo OK.
