@@ -52,3 +52,4 @@ git pull origin master --rebase
 git push origin master --quiet
 echo OK.
 }
+Main
