@@ -49,7 +49,6 @@ echo OK.
 }
 
 function Main {
-	Build
 	if [ "$Branch" = "master" ]; then
         APIFile="api_master.json"
 		BuildJSON
