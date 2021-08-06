@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #prepare variable we need.
-
+ApiRepoUrl="https://github.com/UnnamedNetwork/unnamednetwork.github.io"
+ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
 DistroName=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_NAME;')
 PhpVersion="7.4"
@@ -20,7 +21,7 @@ rm api.json 2> /dev/null
 function Main {
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
-git clone https://github.com/UnnamedNetwork/
+git clone $ApiRepoUrl
 cd unnamednetwork.github.io
 git checkout master
 cd UNWDS/version_control/
