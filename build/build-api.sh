@@ -49,8 +49,8 @@ git commit -m "API: bumped to version $DistroVersion"
 git remote rm origin
 # Add new "origin" with access token in the git URL for authentication
 git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
-git pull origin master --rebase
-git push origin master --quiet
+git pull origin main --rebase
+git push origin main --quiet
 echo OK.
 }
 Main
