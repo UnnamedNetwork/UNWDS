@@ -39,7 +39,7 @@ function BuildJSON {
     echo "$MakeJSON" >> $APIFile
 
     git add $APIFile
-    git commit -m "$APIFile: bumped to version $DistroVersion"
+    git commit -m "$APIFile: bumped to version $DistroVersion, build $BuildNumber"
     git remote rm origin
     # Add new "origin" with access token in the git URL for authentication
     git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
