@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #prepare variable we need.
+BUILD_TOKEN="$GHTOKEN"
 ApiRepoUrl="https://github.com/UnnamedNetwork/unnamednetwork.github.io"
 ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
