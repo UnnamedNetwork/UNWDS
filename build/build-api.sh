@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt-get install jo
+sudo apt-get install jo
 
 #prepare variable we need.
 BUILD_TOKEN="$GHTOKEN"
