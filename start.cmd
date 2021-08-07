@@ -9,10 +9,10 @@ if exist bin\php\php.exe (
 	set PHP_BINARY=php
 )
 
-if exist PocketMine-MP.phar (
+if exist UNWDS.phar (
 	set POCKETMINE_FILE=UNWDS.phar
 ) else (
-	echo %POCKETMINE_FILE% not found
+	echo UNWDS.phar not found
 	echo Downloads can be found at https://github.com/UnnamedNetwork/UNWDS/releases
 	pause
 	exit 1
