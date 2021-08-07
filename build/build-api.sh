@@ -30,7 +30,8 @@ function BuildJSON {
     git clone $ApiRepoUrl
     cd $ApiRepo
     git checkout main
-    cd $DistroName/version_control/
+    [ ! -d "$DistroName/update" ] && mkdir $DistroName/update
+    cd $DistroName/update/
     rm -rf $APIFile
 
     # the work will here.
@@ -45,13 +46,12 @@ function BuildJSON {
     git remote add origin https://dtcgalt:$BUILD_TOKEN@github.com/$Org/$ApiRepo > /dev/null 2>&1
     git pull origin main --rebase
     git push origin main --quiet
-    echo OK.
     }
 
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
         APIFile="api.json"
-	BuildJSON
+	    BuildJSON
 	else
         APIFile="api_$Branch.json"
         BuildJSON
