@@ -245,7 +245,7 @@ jobs:
       - name: Build update API
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
-        run: chmod +x ./build/build-api.sh && ./build-api.sh
+        run: chmod +x ./build/build-api.sh && ./build/build-api.sh
 
       - name: Optimise server software
         run: |
