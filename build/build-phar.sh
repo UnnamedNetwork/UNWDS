@@ -2,15 +2,12 @@
 
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 BUILD_TOKEN="$GHTOKEN"
-
-function build_official {
-dateAndMonth=`date`
-BUILDPHPV=$(php -r 'echo PHP_VERSION;')
-OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
+CURR_BUILD_NUMBER=$(expr 1000 + $GITHUB_RUN_NUMBER)
+OLDBLD=$(expr $CURR_BUILD_NUMBER - 1)
 OUTPUT_REPO="build-repo/UNWDS/branch"
-
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
+function Build {
 rm UNWDS.phar 2> /dev/null
 
 composer make-server
@@ -21,7 +18,9 @@ else
 	echo Server phar was not created!
 	exit 1
 fi
+}
 
+function Push {
 git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 git config --global user.name "github-actions[bot]"
 git clone https://github.com/UnnamedNetwork/build-repo.git
@@ -31,12 +30,12 @@ cd UNWDS/branch
 # Checking if output branch folder exist.
 [ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
 [ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
+[ ! -d "$CURRENT_BRANCH/latest/$CURR_BUILD_NUMBER" ] && mkdir $CURRENT_BRANCH/latest/CURR_BUILD_NUMBER
 [ ! -d "$CURRENT_BRANCH/old" ] && mkdir $CURRENT_BRANCH/old
-mkdir $CURRENT_BRANCH/old/$OLDBLD
+[ ! -d "$CURRENT_BRANCH/old/$OLDBLD" ] && mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../../
-rm -rf /build-repo/UNWDS.phar
-cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
+cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest/CURR_BUILD_NUMBER
 cd build-repo
 git add -A
 git commit -m "Build from UNWDS ($CURRENT_BRANCH): $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
@@ -48,42 +47,24 @@ git push origin master --quiet
 echo Pushed on: "$OUTPUT_REPO"/"$CURRENT_BRANCH"
 }
 
-function build_artifact {
-dateAndMonth=`date`
-BUILDPHPV=$(php -r 'echo PHP_VERSION;')
-OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
-CURRENT_BRANCH="${GITHUB_REF##*/}"
-
-rm UNWDS.phar 2> /dev/null
-
-composer make-server
-
-if [ -f UNWDS.phar ]; then
-	echo Server phar created successfully.
-else
-	echo Server phar was not created!
-	exit 1
-fi
-}
-
 # Checking if this workflows run on allowed branch
 
-function CheckBranch {
+function Main {
+	Build
 	if [ "$CURRENT_BRANCH" = "master" ]; then
-    		echo Branch detected: "$CURRENT_BRANCH" 
+    	echo Branch detected: "$CURRENT_BRANCH" 
 		echo OK.
-		build_official
+		Push
 	else
 		if [ "$CURRENT_BRANCH" = "stable" ]; then
-    			echo Branch detected: "$CURRENT_BRANCH" 
+    		echo Branch detected: "$CURRENT_BRANCH" 
 			echo OK.
-			build_official
+			Push
 		else
 			echo Found unsupported branch: "$CURRENT_BRANCH"
-			echo DENIED. # this prevent push on unexpected branch, like tags build, but still build and upload server software to artifact
-			build_artifact
+			echo Found CI ran on unsupported branch. Stopping... # this prevent push on unexpected branch, like Dependabot builds, but still build and upload server software to artifact
 		fi
 	fi
 }
 
-CheckBranch
+Main

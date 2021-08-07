@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.8]
 
     steps:
       - uses: actions/checkout@v2 #needed for build.sh
@@ -36,11 +36,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: 8.0.7
+          - php: 8.0.8
             config: phpstan.neon.dist
-            image: ubuntu-20.04
-          - php: 7.4.20
-            config: phpstan.php7.neon
             image: ubuntu-20.04
 
     steps:
@@ -91,7 +88,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -141,7 +138,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -193,7 +190,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [8.0.7]
+        php: [8.0.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -232,7 +229,23 @@ jobs:
             composer-v2-cache-
 
       - name: Install Composer dependencies
-        run: php composer.phar install --no-dev --classmap-authoritative
+        run: php composer.phar install --no-dev --prefer-dist --no-interaction --classmap-authoritative
+
+      - name: Install jo
+        run: sudo apt-get install jo
+
+      - name: Minify BedrockData JSON files #from https://github.com/pmmp/PocketMine-MP/commit/c03967411ee12d5d361c8e7ac98f23603fc7bf2a
+        run: php src/pocketmine/resources/vanilla/.minify_json.php
+
+      - name: Patch new VersionInfo #modified from https://github.com/pmmp/PocketMine-MP/commit/c03967411ee12d5d361c8e7ac98f23603fc7bf2a
+        run: |
+          export CalcedBuildNumber=1000+$GITHUB_RUN_NUMBER
+          sed -i "s/const BUILD_NUMBER = 0333/const BUILD_NUMBER = ${CalcedBuildNumber}/" src/pocketmine/VersionInfo.php
+
+      - name: Build update API
+        env: 
+          GHTOKEN: ${{ secrets.GHTOKEN }}
+        run: chmod +x ./build/build-api.sh && ./build/build-api.sh
 
       - name: Optimise server software
         run: |
@@ -246,7 +259,7 @@ jobs:
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
           done
           
-      - name: Build
+      - name: Build server software
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./build/build-phar.sh && ./build/build-phar.sh
@@ -266,7 +279,7 @@ jobs:
       fail-fast: false
       matrix:
         image: [ubuntu-20.04]
-        php: [7.4.20, 8.0.7]
+        php: [8.0.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -311,10 +324,8 @@ jobs:
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
           php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-
           #dump the diff of preprocessor replacements to a patch in case it has bugs
           git diff > preprocessor_diff.patch
-
           VENDOR_PM="$GITHUB_WORKSPACE/vendor"
           VENDOR_PM_BACKUP="$GITHUB_WORKSPACE/vendor-before-preprocess"
           cp -r "$VENDOR_PM" "$VENDOR_PM_BACKUP"
