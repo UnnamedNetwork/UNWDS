@@ -2,7 +2,8 @@
 
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 BUILD_TOKEN="$GHTOKEN"
-OLDBLD=$(expr $GITHUB_RUN_NUMBER - 1)
+CURR_BUILD_NUMBER=$(expr 1000 + $GITHUB_RUN_NUMBER)
+OLDBLD=$(expr $CURR_BUILD_NUMBER - 1)
 OUTPUT_REPO="build-repo/UNWDS/branch"
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
@@ -29,12 +30,12 @@ cd UNWDS/branch
 # Checking if output branch folder exist.
 [ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
 [ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
+[ ! -d "$CURRENT_BRANCH/latest/$CURR_BUILD_NUMBER" ] && mkdir $CURRENT_BRANCH/latest/CURR_BUILD_NUMBER
 [ ! -d "$CURRENT_BRANCH/old" ] && mkdir $CURRENT_BRANCH/old
 [ ! -d "$CURRENT_BRANCH/old/$OLDBLD" ] && mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../../
-rm -rf /build-repo/UNWDS.phar
-cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest
+cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest/CURR_BUILD_NUMBER
 cd build-repo
 git add -A
 git commit -m "Build from UNWDS ($CURRENT_BRANCH): $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
