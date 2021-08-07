@@ -30,7 +30,7 @@ cd UNWDS/branch
 [ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
 [ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
 [ ! -d "$CURRENT_BRANCH/old" ] && mkdir $CURRENT_BRANCH/old
-mkdir $CURRENT_BRANCH/old/$OLDBLD
+[ ! -d "$CURRENT_BRANCH/old/$OLDBLD" ] && mkdir $CURRENT_BRANCH/old/$OLDBLD
 cp $CURRENT_BRANCH/latest/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
 cd ../../../
 rm -rf /build-repo/UNWDS.phar
