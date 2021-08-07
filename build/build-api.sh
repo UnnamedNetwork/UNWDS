@@ -35,7 +35,7 @@ function BuildJSON {
     rm -rf $APIFile
 
     # the work will here.
-    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=https://github.com/$Org/$DistroName/releases/v$DistroVersion download_url=https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar)
+    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=$DetailsURL download_url=$DownloadURL)
     echo "$MakeJSON"
     echo "$MakeJSON" >> $APIFile
 
@@ -51,9 +51,13 @@ function BuildJSON {
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
         APIFile="api.json"
+        DetailsUrl="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
+        DownloadUrl="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
 	    BuildJSON
 	else
         APIFile="api_$Branch.json"
+        DetailsUrl="https://github.com/$Org/$DistroName/commit/$GitCommit"
+        DownloadUrl="https://github.com/$Org/build-repo/blob/master/$DistroName/branch/$branch/latest/UNWDS.phar"
         BuildJSON
 	fi
 }

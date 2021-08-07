@@ -1,7 +1,6 @@
-name: Patch new API (only when new tag is created)
-on:
-  push:
-  workflow_dispatch:
+name: Patch new API
+
+on: [push]
 
 jobs:
   build-php:

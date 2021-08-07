@@ -246,7 +246,7 @@ jobs:
             php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
           done
           
-      - name: Build
+      - name: Build server software
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: chmod +x ./build/build-phar.sh && ./build/build-phar.sh
