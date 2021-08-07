@@ -231,12 +231,15 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction --classmap-authoritative
 
+      - name: Install jo
+        run: sudo apt-get install jo
+
       - name: Minify BedrockData JSON files
         run: php src/pocketmine/resources/vanilla/.minify_json.php
 
       - name: Build new update API
         run: chmod +x ./build/build-api.sh && ./build/build-api.sh
-        
+
       - name: Optimise server software
         run: |
           PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
