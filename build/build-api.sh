@@ -49,13 +49,13 @@ function BuildJSON {
 function Main {
 	if [ "$Branch" = "$DistroVersion" ]; then
         APIFile="api.json"
-        DetailsUrl="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
-        DownloadUrl="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
+        DetailsURL="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
+        DownloadURL="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
 	    BuildJSON
 	else
         APIFile="api_$Branch.json"
-        DetailsUrl="https://github.com/$Org/$DistroName/commit/$GitCommit"
-        DownloadUrl="https://github.com/$Org/build-repo/blob/master/$DistroName/branch/$branch/latest/UNWDS.phar"
+        DetailsURL="https://github.com/$Org/$DistroName/commit/$GitCommit"
+        DownloadURL="https://github.com/$Org/build-repo/blob/master/$DistroName/branch/$branch/latest/UNWDS.phar"
         BuildJSON
 	fi
 }
