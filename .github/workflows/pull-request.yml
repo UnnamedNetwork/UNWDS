@@ -1,4 +1,4 @@
-name: CI
+name: CI (pull_request)
 
 on: [pull_request]
 
