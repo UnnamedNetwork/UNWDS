@@ -55,7 +55,7 @@ function Main {
 	else
         APIFile="api_$Branch.json"
         DetailsURL="https://github.com/$Org/$DistroName/commit/$GitCommit"
-        DownloadURL="https://github.com/$Org/build-repo/blob/master/$DistroName/branch/$branch/latest/UNWDS.phar"
+        DownloadURL="https://github.com/$Org/build-repo/blob/master/$DistroName/branch/$Branch/latest/UNWDS.phar"
         BuildJSON
 	fi
 }
