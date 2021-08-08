@@ -4,12 +4,22 @@ This will follow the PocketMine-MP install guide.
 ## Windows (using PowerShell script): (recommended)
 + Requirement: Windows PowerShell v5.1 or above installed (Windows 10/Server version 1607 or above have already pre-installed).
 + Older OS can grab new PowerShell version by [click here](https://github.com/PowerShell/PowerShell/releases/). Choose PowerShell-version-win-x64.msi. Once downloaded, install it.
++ If you want to use ported script from original PocketMine-MP script, use this command (some function are not ported/not ported correctly, but its so stable):
 + On PowerShell window use this command:
+```sh
+
+Invoke-WebRequest -Uri "https://unnamednetwork.github.io/UNWDS/scripts/installer_ported.ps1" -OutFile "installer_ported.ps1"; powershell -ExecutionPolicy Bypass -File .\installer_ported.ps1
+
+```
+
+or, you want to use update function, check out our script:
+
 ```sh
 
 Invoke-WebRequest -Uri "https://unnamednetwork.github.io/UNWDS/scripts/installer.ps1" -OutFile "installer.ps1"; powershell -ExecutionPolicy Bypass -File .\installer.ps1
 
 ```
+
 + Now, type ./start.cmd to run the server!
 
 + Error fix: 
@@ -23,7 +33,7 @@ to fix that, you just need use this command and re-run the installer:
 
 ```
 
-+ Note: Do not remove either `current_version.info` or `remote_version.info` (if present). These files for update function.
++ Note: Do not remove either `currentVersion.json` or 'remoteVersion.json` (if present). These files for update function.
 
 ## Windows (manually):
 + Follow the instruction from PocketMine-MP [here](https://pmmp.readthedocs.io/en/rtfd/installation.html)
@@ -71,22 +81,14 @@ $ wget https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.sh &&
 If you want to use Stable releases, use this:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/{YOUR_PREFERRED_VERESION}/UNWDS.phar
-
-```
-
-If you want to use latest stable development releases, use this:
-```sh
-
-$ wget https://github.com/UnnamedNetwork/build-repo/releases/download/stable-build/UNWDS.phar
-
+$ wget https://github.com/UnnamedNetwork/UNWDS/releases/download/v{YOUR_PREFERRED_VERESION}/UNWDS.phar
 
 ```
 
 or you want to download specific build, use this link:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/old/<action-run-number>/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/<action-run-number>/UNWDS.phar
 
 ```
 
@@ -97,7 +99,7 @@ $ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/old
 + Example: You want to download CI #91, you need this command:
 ```sh
 
-$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/old/91/UNWDS.phar
+$ wget https://github.com/UnnamedNetwork/build-repo/raw/master/branch/stable/91/UNWDS.phar
 
 ```
 

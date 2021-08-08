@@ -29,13 +29,9 @@ git checkout master
 cd UNWDS/branch
 # Checking if output branch folder exist.
 [ ! -d "$CURRENT_BRANCH" ] && mkdir $CURRENT_BRANCH
-[ ! -d "$CURRENT_BRANCH/latest" ] && mkdir $CURRENT_BRANCH/latest
-[ ! -d "$CURRENT_BRANCH/latest/$CURR_BUILD_NUMBER" ] && mkdir $CURRENT_BRANCH/latest/$CURR_BUILD_NUMBER
-[ ! -d "$CURRENT_BRANCH/old" ] && mkdir $CURRENT_BRANCH/old
-[ ! -d "$CURRENT_BRANCH/old/$OLDBLD" ] && mkdir $CURRENT_BRANCH/old/$OLDBLD
-cp $CURRENT_BRANCH/latest/$OLDBLD/UNWDS.phar $CURRENT_BRANCH/old/$OLDBLD
+[ ! -d "$CURRENT_BRANCH/$CURR_BUILD_NUMBER" ] && mkdir $CURRENT_BRANCH/$CURR_BUILD_NUMBER
 cd ../../../
-cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/latest/$CURR_BUILD_NUMBER
+cp UNWDS.phar $OUTPUT_REPO/$CURRENT_BRANCH/$CURR_BUILD_NUMBER
 cd build-repo
 git add -A
 git commit -m "Build from UNWDS ($CURRENT_BRANCH): $dateAndMonth (CI #$GITHUB_RUN_NUMBER)"
