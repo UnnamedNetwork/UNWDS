@@ -32,6 +32,11 @@ function Push {
     cd $DistroName/update/
     rm -rf $APIFile
 
+    # the work will here.
+    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=$DetailsURL download_url=$DownloadURL)
+    echo "$MakeJSON"
+    echo "$MakeJSON" >> $APIFile
+
     git add $APIFile
     git commit -m "$APIFile: bumped to version $DistroVersion, build $BuildNumber"
     git remote rm origin
@@ -41,16 +46,8 @@ function Push {
     git push origin main --quiet
 }
 
-function BuildJSON {
-    # the work will here.
-    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=$DetailsURL download_url=$DownloadURL)
-    echo "$MakeJSON"
-    echo "$MakeJSON" >> $APIFile
-}
-
 # Checking if this workflows run on allowed branch
 function Main {
-	BuildJSON
     APIFile="api_$Branch.json"
     DetailsURL="https://github.com/$Org/$DistroName/commit/$GitCommit"
     DownloadURL="https://github.com/$Org/build-repo/raw/master/$DistroName/branch/$Branch/$BuildNumber/UNWDS.phar"
