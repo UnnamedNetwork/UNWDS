@@ -52,11 +52,14 @@ function Main {
         DetailsURL="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
         DownloadURL="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
 	    BuildJSON
-	else
+	elif [ "$Branch" = "stable" || "$Branch" = "master" ]; then
         APIFile="api_$Branch.json"
         DetailsURL="https://github.com/$Org/$DistroName/commit/$GitCommit"
         DownloadURL="https://github.com/$Org/build-repo/raw/master/$DistroName/branch/$Branch/$BuildNumber/UNWDS.phar"
         BuildJSON
+    else
+        echo "The current branch, which this script are running on, are not supported by automatic API build."
+        echo "API build will be cancelled."
 	fi
 }
 Main
