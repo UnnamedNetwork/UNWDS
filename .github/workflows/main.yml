@@ -241,7 +241,7 @@ jobs:
         run: |
           export CalcedBuildNumber=$GITHUB_RUN_NUMBER+580
           sed -i "s/const BUILD_NUMBER = 0333/const BUILD_NUMBER = ${CalcedBuildNumber}/" src/pocketmine/VersionInfo.php
-          sed -i "s/const BUILD_CHANNEL = ""/const BUILD_CHANNEL = ${GITHUB_REF##*/}/" src/pocketmine/VersionInfo.php
+          sed -i "s/const BUILD_CHANNEL = ""/const BUILD_CHANNEL = "${GITHUB_REF##*/}/" src/pocketmine/VersionInfo.php
 
       - name: Build update API
         env: 
