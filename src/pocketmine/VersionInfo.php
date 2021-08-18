@@ -39,3 +39,4 @@ const BASE_VERSION = "3.22.2";
 const DISTRO_VERSION = "2.7.2";
 const IS_DEVELOPMENT_BUILD = true;
 const BUILD_NUMBER = 0333;
+const BUILD_CHANNEL = "";
