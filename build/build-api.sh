@@ -5,6 +5,7 @@ BUILD_TOKEN="$GHTOKEN"
 ApiRepoUrl="https://github.com/UnnamedNetwork/unnamednetwork.github.io"
 ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
+Name="UNWDS"
 PhpVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_VERSION;')
 BuildNumber=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\BUILD_NUMBER;')
@@ -19,18 +20,19 @@ else
     IsDev="true"
 fi
 
+
 function Push {
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
     cd $ApiRepo
     git checkout main
-    [ ! -d "$DistroName/update" ] && mkdir $DistroName/update
-    cd $DistroName/update/
+    [ ! -d "$Name/update" ] && mkdir $Name/update
+    cd $Name/update/
     rm -rf $APIFile
 
     # the work will here.
-    MakeJSON=$(jo -p job=$DistroName php_version=${PhpVersion} base_version=$DistroVersion build=$BuildNumber is_dev=$IsDev channel=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion date=$Date details_url=$DetailsURL download_url=$DownloadURL source_url=$SourceURL)
+    MakeJSON=$(jo -p job=$Name php_version=${PhpVersion} base_version=$DistroVersion build=$BuildNumber is_dev=$IsDev channel=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion date=$Date details_url=$DetailsURL download_url=$DownloadURL source_url=$SourceURL)
     echo "$MakeJSON"
     echo "$MakeJSON" >> $APIFile
 
@@ -46,9 +48,9 @@ function Push {
 # Checking if this workflows run on allowed branch
 function Main {
     APIFile="api_$Branch.json"
-    SourceURL="https://github.com/$Org/$DistroName/tree/$GitCommit"
-    DetailsURL="https://github.com/$Org/$DistroName/commit/$GitCommit"
-    DownloadURL="https://github.com/$Org/build-repo/raw/master/$DistroName/branch/$Branch/$BuildNumber/UNWDS.phar"
+    SourceURL="https://github.com/$Org/$Name/tree/$GitCommit"
+    DetailsURL="https://github.com/$Org/$Name/commit/$GitCommit"
+    DownloadURL="https://github.com/$Org/build-repo/raw/master/$Name/branch/$Branch/$BuildNumber/UNWDS.phar"
 	if [ "$Branch" = "master" ]; then
     	echo Branch detected: "$CURRENT_BRANCH" 
 		echo OK.
@@ -61,9 +63,9 @@ function Main {
 		else
             if [ "$Branch" = "v$DistroVersion" ]; then
                 APIFile="api.json"
-                SourceURL="https://github.com/$Org/$DistroName/tree/v$DistroVersion"
-                DetailsURL="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
-                DownloadURL="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
+                SourceURL="https://github.com/$Org/$Name/tree/v$DistroVersion"
+                DetailsURL="https://github.com/$Org/$Name/releases/v$DistroVersion"
+                DownloadURL="https://github.com/$Org/$Name/releases/download/v$DistroVersion/$Name.phar"
     		    echo Branch detected: "$Branch" 
 			    echo OK.
 			    Push
