@@ -22,6 +22,7 @@ fi
 
 
 function Push {
+    sed -i "s/const BUILD_CHANNEL = \"\"/const BUILD_CHANNEL = \"${Branch}\"/g" src/pocketmine/VersionInfo.php
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
@@ -68,6 +69,7 @@ function Main {
                 DownloadURL="https://github.com/$Org/$Name/releases/download/v$DistroVersion/$Name.phar"
     		    echo Branch detected: "$Branch" 
 			    echo OK.
+                export Branch="stable"
 			    Push
             else
 			    echo Found unsupported branch: "$Branch"
