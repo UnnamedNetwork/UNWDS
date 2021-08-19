@@ -33,7 +33,7 @@ function Push {
     rm -rf $APIFile
 
     # the work will here.
-    MakeJSON=$(jo -p php_version="'${PhpVersion}'" base_version=$DistroVersion build=$BuildNumber is_dev=$IsDev channel=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion date=$Date details_url=$DetailsURL download_url=$DownloadURL source_url=$SourceURL)
+    MakeJSON=$(jo -p php_version="${PhpVersion}" base_version=$DistroVersion build=$BuildNumber is_dev=$IsDev channel=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion date=$Date details_url=$DetailsURL download_url=$DownloadURL source_url=$SourceURL)
     echo "$MakeJSON"
     echo "$MakeJSON" >> $APIFile
 
