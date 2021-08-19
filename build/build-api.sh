@@ -7,7 +7,7 @@ ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
 DistroName=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_NAME;')
 PhpVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
-FixedPhpVersion=\"${PhpVersion}\"
+PhpVersion=\"${PhpVersion}\"
 DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_VERSION;')
 BuildNumber=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\BUILD_NUMBER;')
 IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\IS_DEVELOPMENT_BUILD;')
@@ -34,7 +34,7 @@ function Push {
     rm -rf $APIFile
 
     # the work will here.
-    MakeJSON=$(jo -p job=$DistroName php_version=$FixedPhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=$DetailsURL download_url=$DownloadURL)
+    MakeJSON=$(jo -p job=$DistroName php_version=$PhpVersion base_version=$DistroVersion build_number=$BuildNumber is_dev=$IsDev branch=$Branch git_commit=$GitCommit mcpe_version=$TargetVersion phar_name=$PharName dummy=$Dummy build=$BuildNumber date=$Date details_url=$DetailsURL download_url=$DownloadURL)
     echo "$MakeJSON"
     echo "$MakeJSON" >> $APIFile
 
