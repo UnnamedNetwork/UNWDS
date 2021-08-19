@@ -62,7 +62,7 @@ function Main {
 			echo OK.
 			Push
 		else
-            if [ "$Branch" = "$DistroVersion" ]; then
+            if [ "$Branch" = "v$DistroVersion" ]; then
                 APIFile="api.json"
                 DetailsURL="https://github.com/$Org/$DistroName/releases/v$DistroVersion"
                 DownloadURL="https://github.com/$Org/$DistroName/releases/download/v$DistroVersion/$DistroName.phar"
