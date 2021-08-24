@@ -53,12 +53,12 @@ function Main {
     DetailsURL="https://github.com/$Org/$Name/commit/$GitCommit"
     DownloadURL="https://github.com/$Org/build-repo/raw/master/$Name/branch/$Branch/$BuildNumber/UNWDS.phar"
 	if [ "$Branch" = "master" ]; then
-    	echo Branch detected: "$CURRENT_BRANCH" 
+    	echo Branch detected: "$Branch" 
 		echo OK.
 		Push
 	else
 		if [ "$Branch" = "stable" ]; then
-    		echo Branch detected: "$CURRENT_BRANCH" 
+    		echo Branch detected: "$Branch" 
 			echo OK.
 			Push
 		else
@@ -74,6 +74,7 @@ function Main {
             else
 			    echo Found unsupported branch: "$Branch"
 			    echo Found CI ran on unsupported branch. Stopping... # this prevent push on unexpected branch, like Dependabot builds, but still build and upload server software to artifact
+			    exit 0
             fi
 		fi
 	fi
