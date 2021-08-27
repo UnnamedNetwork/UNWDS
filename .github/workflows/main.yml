@@ -240,7 +240,6 @@ jobs:
       - name: Patch new VersionInfo #modified from https://github.com/pmmp/PocketMine-MP/commit/c03967411ee12d5d361c8e7ac98f23603fc7bf2a
         run: |
           export CalcedBuildNumber=580+$GITHUB_RUN_NUMBER
-          export PHPVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
           sed -i "s/const BUILD_NUMBER = 0333/const BUILD_NUMBER = ${CalcedBuildNumber}/" src/pocketmine/VersionInfo.php
 
       - name: Build update API

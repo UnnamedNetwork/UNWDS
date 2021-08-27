@@ -6,6 +6,7 @@ ApiRepoUrl="https://github.com/UnnamedNetwork/unnamednetwork.github.io"
 ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
 Name="UNWDS"
+PHPVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_VERSION;')
 BuildNumber=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\BUILD_NUMBER;')
 IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\IS_DEVELOPMENT_BUILD;')
