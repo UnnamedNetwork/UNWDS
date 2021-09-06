@@ -8,12 +8,8 @@ OUTPUT_REPO="build-repo/UNWDS/branch"
 CURRENT_BRANCH="${GITHUB_REF##*/}"
 
 function Build {
-rm UNWDS.phar 2> /dev/null
-
-composer make-server
-
 if [ -f UNWDS.phar ]; then
-	echo Server phar created successfully.
+	echo Server phar created successfully. Contiuning...
 else
 	echo Server phar was not created!
 	exit 1
