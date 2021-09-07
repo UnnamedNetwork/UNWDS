@@ -258,7 +258,6 @@ jobs:
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: |
-            php build/server-phar.php --git ${{ github.sha }}
             chmod +x ./build/build-phar.sh && ./build/build-phar.sh
             chmod +x ./build/build-api.sh && ./build/build-api.sh
         
