@@ -4,8 +4,8 @@ includes:
 	- tests/phpstan/configs/gc-hacks.neon
 	- tests/phpstan/configs/l7-baseline.neon
 	- tests/phpstan/configs/l8-baseline.neon
-	- tests/phpstan/configs/php74-compat.neon
 	- tests/phpstan/configs/php-bugs.neon
+	- tests/phpstan/configs/php74-compat.neon
 	- tests/phpstan/configs/phpstan-bugs.neon
 	- tests/phpstan/configs/phpunit-wiring-tests.neon
 	- tests/phpstan/configs/pthreads-bugs.neon
@@ -22,24 +22,25 @@ parameters:
 	bootstrapFiles:
 		- tests/phpstan/bootstrap.php
 	scanDirectories:
+		- build
 		- tests/plugins/TesterPlugin
 	scanFiles:
 		- src/pocketmine/PocketMine.php
-		- build/make-release.php
-		- build/server-phar.php
 	paths:
+		- build
 		- src
-		- build/make-release.php
-		- build/server-phar.php
 		- tests/phpunit
 		- tests/plugins/TesterPlugin
+	excludePaths:
+		analyseAndScan:
+			- build/preprocessor
 	dynamicConstantNames:
-		- pocketmine\IS_DEVELOPMENT_BUILD
 		- pocketmine\DEBUG
+		- pocketmine\IS_DEVELOPMENT_BUILD
 	stubFiles:
-		- tests/phpstan/stubs/pthreads.stub
 		- tests/phpstan/stubs/chunkutils.stub
 		- tests/phpstan/stubs/leveldb.stub
+		- tests/phpstan/stubs/pthreads.stub
 	reportUnmatchedIgnoredErrors: false #no other way to silence platform-specific non-warnings
 	staticReflectionClassNamePatterns:
 		- "#^COM$#"
