@@ -3889,7 +3889,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 		$this->actuallyRespawn();
 	}
-	
+
 	protected function actuallyRespawn() : void{
 		$ev = new PlayerRespawnEvent($this, $this->getSpawn());
 		$ev->call();
