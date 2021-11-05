@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfba71d2ad0dd961ed00520b5d52e4d7",
+    "content-hash": "352902efd3a960977acfb3ae7bda38da",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -153,20 +153,20 @@
         },
         {
             "name": "pocketmine/classloader",
-            "version": "0.1.2",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/ClassLoader.git",
-                "reference": "9757928424652393b178a3760073113aa7c9911b"
+                "reference": "3c484a27787f7732ce842ed694928a29ba340961"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/ClassLoader/zipball/9757928424652393b178a3760073113aa7c9911b",
-                "reference": "9757928424652393b178a3760073113aa7c9911b",
+                "url": "https://api.github.com/repos/pmmp/ClassLoader/zipball/3c484a27787f7732ce842ed694928a29ba340961",
+                "reference": "3c484a27787f7732ce842ed694928a29ba340961",
                 "shasum": ""
             },
             "require": {
-                "ext-pthreads": "~3.2.0",
+                "ext-pthreads": "~3.2.0 || ^4.0",
                 "ext-reflection": "*",
                 "php": "^7.2 || ^8.0"
             },
@@ -175,7 +175,7 @@
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "0.12.66",
+                "phpstan/phpstan": "0.12.99",
                 "phpstan/phpstan-strict-rules": "^0.12.4"
             },
             "type": "library",
@@ -191,9 +191,9 @@
             "description": "Ad-hoc autoloading components used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/ClassLoader/issues",
-                "source": "https://github.com/pmmp/ClassLoader/tree/0.1.2"
+                "source": "https://github.com/pmmp/ClassLoader/tree/0.1.3"
             },
-            "time": "2021-01-15T00:40:47+00:00"
+            "time": "2021-11-01T20:13:55+00:00"
         },
         {
             "name": "pocketmine/log",
@@ -238,20 +238,20 @@
         },
         {
             "name": "pocketmine/log-pthreads",
-            "version": "0.1.3",
+            "version": "0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/LogPthreads.git",
-                "reference": "e477ecf6ec214fdd4415ea1da3fdd9d73bf699ea"
+                "reference": "01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/LogPthreads/zipball/e477ecf6ec214fdd4415ea1da3fdd9d73bf699ea",
-                "reference": "e477ecf6ec214fdd4415ea1da3fdd9d73bf699ea",
+                "url": "https://api.github.com/repos/pmmp/LogPthreads/zipball/01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3",
+                "reference": "01620c3628cdaa6b4a21122cff4c5d2f70b5c1d3",
                 "shasum": ""
             },
             "require": {
-                "ext-pthreads": "~3.2.0",
+                "ext-pthreads": "~3.2.0 || ^4.0",
                 "php": "^7.2 || ^8.0",
                 "pocketmine/log": "^0.2.0"
             },
@@ -260,7 +260,7 @@
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "0.12.66",
+                "phpstan/phpstan": "0.12.80",
                 "phpstan/phpstan-strict-rules": "^0.12.4"
             },
             "type": "library",
@@ -276,9 +276,9 @@
             "description": "Logging components specialized for pthreads used by PocketMine-MP and related projects",
             "support": {
                 "issues": "https://github.com/pmmp/LogPthreads/issues",
-                "source": "https://github.com/pmmp/LogPthreads/tree/0.1.3"
+                "source": "https://github.com/pmmp/LogPthreads/tree/0.1.4"
             },
-            "time": "2021-01-15T00:35:49+00:00"
+            "time": "2021-11-01T20:36:53+00:00"
         },
         {
             "name": "pocketmine/math",
@@ -365,20 +365,20 @@
         },
         {
             "name": "pocketmine/raklib",
-            "version": "0.12.11",
+            "version": "0.12.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/RakLib.git",
-                "reference": "9cce458b8bfde3e4dfdbf70c659fc7b7fe26b5c4"
+                "reference": "5abe22043352e94099e4edfcef5fb3644578ddc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/RakLib/zipball/9cce458b8bfde3e4dfdbf70c659fc7b7fe26b5c4",
-                "reference": "9cce458b8bfde3e4dfdbf70c659fc7b7fe26b5c4",
+                "url": "https://api.github.com/repos/pmmp/RakLib/zipball/5abe22043352e94099e4edfcef5fb3644578ddc1",
+                "reference": "5abe22043352e94099e4edfcef5fb3644578ddc1",
                 "shasum": ""
             },
             "require": {
-                "ext-pthreads": "~3.2.0",
+                "ext-pthreads": "~3.2.0 || ^4.0",
                 "ext-sockets": "*",
                 "php": "^7.2 || ^8.0",
                 "php-64bit": "*",
@@ -389,7 +389,7 @@
                 "pocketmine/snooze": "^0.1.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "0.12.76",
+                "phpstan/phpstan": "0.12.87",
                 "phpstan/phpstan-strict-rules": "^0.12.2"
             },
             "type": "library",
@@ -405,26 +405,26 @@
             "description": "A RakNet server implementation written in PHP",
             "support": {
                 "issues": "https://github.com/pmmp/RakLib/issues",
-                "source": "https://github.com/pmmp/RakLib/tree/0.12.11"
+                "source": "https://github.com/pmmp/RakLib/tree/0.12.12"
             },
-            "time": "2021-02-15T11:21:05+00:00"
+            "time": "2021-11-01T20:52:51+00:00"
         },
         {
             "name": "pocketmine/snooze",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/Snooze.git",
-                "reference": "70b5e7937a06878dd321a3182ceb76d56298f2cd"
+                "reference": "92abf1e988c71635d466abb777f61f89e5a9c990"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/Snooze/zipball/70b5e7937a06878dd321a3182ceb76d56298f2cd",
-                "reference": "70b5e7937a06878dd321a3182ceb76d56298f2cd",
+                "url": "https://api.github.com/repos/pmmp/Snooze/zipball/92abf1e988c71635d466abb777f61f89e5a9c990",
+                "reference": "92abf1e988c71635d466abb777f61f89e5a9c990",
                 "shasum": ""
             },
             "require": {
-                "ext-pthreads": ">=3.1.7dev",
+                "ext-pthreads": "~3.2.0 || ^4.0",
                 "php-64bit": "^7.2 || ^8.0"
             },
             "require-dev": {
@@ -445,9 +445,9 @@
             "description": "Thread notification management library for code using the pthreads extension",
             "support": {
                 "issues": "https://github.com/pmmp/Snooze/issues",
-                "source": "https://github.com/pmmp/Snooze/tree/0.1.5"
+                "source": "https://github.com/pmmp/Snooze/tree/0.1.6"
             },
-            "time": "2021-02-22T16:16:12+00:00"
+            "time": "2021-11-01T20:48:46+00:00"
         },
         {
             "name": "pocketmine/spl",
@@ -837,16 +837,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.2.2",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556"
+                "reference": "622548b623e81ca6d78b721c5e029f4ce664f170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/069a785b2141f5bcf49f3e353548dc1cce6df556",
-                "reference": "069a785b2141f5bcf49f3e353548dc1cce6df556",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/622548b623e81ca6d78b721c5e029f4ce664f170",
+                "reference": "622548b623e81ca6d78b721c5e029f4ce664f170",
                 "shasum": ""
             },
             "require": {
@@ -857,7 +857,8 @@
                 "webmozart/assert": "^1.9.1"
             },
             "require-dev": {
-                "mockery/mockery": "~1.3.2"
+                "mockery/mockery": "~1.3.2",
+                "psalm/phar": "^4.8"
             },
             "type": "library",
             "extra": {
@@ -887,9 +888,9 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/master"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.3.0"
             },
-            "time": "2020-09-03T19:13:55+00:00"
+            "time": "2021-10-19T17:43:47+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1010,16 +1011,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.99",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b4d40f1d759942f523be267a1bab6884f46ca3f7"
+                "reference": "e9e2a501102ba0b126b2f63a7f0a3b151056fe91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b4d40f1d759942f523be267a1bab6884f46ca3f7",
-                "reference": "b4d40f1d759942f523be267a1bab6884f46ca3f7",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e9e2a501102ba0b126b2f63a7f0a3b151056fe91",
+                "reference": "e9e2a501102ba0b126b2f63a7f0a3b151056fe91",
                 "shasum": ""
             },
             "require": {
@@ -1035,7 +1036,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.12-dev"
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -1050,7 +1051,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.99"
+                "source": "https://github.com/phpstan/phpstan/tree/1.0.2"
             },
             "funding": [
                 {
@@ -1070,38 +1071,39 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-12T20:09:55+00:00"
+            "time": "2021-11-03T16:09:51+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "0.12.22",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "7c01ef93bf128b4ac8bdad38c54b2a4fd6b0b3cc"
+                "reference": "9eb88c9f689003a8a2a5ae9e010338ee94dc39b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/7c01ef93bf128b4ac8bdad38c54b2a4fd6b0b3cc",
-                "reference": "7c01ef93bf128b4ac8bdad38c54b2a4fd6b0b3cc",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/9eb88c9f689003a8a2a5ae9e010338ee94dc39b3",
+                "reference": "9eb88c9f689003a8a2a5ae9e010338ee94dc39b3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
-                "phpstan/phpstan": "^0.12.92"
+                "phpstan/phpstan": "^1.0"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.0"
             },
             "require-dev": {
+                "nikic/php-parser": "^4.13.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-strict-rules": "^0.12.6",
+                "phpstan/phpstan-strict-rules": "^1.0",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "phpstan-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.12-dev"
+                    "dev-master": "1.0-dev"
                 },
                 "phpstan": {
                     "includes": [
@@ -1122,37 +1124,38 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/0.12.22"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/1.0.0"
             },
-            "time": "2021-08-12T10:53:43+00:00"
+            "time": "2021-10-14T08:03:54+00:00"
         },
         {
             "name": "phpstan/phpstan-strict-rules",
-            "version": "0.12.11",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-strict-rules.git",
-                "reference": "2b72e8e17d2034145f239126e876e5fb659675e2"
+                "reference": "7f50eb112f37fda2ef956813d3f1e9b1e69d7940"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/2b72e8e17d2034145f239126e876e5fb659675e2",
-                "reference": "2b72e8e17d2034145f239126e876e5fb659675e2",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/7f50eb112f37fda2ef956813d3f1e9b1e69d7940",
+                "reference": "7f50eb112f37fda2ef956813d3f1e9b1e69d7940",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
-                "phpstan/phpstan": "^0.12.96"
+                "phpstan/phpstan": "^1.0"
             },
             "require-dev": {
+                "nikic/php-parser": "^4.13.0",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "phpstan-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.12-dev"
+                    "dev-master": "1.0-dev"
                 },
                 "phpstan": {
                     "includes": [
@@ -1172,29 +1175,29 @@
             "description": "Extra strict and opinionated rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
-                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/0.12.11"
+                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/1.0.0"
             },
-            "time": "2021-08-21T11:36:27+00:00"
+            "time": "2021-10-11T06:57:58+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.7",
+            "version": "9.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218"
+                "reference": "cf04e88a2e3c56fc1a65488afd493325b4c1bc3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/d4c798ed8d51506800b441f7a13ecb0f76f12218",
-                "reference": "d4c798ed8d51506800b441f7a13ecb0f76f12218",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/cf04e88a2e3c56fc1a65488afd493325b4c1bc3e",
+                "reference": "cf04e88a2e3c56fc1a65488afd493325b4c1bc3e",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
-                "nikic/php-parser": "^4.12.0",
+                "nikic/php-parser": "^4.13.0",
                 "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
@@ -1243,7 +1246,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.7"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.8"
             },
             "funding": [
                 {
@@ -1251,7 +1254,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-17T05:39:03+00:00"
+            "time": "2021-10-30T08:01:38+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2766,7 +2769,7 @@
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-phar": "*",
-        "ext-pthreads": "~3.2.0",
+        "ext-pthreads": "^4.0",
         "ext-reflection": "*",
         "ext-simplexml": "*",
         "ext-sockets": "*",
