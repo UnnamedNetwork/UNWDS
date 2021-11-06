@@ -138,11 +138,13 @@ LICENSE;
 		$this->message($this->lang->translateString("cmnotes_1", [\pocketmine\DISTRO_NAME]));
 		echo <<<CMNOTES
 
-  UNWDS is an PocketMine-MP fork (also called spoon). UNWDS didn't touch/change anything related to PocketMine-MP API system, but it's still spoon, this still WILL NOT get any support for plugins.
+  UNWDS is an PocketMine-MP fork (also called spoon). UNWDS didn't touch/change anything related to PocketMine-MP API system, 
+  but it's still spoon, this WILL NOT get any support for plugins.
 
   In order to begin using this server software you must understand that you will be offered no support for plugins.
 
-  Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
+  Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. 
+  Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
 
   Make sure you can reproduce bugs in vanilla PocketMine-MP before report it to plugin developers.
   
