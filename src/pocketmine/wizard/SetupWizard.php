@@ -138,13 +138,15 @@ LICENSE;
 		$this->message($this->lang->translateString("cmnotes_1", [\pocketmine\DISTRO_NAME]));
 		echo <<<CMNOTES
 
-  Some plugin authors does not provide support for third-party builds of PocketMine-MP (spoons), included this version of UNWDS. Some spoons detract from the overall quality of the MCPE plugin environment, which is already lacking in quality. They force plugin developers to waste time trying to support conflicting APIs.
+  UNWDS is an PocketMine-MP fork (also called spoon). UNWDS didn't touch/change anything related to PocketMine-MP API system, but it's still spoon, this still WILL NOT get any support for plugins.
 
   In order to begin using this server software you must understand that you will be offered no support for plugins.
 
   Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
 
-  If you have read and agree the above, then you point your finger at us for embarrassing you when you open a plugin issue on Github while running UNWDS, we will laugh at you.
+  Make sure you can reproduce bugs in vanilla PocketMine-MP before report it to plugin developers.
+  
+  If you use UNWDS, you agree to these terms by default. Otherwise, please stop using UNWDS immediately. 
 
 CMNOTES;
 		$this->writeLine();
