@@ -6,11 +6,6 @@ parameters:
 			path: ../../../src/pocketmine/CrashDump.php
 
 		-
-			message: "#^Cannot access offset 'distro_version' on mixed\\.$#"
-			count: 1
-			path: ../../../src/pocketmine/CrashDump.php
-
-		-
 			message: "#^Cannot access offset 'build' on mixed\\.$#"
 			count: 1
 			path: ../../../src/pocketmine/CrashDump.php
@@ -84,6 +79,11 @@ parameters:
 			message: "#^Call to function method_exists\\(\\) with pocketmine\\\\network\\\\mcpe\\\\CachedEncapsulatedPacket and '__toString' will always evaluate to true\\.$#"
 			count: 1
 			path: ../../../src/pocketmine/network/mcpe/protocol/DataPacket.php
+
+		-
+			message: "#^Parameter \\#1 \\$yamlString of class pocketmine\\\\plugin\\\\PluginDescription constructor expects array\\|string, array\\<string\\> given\\.$#"
+			count: 1
+			path: ../../../src/pocketmine/plugin/ScriptPluginLoader.php
 
 		-
 			message: "#^Dead catch \\- ReflectionException is never thrown in the try block\\.$#"
