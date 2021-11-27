@@ -37,6 +37,6 @@ const DISTRO_NAME = "UNWDS";
 const CODENAME = "Twee";
 const BASE_VERSION = "3.25.6";
 const DISTRO_VERSION = "2.10.6";
-const IS_DEVELOPMENT_BUILD = true;
+const IS_DEVELOPMENT_BUILD = false;
 const BUILD_NUMBER = 0333; // This line is removed from pmmp source, will work on this later, currently we still need this.
 const BUILD_CHANNEL = "";
