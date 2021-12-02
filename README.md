@@ -3,6 +3,9 @@
 
 A open-source server software for Minecraft: Bedrock Edition. UNWDS is a fork of [PocketMine-MP](https://github.com/pmmp/PocketMine-MP).
 
+# About UNWDS v3 based on PM4:
+- Currently, I'm  so busy that can't release the next release of UNWDS based on PM4. Development branch have been created, but I'm not sure I can do it soon.
+
 ## Documentation
 - [Documentation](DOCUMENT.md)
 - [How to install](INSTALL.md)
