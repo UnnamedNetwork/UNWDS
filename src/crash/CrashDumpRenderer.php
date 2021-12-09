@@ -41,7 +41,7 @@ final class CrashDumpRenderer{
 	}
 
 	public function renderHumanReadable() : void{
-		$this->addLine(VersionString::DISTRO_NAME . " Crash Dump " . date("D M j H:i:s T Y", (int) $this->data->time));
+		$this->addLine("Crash Dump " . date("D M j H:i:s T Y", (int) $this->data->time));
 		$this->addLine();
 
 		$this->addLine("Error: " . $this->data->error["message"]);

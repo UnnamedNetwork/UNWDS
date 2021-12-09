@@ -229,7 +229,7 @@ LICENSE;
 	private function endWizard() : void{
 		$this->message($this->lang->translate(KnownTranslationFactory::you_have_finished()));
 		$this->message($this->lang->translate(KnownTranslationFactory::pocketmine_plugins()));
-		$this->message($this->lang->translate(KnownTranslationFactory::pocketmine_will_start(VersionInfo::DISTRONAME)));
+		$this->message($this->lang->translate(KnownTranslationFactory::pocketmine_will_start(VersionInfo::DISTRO_NAME)));
 
 		$this->writeLine();
 		$this->writeLine();

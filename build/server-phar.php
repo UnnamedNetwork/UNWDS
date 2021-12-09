@@ -134,22 +134,29 @@ function main() : void{
 		exit(1);
 	}
 
-	$opts = getopt("", ["out:", "git:"]);
+	$opts = getopt("", ["out:", "git:", "build:"]);
 	if(isset($opts["git"])){
 		$gitHash = $opts["git"];
 	}else{
 		$gitHash = Git::getRepositoryStatePretty(dirname(__DIR__));
 		echo "Git hash detected as $gitHash" . PHP_EOL;
 	}
+	if(isset($opts["build"])){
+		$build = (int) $opts["build"];
+	}else{
+		$build = 0;
+	}
 	foreach(buildPhar(
 		$opts["out"] ?? getcwd() . DIRECTORY_SEPARATOR . "UNWDS.phar",
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
 		[
+			'resources',
 			'src',
 			'vendor'
 		],
 		[
-			'git' => $gitHash
+			'git' => $gitHash,
+			'build' => $build
 		],
 		<<<'STUB'
 <?php
@@ -162,7 +169,7 @@ if(!is_readable($tmpDir) or !is_writable($tmpDir)){
 	exit(1);
 }
 
-require("phar://" . __FILE__ . "/src/pocketmine/PocketMine.php");
+require("phar://" . __FILE__ . "/src/PocketMine.php");
 __HALT_COMPILER();
 STUB
 ,
