@@ -1,4 +1,5 @@
 #!/bin/bash
+
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
@@ -14,17 +15,16 @@ DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
 rm -rf "$DATA_DIR"
-rm UNWDS.phar 2> /dev/null
+rm PocketMine-MP.phar 2> /dev/null
 mkdir "$DATA_DIR"
 mkdir "$PLUGINS_DIR"
 
-
 cd tests/plugins/DevTools
-php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
+php -dphar.readonly=0 ./src/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
 cd ../../..
 composer make-server
 
-if [ -f UNWDS.phar ]; then
+if [ -f PocketMine-MP.phar ]; then
 	echo Server phar created successfully.
 else
 	echo Server phar was not created!
@@ -32,13 +32,11 @@ else
 fi
 
 cp -r tests/plugins/TesterPlugin "$PLUGINS_DIR"
-echo -e "stop\n" | php UNWDS.phar --no-wizard --disable-ansi --disable-readline --debug.level=2 --data="$DATA_DIR" --plugins="$PLUGINS_DIR" --anonymous-statistics.enabled=0 --settings.async-workers="$PM_WORKERS" --settings.enable-dev-builds=1
+echo -e "stop\n" | php PocketMine-MP.phar --no-wizard --disable-ansi --disable-readline --debug.level=2 --data="$DATA_DIR" --plugins="$PLUGINS_DIR" --anonymous-statistics.enabled=0 --settings.async-workers="$PM_WORKERS" --settings.enable-dev-builds=1
 
 output=$(grep '\[TesterPlugin\]' "$DATA_DIR/server.log")
 if [ "$output" == "" ]; then
 	echo TesterPlugin failed to run tests, check the logs
-	echo Debugging vendor installed then exit
-	cat vendor/composer/installed.php
 	exit 1
 fi
 
@@ -51,5 +49,5 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 	echo Server log contains error messages, changing build status to failed
 	exit 1
 else
-	echo All tests passed.
+	echo All tests passed
 fi
