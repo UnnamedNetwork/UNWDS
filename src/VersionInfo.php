@@ -30,9 +30,9 @@ use function is_int;
 use function str_repeat;
 
 final class VersionInfo{
-	// PocketMine-MP core strings 
+	// PocketMine-MP core strings
 	public const NAME = "PocketMine-MP";
-	public const BASE_VERSION = "4.0.2"; // First UNWDS 3 build on 4.0.2 
+	public const BASE_VERSION = "4.0.2"; // First UNWDS 3 build on 4.0.2
 	public const IS_DEVELOPMENT_BUILD = true;
 	public const BUILD_CHANNEL = "";
 
