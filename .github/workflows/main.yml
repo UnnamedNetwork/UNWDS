@@ -192,9 +192,8 @@ jobs:
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: |
-            sed -i "s/public const BUILD_CHANNEL = \"\"/public const BUILD_CHANNEL = \"${{GITHUB_REF##*/}}\"/g" src/VersionInfo.php
-            php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.version_info.outputs.BUILD_NUMBER }}
             chmod +x ./build/build-api.sh && ./build/build-api.sh
+            php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.version_info.outputs.BUILD_NUMBER }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2

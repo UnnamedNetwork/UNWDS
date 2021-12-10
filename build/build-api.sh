@@ -22,6 +22,7 @@ fi
 
 
 function Push {
+    sed -i "s/public const BUILD_CHANNEL = \"\"/public const BUILD_CHANNEL = \"${Branch}\"/g" src/VersionInfo.php
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
