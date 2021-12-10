@@ -7,9 +7,8 @@ ApiRepo="unnamednetwork.github.io"
 Org="UnnamedNetwork"
 Name="UNWDS"
 PHPVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
-DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\DISTRO_VERSION;')
-BuildNumber=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\BUILD_NUMBER;')
-IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\IS_DEVELOPMENT_BUILD;')
+DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::DISTRO_VERSION;')
+IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::IS_DEVELOPMENT_BUILD;')
 Branch="${GITHUB_REF##*/}"
 GitCommit="${GITHUB_SHA}"
 TargetVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\network\mcpe\protocol\ProtocolInfo::MINECRAFT_VERSION_NETWORK;')
@@ -22,7 +21,7 @@ fi
 
 
 function Push {
-    sed -i "s/const BUILD_CHANNEL = \"\"/const BUILD_CHANNEL = \"${Branch}\"/g" src/pocketmine/VersionInfo.php
+    sed -i "s/public const BUILD_CHANNEL = \"\"/public const BUILD_CHANNEL = \"${Branch}\"/g" src/VersionInfo.php
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
@@ -56,7 +55,7 @@ function Main {
 		echo OK.
 		Push
 	else
-		if [ "$Branch" = "stable" ]; then
+		if [ "$Branch" = "3.0-pm-4" ]; then
     		echo Branch detected: "$Branch" 
 			echo OK.
 			Push

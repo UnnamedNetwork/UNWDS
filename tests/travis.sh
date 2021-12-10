@@ -1,4 +1,5 @@
 #!/bin/bash
+
 PM_WORKERS="auto"
 
 while getopts "t:" OPTION 2> /dev/null; do
@@ -14,13 +15,12 @@ DATA_DIR="$(pwd)/test_data"
 PLUGINS_DIR="$DATA_DIR/plugins"
 
 rm -rf "$DATA_DIR"
-rm UNWDS.phar 2> /dev/null
+rm PocketMine-MP.phar 2> /dev/null
 mkdir "$DATA_DIR"
 mkdir "$PLUGINS_DIR"
 
-
 cd tests/plugins/DevTools
-php -dphar.readonly=0 ./src/DevTools/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
+php -dphar.readonly=0 ./src/ConsoleScript.php --make ./ --relative ./ --out "$PLUGINS_DIR/DevTools.phar"
 cd ../../..
 composer make-server
 
@@ -37,8 +37,6 @@ echo -e "stop\n" | php UNWDS.phar --no-wizard --disable-ansi --disable-readline 
 output=$(grep '\[TesterPlugin\]' "$DATA_DIR/server.log")
 if [ "$output" == "" ]; then
 	echo TesterPlugin failed to run tests, check the logs
-	echo Debugging vendor installed then exit
-	cat vendor/composer/installed.php
 	exit 1
 fi
 
@@ -51,5 +49,5 @@ elif [ $(grep -c "ERROR\|CRITICAL\|EMERGENCY" "$DATA_DIR/server.log") -ne 0 ]; t
 	echo Server log contains error messages, changing build status to failed
 	exit 1
 else
-	echo All tests passed.
+	echo All tests passed
 fi

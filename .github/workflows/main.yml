@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -29,15 +30,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - php: 8.0.11
-            config: phpstan.neon.dist
-            image: ubuntu-20.04
+        image: [ubuntu-20.04]
+        php: [8.0.11]
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and prepare PHP cache
+      - name: Setup PHP
         uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
         with:
           php-version: ${{ matrix.php }}
@@ -60,7 +59,7 @@ jobs:
         run: php composer.phar install --prefer-dist --no-interaction
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyze --no-progress --memory-limit=2G -c ${{ matrix.config }}
+        run: ./vendor/bin/phpstan analyze --no-progress --memory-limit=2G
 
   phpunit:
     name: PHPUnit tests
@@ -75,7 +74,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and prepare PHP cache
+      - name: Setup PHP
         uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
         with:
           php-version: ${{ matrix.php }}
@@ -101,7 +100,7 @@ jobs:
         run: ./vendor/bin/phpunit --bootstrap vendor/autoload.php --fail-on-warning tests/phpunit
 
   integration:
-    name: Tests
+    name: Integration tests
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -115,7 +114,7 @@ jobs:
         with:
           submodules: true
 
-      - name: Build and prepare PHP cache
+      - name: Setup PHP
         uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
         with:
           php-version: ${{ matrix.php }}
@@ -137,11 +136,11 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction
 
-      - name: Run tests
-        run: chmod +x ./tests/travis.sh && ./tests/travis.sh -t4
-    
+      - name: Run integration tests
+        run: ./tests/travis.sh -t4
+
   build-prod:
-    name: Build production artifact
+    name: Build production software
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -155,7 +154,7 @@ jobs:
         with:
           submodules: true
 
-      - name: Build and prepare PHP cache
+      - name: Setup PHP
         uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
         with:
           php-version: ${{ matrix.php }}
@@ -175,47 +174,38 @@ jobs:
             composer-v2-cache-
 
       - name: Install Composer dependencies
-        run: php composer.phar install --no-dev --prefer-dist --no-interaction --classmap-authoritative
+        run: php composer.phar install --no-dev --classmap-authoritative
 
       - name: Install jo
         run: sudo apt-get install jo
 
-      - name: Minify BedrockData JSON files #from https://github.com/pmmp/PocketMine-MP/commit/c03967411ee12d5d361c8e7ac98f23603fc7bf2a
-        run: php src/pocketmine/resources/vanilla/.minify_json.php
-
-      - name: Patch new VersionInfo #modified from https://github.com/pmmp/PocketMine-MP/commit/c03967411ee12d5d361c8e7ac98f23603fc7bf2a
+      - name: Patch VersionInfo
+        id: version_info
         run: |
           export CalcedBuildNumber=$((1000+$GITHUB_RUN_NUMBER))
-          sed -i "s/const BUILD_NUMBER = 0333/const BUILD_NUMBER = ${CalcedBuildNumber}/" src/pocketmine/VersionInfo.php
+          echo ::set-output name=BUILD_NUMBER::$CalcedBuildNumber
+      
+      - name: Minify BedrockData JSON files
+        run: php vendor/pocketmine/bedrock-data/.minify_json.php
 
-      - name: Optimise server software
-        run: |
-          PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
-          php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-          VENDOR_PM="$GITHUB_WORKSPACE/vendor"
-          VENDOR_PM_BACKUP="$GITHUB_WORKSPACE/vendor-before-preprocess"
-          cp -r "$VENDOR_PM" "$VENDOR_PM_BACKUP"
-          for f in $(ls $VENDOR_PM/pocketmine); do
-            echo "Processing directory \"$f\"..."
-            php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-          done
-          
       - name: Build server software & Update API
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: |
+            export BuildNumber=${{ steps.version_info.outputs.BUILD_NUMBER }}
             chmod +x ./build/build-api.sh && ./build/build-api.sh
-            chmod +x ./build/build-phar.sh && ./build/build-phar.sh
-        
-      - name: Upload Artifact
+            php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.version_info.outputs.BUILD_NUMBER }}
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         if: always()
         with:
           name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
 
-  preprocessor:
-    name: PreProcessor tests
+
+  codegen:
+    name: Generated Code consistency checks
     needs: build-php
     runs-on: ${{ matrix.image }}
     strategy:
@@ -226,10 +216,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
 
-      - name: Build and prepare PHP cache
+      - name: Setup PHP
         uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
         with:
           php-version: ${{ matrix.php }}
@@ -251,35 +239,16 @@ jobs:
       - name: Install Composer dependencies
         run: php composer.phar install --no-dev --prefer-dist --no-interaction
 
-      - name: Run PreProcessor
-        run: |
-          PM_PREPROCESSOR_PATH="$GITHUB_WORKSPACE/build/preprocessor"
-          php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path=src --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-          #dump the diff of preprocessor replacements to a patch in case it has bugs
-          git diff > preprocessor_diff.patch
-          VENDOR_PM="$GITHUB_WORKSPACE/vendor"
-          VENDOR_PM_BACKUP="$GITHUB_WORKSPACE/vendor-before-preprocess"
-          cp -r "$VENDOR_PM" "$VENDOR_PM_BACKUP"
-          for f in $(ls $VENDOR_PM/pocketmine); do
-            echo "Processing directory \"$f\"..."
-            php "$PM_PREPROCESSOR_PATH/PreProcessor.php" --path="$VENDOR_PM/pocketmine/$f" --multisize || (echo "Preprocessor exited with code $?" && exit 1)
-            echo "Checking for changes in \"$f\"..."
-            DIFF=$(git diff --no-index "$VENDOR_PM_BACKUP/pocketmine/$f" "$VENDOR_PM/pocketmine/$f" || true)
-            if [ "$DIFF" != "" ]; then
-              PATCH="$GITHUB_WORKSPACE/preprocessor_diff_$f.patch"
-              echo "$DIFF" > "$PATCH"
-              echo "Generated patch file \"$PATCH\""
-            else
-              echo "No diff generated for \"$f\" (preprocessor made no changes)"
-            fi
-          done
+      - name: Regenerate registry annotations
+        run: php build/generate-registry-annotations.php src
 
-      - name: Upload PreProcessor diffs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: preprocessor_diffs_${{ matrix.php }}_${{ matrix.image }}
-          path: ${{ github.workspace }}/preprocessor_diff*.patch
+      - name: Regenerate KnownTranslation APIs
+        run: php build/generate-known-translation-apis.php
+
+      - name: Verify code is unchanged
+        run: |
+          git diff
+          git diff --quiet
 
   codestyle:
     name: Code Style checks
