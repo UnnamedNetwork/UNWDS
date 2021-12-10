@@ -139,7 +139,7 @@ LICENSE;
 	}
 
 	private function showCompatibilityModeNotes() : bool{
-		$this->message($this->lang->translate(KnownTranslationFactory::cmnotes_1())));
+		$this->message($this->lang->translate(KnownTranslationFactory::cmnotes_1()));
 		echo <<<CMNOTES
 
   UNWDS is an PocketMine-MP fork (also called spoon). UNWDS didn't touch/change anything related to PocketMine-MP API, 
