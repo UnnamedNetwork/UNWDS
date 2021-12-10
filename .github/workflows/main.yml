@@ -200,7 +200,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: UNWDS_${{ steps.version_info.outputs.BUILD_NUMBER }}
+          name: UNWDS
           path: ${{ github.workspace }}/UNWDS.phar
 
 
