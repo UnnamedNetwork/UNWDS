@@ -37,16 +37,12 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::ABILITY_NOCLIP, []);
 	}
 
-	public static function accept_license() : Translatable{
-		return new Translatable(KnownTranslationKeys::ACCEPT_LICENSE, []);
-	}
-
 	public static function accept_cmnotes() : Translatable{
 		return new Translatable(KnownTranslationKeys::ACCEPT_CMNOTES, []);
 	}
 
-	public static function cmnotes_1() : Translatable{
-		return new Translatable(KnownTranslationKeys::CMNOTES_1);
+	public static function accept_license() : Translatable{
+		return new Translatable(KnownTranslationKeys::ACCEPT_LICENSE, []);
 	}
 
 	public static function chat_type_achievement(Translatable|string $param0, Translatable|string $param1) : Translatable{
@@ -82,6 +78,10 @@ final class KnownTranslationFactory{
 			0 => $param0,
 			1 => $param1,
 		]);
+	}
+
+	public static function cmnotes_1() : Translatable{
+		return new Translatable(KnownTranslationKeys::CMNOTES_1, []);
 	}
 
 	public static function commands_ban_success(Translatable|string $param0) : Translatable{
@@ -1451,12 +1451,12 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_VERSION_USAGE, []);
 	}
 
-	public static function pocketmine_compatibilitymode_info() : Translatable{
-		return new Translatable(KnownTranslationKeys::POCKETMINE_COMPATIBILITYMODE_INFO, []);
-	}
-
 	public static function pocketmine_command_whitelist_description() : Translatable{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_WHITELIST_DESCRIPTION, []);
+	}
+
+	public static function pocketmine_compatibilitymode_info() : Translatable{
+		return new Translatable(KnownTranslationKeys::POCKETMINE_COMPATIBILITYMODE_INFO, []);
 	}
 
 	public static function pocketmine_crash_archive(Translatable|string $param0, Translatable|string $param1) : Translatable{
@@ -2181,14 +2181,12 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::YOU_HAVE_FINISHED, []);
 	}
 
-	public static function you_have_to_accept_the_license(Translatable|string $param0) : Translatable{
-		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_LICENSE, [
-			0 => $param0,
-		]);
+	public static function you_have_to_accept_the_cmnotes() : Translatable{
+		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_CMNOTES, []);
 	}
 
-	public static function you_have_to_accept_the_cmnotes(Translatable|string $param0) : Translatable{
-		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_CMNOTES, [
+	public static function you_have_to_accept_the_license(Translatable|string $param0) : Translatable{
+		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_LICENSE, [
 			0 => $param0,
 		]);
 	}
