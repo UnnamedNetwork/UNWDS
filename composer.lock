@@ -543,7 +543,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Languages/zipball/98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
                 "reference": "98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
                 "shasum": ""
             },
