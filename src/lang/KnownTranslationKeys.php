@@ -31,6 +31,8 @@ final class KnownTranslationKeys{
 	public const ABILITY_FLIGHT = "ability.flight";
 	public const ABILITY_NOCLIP = "ability.noclip";
 	public const ACCEPT_LICENSE = "accept_license";
+	public const ACCEPT_CMNOTES = "accept_cmnotes";
+	public const CMNOTES_1 = "cmnotes_1";
 	public const CHAT_TYPE_ACHIEVEMENT = "chat.type.achievement";
 	public const CHAT_TYPE_ADMIN = "chat.type.admin";
 	public const CHAT_TYPE_ANNOUNCEMENT = "chat.type.announcement";
@@ -237,6 +239,7 @@ final class KnownTranslationKeys{
 	public const POCKETMINE_COMMAND_BAN_IP_DESCRIPTION = "pocketmine.command.ban.ip.description";
 	public const POCKETMINE_COMMAND_BAN_PLAYER_DESCRIPTION = "pocketmine.command.ban.player.description";
 	public const POCKETMINE_COMMAND_BANLIST_DESCRIPTION = "pocketmine.command.banlist.description";
+	public const POCKETMINE_COMPATIBILITYMODE_INFO = "pocketmine.compatibilitymode.info";
 	public const POCKETMINE_COMMAND_CLEAR_DESCRIPTION = "pocketmine.command.clear.description";
 	public const POCKETMINE_COMMAND_CLEAR_USAGE = "pocketmine.command.clear.usage";
 	public const POCKETMINE_COMMAND_DEFAULTGAMEMODE_DESCRIPTION = "pocketmine.command.defaultgamemode.description";
@@ -452,4 +455,5 @@ final class KnownTranslationKeys{
 	public const WHITELIST_WARNING = "whitelist_warning";
 	public const YOU_HAVE_FINISHED = "you_have_finished";
 	public const YOU_HAVE_TO_ACCEPT_THE_LICENSE = "you_have_to_accept_the_license";
+	public const YOU_HAVE_TO_ACCEPT_THE_CMNOTES = "you_have_to_accept_the_cmnotes";
 }
