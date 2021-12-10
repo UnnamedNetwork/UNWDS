@@ -8,7 +8,7 @@ Org="UnnamedNetwork"
 Name="UNWDS"
 PHPVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::DISTRO_VERSION;')
-#BuildNumber=$(php -r 'require "vendor/autoload.php"; echo VersionInfo::BUILD;') #skipped this
+BuildNumber=$CalcedBuildNumber
 IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::IS_DEVELOPMENT_BUILD;')
 Branch="${GITHUB_REF##*/}"
 GitCommit="${GITHUB_SHA}"
@@ -22,7 +22,6 @@ fi
 
 
 function Push {
-    sed -i "s/const BUILD_CHANNEL = \"\"/const BUILD_CHANNEL = \"${Branch}\"/g" src/pocketmine/VersionInfo.php
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     git config --global user.name "github-actions[bot]"
     git clone $ApiRepoUrl
