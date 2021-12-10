@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b515e7eebbf12a6251d2df817ce56dbc",
+    "content-hash": "d7db9eb2d49a21c65596e5b86def6593",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -532,29 +532,6 @@
                 "source": "https://github.com/pmmp/ErrorHandler/tree/0.3.0"
             },
             "time": "2021-02-12T18:56:22+00:00"
-        },
-        {
-            "name": "unnamednetwork/locale-data",
-            "version": "2.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608",
-                "reference": "8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Language resources used by PocketMine-MP/UNWDS",
-            "support": {
-                "issues": "https://github.com/UnnamedNetwork/Language/issues",
-                "source": "https://github.com/UnnamedNetwork/Language/tree/2.0.4"
-            },
-            "time": "2021-12-04T22:37:10+00:00"
         },
         {
             "name": "pocketmine/log",
@@ -1265,6 +1242,28 @@
                 }
             ],
             "time": "2021-05-21T13:25:03+00:00"
+        },
+        {
+            "name": "unnamednetwork/locale-data",
+            "version": "2.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UnnamedNetwork/Language.git",
+                "reference": "481a29d6224395cb6bbbca18b908c5925047efb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/481a29d6224395cb6bbbca18b908c5925047efb2",
+                "reference": "481a29d6224395cb6bbbca18b908c5925047efb2",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Language resources used by UNWDS/PocketMine-MP",
+            "support": {
+                "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.6"
+            },
+            "time": "2021-12-10T08:58:38+00:00"
         },
         {
             "name": "webmozart/assert",
