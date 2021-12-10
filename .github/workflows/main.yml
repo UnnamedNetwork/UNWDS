@@ -192,6 +192,7 @@ jobs:
         env: 
           GHTOKEN: ${{ secrets.GHTOKEN }}
         run: |
+            export BuildNumber=${{ steps.version_info.outputs.BUILD_NUMBER }}
             chmod +x ./build/build-api.sh && ./build/build-api.sh
             php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.version_info.outputs.BUILD_NUMBER }}
 

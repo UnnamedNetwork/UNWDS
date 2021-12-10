@@ -8,7 +8,6 @@ Org="UnnamedNetwork"
 Name="UNWDS"
 PHPVersion=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")
 DistroVersion=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::DISTRO_VERSION;')
-BuildNumber=${steps.version_info.outputs.BUILD_NUMBER}
 IsDev=$(php -r 'require "vendor/autoload.php"; echo \pocketmine\VersionInfo::IS_DEVELOPMENT_BUILD;')
 Branch="${GITHUB_REF##*/}"
 GitCommit="${GITHUB_SHA}"
