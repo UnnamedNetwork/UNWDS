@@ -251,6 +251,15 @@ jobs:
           git diff
           git diff --quiet
 
+      - name: Upload diff to artifact
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: git-diff-artifact-${{ GITHUB_RUN_NUMBER }}
+          path: |
+            ${{ github.workspace }}/src/lang/KnownTranslationFactory.php
+            ${{ github.workspace }}/src/lang/KnownTranslationKeys.php
+
   codestyle:
     name: Code Style checks
     runs-on: ubuntu-20.04
