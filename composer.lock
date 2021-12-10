@@ -534,25 +534,25 @@
             "time": "2021-02-12T18:56:22+00:00"
         },
         {
-            "name": "pocketmine/locale-data",
+            "name": "unnamednetwork/locale-data",
             "version": "2.0.22",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pmmp/Language.git",
-                "reference": "181eb9d42653296e65d55a1bbba10e0dd76bbd61"
+                "url": "https://github.com/UnnamedNetwork/Language.git",
+                "reference": "98627587b5fe6baeb0ae6dc6f183bfb9465500ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/Language/zipball/181eb9d42653296e65d55a1bbba10e0dd76bbd61",
-                "reference": "181eb9d42653296e65d55a1bbba10e0dd76bbd61",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Languages/zipball/98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
+                "reference": "98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "description": "Language resources used by PocketMine-MP",
+            "description": "Language resources used by PocketMine-MP/UNWDS",
             "support": {
-                "issues": "https://github.com/pmmp/Language/issues",
-                "source": "https://github.com/pmmp/Language/tree/2.0.22"
+                "issues": "https://github.com/UnnamedNetwork/Language/issues",
+                "source": "https://github.com/UnnamedNetwork/Language/tree/2.0.2"
             },
             "time": "2021-12-04T22:37:10+00:00"
         },
