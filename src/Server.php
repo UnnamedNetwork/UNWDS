@@ -793,6 +793,16 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
+			if(\pocketmine\VersionInfo::IS_DEVELOPMENT_BUILD){
+				$this->logger->warning("Hash of this build commit is: " . \pocketmine\VersionInfo::GIT_COMMIT . "");
+			}
+			$this->logger->info("Starting " . \pocketmine\VersionInfo::DISTRO_NAME . "...\n\n");
+			$this->logger->info("§a" . \pocketmine\VersionInfo::DISTRO_NAME . " §fis a fork of PocketMine-MP.");
+			$this->logger->info("§fVersion: §b" . \pocketmine\VersionInfo::DISTRO_VERSION . "§7 (" . \pocketmine\VersionInfo::CODENAME . ")");
+			$this->logger->info("§f" . \pocketmine\VersionInfo::NAME . " API version: §b" . \pocketmine\VersionInfo::BASE_VERSION .);
+			$this->logger->info("§fTarget Bedrock version: §d" . \pocketmine\network\mcpe\protocol\ProtocolInfo::MINECRAFT_VERSION_NETWORK .);
+			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
+
 			$this->logger->info("Loading server configuration");
 			$pocketmineYmlPath = Path::join($this->dataPath, "pocketmine.yml");
 			if(!file_exists($pocketmineYmlPath)){
@@ -978,6 +988,7 @@ class Server{
 			$this->pluginManager = new PluginManager($this, $this->configGroup->getPropertyBool("plugins.legacy-data-dir", true) ? null : Path::join($this->getDataPath(), "plugin_data"), $pluginGraylist);
 			$this->pluginManager->registerInterface(new PharPluginLoader($this->autoloader));
 			$this->pluginManager->registerInterface(new ScriptPluginLoader());
+			$this->logger->warning($this->getLanguage()->translate(KnownTranslationFactory::pocketmine_compatibilitymode_info())
 
 			$providerManager = new WorldProviderManager();
 			if(

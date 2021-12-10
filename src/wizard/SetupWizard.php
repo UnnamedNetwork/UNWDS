@@ -134,6 +134,34 @@ LICENSE;
 		return true;
 	}
 
+	private function showCompatibilityModeNotes() : bool{
+		$this->message($this->lang->translate(KnownTranslationFactory::cmnotes_1(VersionInfo::DISTRO_NAME)));
+		echo <<<CMNOTES
+
+  UNWDS is an PocketMine-MP fork (also called spoon). UNWDS didn't touch/change anything related to PocketMine-MP API, 
+  but it's still spoon, this WILL NOT get any support for plugins.
+  
+  In order to begin using this server software you must understand that you will be offered no support for plugins.
+
+  Furthermore, the GitHub issue tracker for some plugins is targeted at vanilla PocketMine only. 
+  Any bugs you create which DO NOT affect with vanilla PocketMine will be deleted.
+
+  Make sure you can reproduce bugs in vanilla PocketMine-MP before report it to plugin developers.
+  
+  If you use UNWDS, you agree to these terms by default. Otherwise, please stop using UNWDS immediately. 
+
+CMNOTES;
+		$this->writeLine();
+		if(strtolower($this->getInput($this->lang->translate(KnownTranslationFactory::accept_cmnotes()), "n", "y/N")) !== "y"){
+			$this->error($this->lang->translate(KnownTranslationFactory::you_have_to_accept_the_cmnotes(VersionInfo::DISTRO_NAME)));
+			sleep(5);
+
+			return false;
+		}
+
+		return true;
+	}
+
 	private function welcome() : void{
 		$this->message($this->lang->translate(KnownTranslationFactory::setting_up_server_now()));
 		$this->message($this->lang->translate(KnownTranslationFactory::default_values_info()));
