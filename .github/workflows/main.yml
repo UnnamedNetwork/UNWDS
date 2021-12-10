@@ -139,6 +139,66 @@ jobs:
       - name: Run integration tests
         run: ./tests/travis.sh -t4
 
+  build-prod:
+    name: Build production software
+    needs: build-php
+    runs-on: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [ubuntu-20.04]
+        php: [8.0.11]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup PHP
+        uses: pmmp/setup-php-action@e232f72a4330a07aae8418e8aa56b64efcdda636
+        with:
+          php-version: ${{ matrix.php }}
+          install-path: "./bin"
+
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | php
+
+      - name: Restore Composer package cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/composer/files
+            ~/.cache/composer/vcs
+          key: "composer-v2-cache-${{ matrix.php }}-${{ hashFiles('./composer.lock') }}"
+          restore-keys: |
+            composer-v2-cache-
+
+      - name: Install Composer dependencies
+        run: php composer.phar install --no-dev --classmap-authoritative
+
+      - name: Install jo
+        run: sudo apt-get install jo
+
+      - name: Patch VersionInfo
+        id: version_info
+        run: |
+          export CalcedBuildNumber=$((1000+$GITHUB_RUN_NUMBER))
+          echo ::set-output name=BUILD_NUMBER::$CalcedBuildNumber
+      
+      - name: Minify BedrockData JSON files
+        run: php vendor/pocketmine/bedrock-data/.minify_json.php
+
+      - name: Build server software
+        run: php -dphar.readonly=0 build/server-phar.php --git ${{ github.sha }} --build ${{ steps.version_info.outputs.BUILD_NUMBER }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: UNWDS_${{ steps.version_info.outputs.BUILD_NUMBER }}
+          path: ${{ github.workspace }}/UNWDS.phar
+
+
   codegen:
     name: Generated Code consistency checks
     needs: build-php
