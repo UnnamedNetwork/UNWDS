@@ -55,7 +55,7 @@ function Main {
 		echo OK.
 		Push
 	else
-		if [ "$Branch" = "3.0-pm-4" ]; then
+		if [ "$Branch" = "stable" ]; then
     		echo Branch detected: "$Branch" 
 			echo OK.
 			Push
