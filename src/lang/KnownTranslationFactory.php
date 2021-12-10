@@ -45,10 +45,8 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::ACCEPT_CMNOTES, []);
 	}
 
-	public static function cmnotes_1(Translatable|string $param0) : Translatable{
-		return new Translatable(KnownTranslationKeys::cmnotes_1, [
-			0 => $param0,
-		]);
+	public static function cmnotes_1() : Translatable{
+		return new Translatable(KnownTranslationKeys::CMNOTES_1);
 	}
 
 	public static function chat_type_achievement(Translatable|string $param0, Translatable|string $param1) : Translatable{
