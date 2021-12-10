@@ -535,16 +535,16 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.0.2",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "98627587b5fe6baeb0ae6dc6f183bfb9465500ff"
+                "reference": "8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
-                "reference": "98627587b5fe6baeb0ae6dc6f183bfb9465500ff",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608",
+                "reference": "8a16dcf323e9dd86bd5f050e87a0f1e4b6a81608",
                 "shasum": ""
             },
             "type": "library",
@@ -552,7 +552,7 @@
             "description": "Language resources used by PocketMine-MP/UNWDS",
             "support": {
                 "issues": "https://github.com/UnnamedNetwork/Language/issues",
-                "source": "https://github.com/UnnamedNetwork/Language/tree/2.0.2"
+                "source": "https://github.com/UnnamedNetwork/Language/tree/2.0.4"
             },
             "time": "2021-12-04T22:37:10+00:00"
         },
