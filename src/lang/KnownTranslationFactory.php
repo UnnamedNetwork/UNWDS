@@ -2181,8 +2181,10 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::YOU_HAVE_FINISHED, []);
 	}
 
-	public static function you_have_to_accept_the_cmnotes() : Translatable{
-		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_CMNOTES, []);
+	public static function you_have_to_accept_the_cmnotes(Translatable|string $param0) : Translatable{
+		return new Translatable(KnownTranslationKeys::YOU_HAVE_TO_ACCEPT_THE_CMNOTES, [
+			0 => $param0,
+		]);
 	}
 
 	public static function you_have_to_accept_the_license(Translatable|string $param0) : Translatable{
