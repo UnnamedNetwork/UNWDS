@@ -1245,16 +1245,16 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.3.6",
+            "version": "2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "481a29d6224395cb6bbbca18b908c5925047efb2"
+                "reference": "06703d70e41a095190185b45178fcbca46daafad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/481a29d6224395cb6bbbca18b908c5925047efb2",
-                "reference": "481a29d6224395cb6bbbca18b908c5925047efb2",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/06703d70e41a095190185b45178fcbca46daafad",
+                "reference": "06703d70e41a095190185b45178fcbca46daafad",
                 "shasum": ""
             },
             "type": "library",
@@ -1263,7 +1263,7 @@
             "support": {
                 "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.6"
             },
-            "time": "2021-12-10T08:58:38+00:00"
+            "time": "2021-12-12T08:58:38+00:00"
         },
         {
             "name": "webmozart/assert",
