@@ -793,7 +793,7 @@ class Server{
 			$this->dataPath = realpath($dataPath) . DIRECTORY_SEPARATOR;
 			$this->pluginPath = realpath($pluginPath) . DIRECTORY_SEPARATOR;
 
-			$this->logger->info("Starting " . VersionInfo::DISTRO_NAME . "...\n\n");
+			$this->logger->info("Starting " . VersionInfo::DISTRO_NAME . "...\n\n"); // Note: will use KnownTranslationFactory for this codeblock... (removing some hardcoded code)
 			$this->logger->info("§a" . VersionInfo::DISTRO_NAME . " §fis a fork of PocketMine-MP.");
 			$this->logger->info("§fVersion: §b" . VersionInfo::DISTRO_VERSION . "§7 (" . VersionInfo::CODENAME . ")");
 			$this->logger->info("Latest source code is available at §6https://github.com/UnnamedNetwork/UNWDS\n\n");
@@ -983,7 +983,7 @@ class Server{
 			$this->pluginManager = new PluginManager($this, $this->configGroup->getPropertyBool("plugins.legacy-data-dir", true) ? null : Path::join($this->getDataPath(), "plugin_data"), $pluginGraylist);
 			$this->pluginManager->registerInterface(new PharPluginLoader($this->autoloader));
 			$this->pluginManager->registerInterface(new ScriptPluginLoader());
-			$this->logger->warning($this->getLanguage()->translate(KnownTranslationFactory::pocketmine_compatibilitymode_info()));
+			$this->logger->warning($this->getLanguage()->translate(KnownTranslationFactory::unnamednetwork_compatibilitymode_info(VersionInfo::DISTRO_NAME)));
 
 			$providerManager = new WorldProviderManager();
 			if(

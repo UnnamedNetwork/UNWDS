@@ -65,6 +65,10 @@ class VersionCommand extends VanillaCommand{
 				VersionInfo::DISTRO_VERSION,
 				VersionInfo::GIT_HASH()
 			));
+			$sender->sendMessage(KnownTranslationFactory::unnamednetwork_compatibilitymode_info_extended(
+				VersionInfo::NAME,
+				VersionInfo::VERSION()->getFullVersion()
+			));
 			$sender->sendMessage(KnownTranslationFactory::pocketmine_command_version_minecraftVersion(
 				ProtocolInfo::MINECRAFT_VERSION_NETWORK,
 				(string) ProtocolInfo::CURRENT_PROTOCOL

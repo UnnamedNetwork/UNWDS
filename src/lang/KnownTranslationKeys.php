@@ -317,7 +317,6 @@ final class KnownTranslationKeys{
 	public const POCKETMINE_COMMAND_VERSION_SERVERSOFTWAREVERSION = "pocketmine.command.version.serverSoftwareVersion";
 	public const POCKETMINE_COMMAND_VERSION_USAGE = "pocketmine.command.version.usage";
 	public const POCKETMINE_COMMAND_WHITELIST_DESCRIPTION = "pocketmine.command.whitelist.description";
-	public const POCKETMINE_COMPATIBILITYMODE_INFO = "pocketmine.compatibilitymode.info";
 	public const POCKETMINE_CRASH_ARCHIVE = "pocketmine.crash.archive";
 	public const POCKETMINE_CRASH_CREATE = "pocketmine.crash.create";
 	public const POCKETMINE_CRASH_ERROR = "pocketmine.crash.error";
@@ -449,6 +448,8 @@ final class KnownTranslationKeys{
 	public const TILE_BED_NOSLEEP = "tile.bed.noSleep";
 	public const TILE_BED_OCCUPIED = "tile.bed.occupied";
 	public const TILE_BED_TOOFAR = "tile.bed.tooFar";
+	public const UNNAMEDNETWORK_COMPATIBILITYMODE_INFO = "unnamednetwork.compatibilitymode.info";
+	public const UNNAMEDNETWORK_COMPATIBILITYMODE_INFO_EXTENDED = "unnamednetwork.compatibilitymode.info.extended";
 	public const WELCOME_TO_POCKETMINE = "welcome_to_pocketmine";
 	public const WHITELIST_ENABLE = "whitelist_enable";
 	public const WHITELIST_INFO = "whitelist_info";

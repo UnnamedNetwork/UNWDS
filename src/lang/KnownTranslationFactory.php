@@ -80,8 +80,10 @@ final class KnownTranslationFactory{
 		]);
 	}
 
-	public static function cmnotes_1() : Translatable{
-		return new Translatable(KnownTranslationKeys::CMNOTES_1, []);
+	public static function cmnotes_1(Translatable|string $param0) : Translatable{
+		return new Translatable(KnownTranslationKeys::CMNOTES_1, [
+			0 => $param0,
+		]);
 	}
 
 	public static function commands_ban_success(Translatable|string $param0) : Translatable{
@@ -1455,10 +1457,6 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_WHITELIST_DESCRIPTION, []);
 	}
 
-	public static function pocketmine_compatibilitymode_info() : Translatable{
-		return new Translatable(KnownTranslationKeys::POCKETMINE_COMPATIBILITYMODE_INFO, []);
-	}
-
 	public static function pocketmine_crash_archive(Translatable|string $param0, Translatable|string $param1) : Translatable{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_CRASH_ARCHIVE, [
 			0 => $param0,
@@ -2157,6 +2155,19 @@ final class KnownTranslationFactory{
 
 	public static function tile_bed_tooFar() : Translatable{
 		return new Translatable(KnownTranslationKeys::TILE_BED_TOOFAR, []);
+	}
+
+	public static function unnamednetwork_compatibilitymode_info(Translatable|string $param0) : Translatable{
+		return new Translatable(KnownTranslationKeys::UNNAMEDNETWORK_COMPATIBILITYMODE_INFO, [
+			0 => $param0,
+		]);
+	}
+
+	public static function unnamednetwork_compatibilitymode_info_extended(Translatable|string $param0, Translatable|string $param1) : Translatable{
+		return new Translatable(KnownTranslationKeys::UNNAMEDNETWORK_COMPATIBILITYMODE_INFO_EXTENDED, [
+			0 => $param0,
+			1 => $param1,
+		]);
 	}
 
 	public static function welcome_to_pocketmine(Translatable|string $param0) : Translatable{
