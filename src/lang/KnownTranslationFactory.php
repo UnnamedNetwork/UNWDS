@@ -1389,6 +1389,13 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_UNBAN_PLAYER_DESCRIPTION, []);
 	}
 
+	public static function pocketmine_command_unwds_compatibilitywith(Translatable|string $param0, Translatable|string $param1) : Translatable{
+		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_UNWDS_COMPATIBILITYWITH, [
+			0 => $param0,
+			1 => $param1,
+		]);
+	}
+
 	public static function pocketmine_command_version_description() : Translatable{
 		return new Translatable(KnownTranslationKeys::POCKETMINE_COMMAND_VERSION_DESCRIPTION, []);
 	}
@@ -2160,13 +2167,6 @@ final class KnownTranslationFactory{
 	public static function unnamednetwork_compatibilitymode_info(Translatable|string $param0) : Translatable{
 		return new Translatable(KnownTranslationKeys::UNNAMEDNETWORK_COMPATIBILITYMODE_INFO, [
 			0 => $param0,
-		]);
-	}
-
-	public static function unnamednetwork_compatibilitymode_info_extended(Translatable|string $param0, Translatable|string $param1) : Translatable{
-		return new Translatable(KnownTranslationKeys::UNNAMEDNETWORK_COMPATIBILITYMODE_INFO_EXTENDED, [
-			0 => $param0,
-			1 => $param1,
 		]);
 	}
 

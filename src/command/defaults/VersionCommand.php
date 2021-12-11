@@ -65,7 +65,7 @@ class VersionCommand extends VanillaCommand{
 				VersionInfo::DISTRO_VERSION,
 				VersionInfo::GIT_HASH()
 			));
-			$sender->sendMessage(KnownTranslationFactory::unnamednetwork_compatibilitymode_info_extended(
+			$sender->sendMessage(KnownTranslationFactory::pocketmine_command_unwds_compatibilitywith(
 				VersionInfo::NAME,
 				VersionInfo::VERSION()->getFullVersion()
 			));

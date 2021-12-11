@@ -304,6 +304,7 @@ final class KnownTranslationKeys{
 	public const POCKETMINE_COMMAND_TRANSFERSERVER_USAGE = "pocketmine.command.transferserver.usage";
 	public const POCKETMINE_COMMAND_UNBAN_IP_DESCRIPTION = "pocketmine.command.unban.ip.description";
 	public const POCKETMINE_COMMAND_UNBAN_PLAYER_DESCRIPTION = "pocketmine.command.unban.player.description";
+	public const POCKETMINE_COMMAND_UNWDS_COMPATIBILITYWITH = "pocketmine.command.unwds.compatibilitywith";
 	public const POCKETMINE_COMMAND_VERSION_DESCRIPTION = "pocketmine.command.version.description";
 	public const POCKETMINE_COMMAND_VERSION_MINECRAFTVERSION = "pocketmine.command.version.minecraftVersion";
 	public const POCKETMINE_COMMAND_VERSION_NOSUCHPLUGIN = "pocketmine.command.version.noSuchPlugin";
@@ -449,7 +450,6 @@ final class KnownTranslationKeys{
 	public const TILE_BED_OCCUPIED = "tile.bed.occupied";
 	public const TILE_BED_TOOFAR = "tile.bed.tooFar";
 	public const UNNAMEDNETWORK_COMPATIBILITYMODE_INFO = "unnamednetwork.compatibilitymode.info";
-	public const UNNAMEDNETWORK_COMPATIBILITYMODE_INFO_EXTENDED = "unnamednetwork.compatibilitymode.info.extended";
 	public const WELCOME_TO_POCKETMINE = "welcome_to_pocketmine";
 	public const WHITELIST_ENABLE = "whitelist_enable";
 	public const WHITELIST_INFO = "whitelist_info";

@@ -1245,16 +1245,16 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "06703d70e41a095190185b45178fcbca46daafad"
+                "reference": "fb5775a0d8ea1984c8d65908be83913a0cd91d10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/06703d70e41a095190185b45178fcbca46daafad",
-                "reference": "06703d70e41a095190185b45178fcbca46daafad",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/fb5775a0d8ea1984c8d65908be83913a0cd91d10",
+                "reference": "fb5775a0d8ea1984c8d65908be83913a0cd91d10",
                 "shasum": ""
             },
             "type": "library",
