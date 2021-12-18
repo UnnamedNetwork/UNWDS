@@ -927,6 +927,12 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::GAMEMODE_INFO, []);
 	}
 
+	public static function gamemode_options(Translatable|string $param0) : Translatable{
+		return new Translatable(KnownTranslationKeys::GAMEMODE_OPTIONS, [
+			0 => $param0,
+		]);
+	}
+
 	public static function invalid_port() : Translatable{
 		return new Translatable(KnownTranslationKeys::INVALID_PORT, []);
 	}
@@ -2142,6 +2148,14 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::SERVER_PORT, []);
 	}
 
+	public static function server_port_v4() : Translatable{
+		return new Translatable(KnownTranslationKeys::SERVER_PORT_V4, []);
+	}
+
+	public static function server_port_v6() : Translatable{
+		return new Translatable(KnownTranslationKeys::SERVER_PORT_V6, []);
+	}
+
 	public static function server_properties() : Translatable{
 		return new Translatable(KnownTranslationKeys::SERVER_PROPERTIES, []);
 	}
@@ -2170,6 +2184,10 @@ final class KnownTranslationFactory{
 		return new Translatable(KnownTranslationKeys::UNNAMEDNETWORK_COMPATIBILITYMODE_INFO, [
 			0 => $param0,
 		]);
+	}
+
+	public static function view_distance() : Translatable{
+		return new Translatable(KnownTranslationKeys::VIEW_DISTANCE, []);
 	}
 
 	public static function welcome_to_pocketmine(Translatable|string $param0) : Translatable{
