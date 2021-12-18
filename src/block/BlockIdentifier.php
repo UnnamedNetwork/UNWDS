@@ -41,7 +41,7 @@ class BlockIdentifier{
 		$this->blockId = $blockId;
 		$this->variant = $variant;
 		$this->itemId = $itemId;
-		
+
 		if($tileClass !== null){
 			Utils::testValidInstance($tileClass, Tile::class);
 		}

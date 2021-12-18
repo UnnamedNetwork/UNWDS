@@ -661,16 +661,16 @@
         },
         {
             "name": "pocketmine/nbt",
-            "version": "0.3.2",
+            "version": "0.2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/NBT.git",
-                "reference": "3e0d9ef6b6c5fb45e3745a121296e75631b3eefe"
+                "reference": "9f82ca4d7f97fcd9a566e44b63c4f18a7657ae82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/NBT/zipball/3e0d9ef6b6c5fb45e3745a121296e75631b3eefe",
-                "reference": "3e0d9ef6b6c5fb45e3745a121296e75631b3eefe",
+                "url": "https://api.github.com/repos/pmmp/NBT/zipball/9f82ca4d7f97fcd9a566e44b63c4f18a7657ae82",
+                "reference": "9f82ca4d7f97fcd9a566e44b63c4f18a7657ae82",
                 "shasum": ""
             },
             "require": {
@@ -697,9 +697,9 @@
             "description": "PHP library for working with Named Binary Tags",
             "support": {
                 "issues": "https://github.com/pmmp/NBT/issues",
-                "source": "https://github.com/pmmp/NBT/tree/0.3.2"
+                "source": "https://github.com/pmmp/NBT/tree/0.2.19"
             },
-            "time": "2021-12-16T01:02:37+00:00"
+            "time": "2021-12-16T01:15:41+00:00"
         },
         {
             "name": "pocketmine/raklib",
@@ -1245,25 +1245,25 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.3.8",
+            "version": "2.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "fb5775a0d8ea1984c8d65908be83913a0cd91d10"
+                "reference": "3e71e8292cee0f04c948d714fce0d210a7205b5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/fb5775a0d8ea1984c8d65908be83913a0cd91d10",
-                "reference": "fb5775a0d8ea1984c8d65908be83913a0cd91d10",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/3e71e8292cee0f04c948d714fce0d210a7205b5a",
+                "reference": "3e71e8292cee0f04c948d714fce0d210a7205b5a",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Language resources used by UNWDS/PocketMine-MP",
             "support": {
-                "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.6"
+                "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.10"
             },
-            "time": "2021-12-12T08:58:38+00:00"
+            "time": "2021-12-18T08:58:38+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -1832,16 +1832,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.14.0",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e"
+                "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
-                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
+                "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
                 "shasum": ""
             },
             "require": {
@@ -1893,9 +1893,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.14.0"
+                "source": "https://github.com/phpspec/prophecy/tree/v1.15.0"
             },
-            "time": "2021-09-10T09:02:12+00:00"
+            "time": "2021-12-08T12:19:24+00:00"
         },
         {
             "name": "phpstan/phpstan",
