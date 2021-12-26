@@ -31,6 +31,9 @@ set PHP_BINARY=php
 if exist src\pocketmine\PocketMine.php (
 set POCKETMINE_FILE=src\pocketmine\PocketMine.php
 ) else (
+if exist src\PocketMine.php (
+set POCKETMINE_FILE=src\PocketMine.php
+) else (
 echo "Couldn't find Source Code installation..."
 pause
 exit 1
