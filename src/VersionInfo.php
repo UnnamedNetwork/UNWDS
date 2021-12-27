@@ -33,12 +33,12 @@ final class VersionInfo{
 	// PocketMine-MP core strings
 	public const NAME = "PocketMine-MP";
 	public const BASE_VERSION = "4.0.4";
-	public const IS_DEVELOPMENT_BUILD = false;
+	public const IS_DEVELOPMENT_BUILD = true;
 	public const BUILD_CHANNEL = "";
 
 	// Custom version strings
 	public const DISTRO_NAME = "UNWDS";
-	public const DISTRO_VERSION = "3.0.0";
+	public const DISTRO_VERSION = "3.0.1";
 	public const CODENAME = "onboard";
 
 	private function __construct(){
