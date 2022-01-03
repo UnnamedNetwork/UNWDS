@@ -38,7 +38,7 @@ final class VersionInfo{
 
 	// Custom version strings
 	public const DISTRO_NAME = "UNWDS";
-	public const DISTRO_VERSION = "3.0.1";
+	public const DISTRO_VERSION = "3.0.2";
 	public const CODENAME = "onboard";
 
 	private function __construct(){
