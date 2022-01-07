@@ -1245,25 +1245,25 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.3.10",
+            "version": "^2.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
-                "reference": "3e71e8292cee0f04c948d714fce0d210a7205b5a"
+                "reference": "718bf71cc77ddf5e4af1ab4343d0e38fe09a4583"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/3e71e8292cee0f04c948d714fce0d210a7205b5a",
-                "reference": "3e71e8292cee0f04c948d714fce0d210a7205b5a",
+                "url": "https://api.github.com/repos/UnnamedNetwork/Language/zipball/718bf71cc77ddf5e4af1ab4343d0e38fe09a4583",
+                "reference": "718bf71cc77ddf5e4af1ab4343d0e38fe09a4583",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "Language resources used by UNWDS/PocketMine-MP",
             "support": {
-                "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.10"
+                "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.11"
             },
-            "time": "2021-12-18T08:58:38+00:00"
+            "time": "2022-01-07T08:58:38+00:00"
         },
         {
             "name": "webmozart/assert",
