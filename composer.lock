@@ -1245,7 +1245,7 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "^2.3.10",
+            "version": "2.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
