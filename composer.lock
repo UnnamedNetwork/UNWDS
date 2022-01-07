@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c567877bb3ddc5d0ea203910bfcb7272",
+    "content-hash": "9559fa6fb8d039e506409a7bcb22530f",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -1245,7 +1245,7 @@
         },
         {
             "name": "unnamednetwork/locale-data",
-            "version": "2.3.10",
+            "version": "2.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UnnamedNetwork/Language.git",
@@ -1263,7 +1263,7 @@
             "support": {
                 "source": "https://github.com/UnnamedNetwork/Language/tree/2.3.11"
             },
-            "time": "2022-01-07T08:58:38+00:00"
+            "time": "2022-01-07T08:19:27+00:00"
         },
         {
             "name": "webmozart/assert",
