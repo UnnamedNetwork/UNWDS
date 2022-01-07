@@ -33,7 +33,7 @@ final class VersionInfo{
 	// PocketMine-MP core strings
 	public const NAME = "PocketMine-MP";
 	public const BASE_VERSION = "4.0.5";
-	public const IS_DEVELOPMENT_BUILD = true;
+	public const IS_DEVELOPMENT_BUILD = false;
 	public const BUILD_CHANNEL = "";
 
 	// Custom version strings
