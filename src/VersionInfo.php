@@ -32,13 +32,13 @@ use function str_repeat;
 final class VersionInfo{
 	// PocketMine-MP core strings
 	public const NAME = "PocketMine-MP";
-	public const BASE_VERSION = "4.0.5";
-	public const IS_DEVELOPMENT_BUILD = false;
+	public const BASE_VERSION = "4.0.6";
+	public const IS_DEVELOPMENT_BUILD = true;
 	public const BUILD_CHANNEL = "";
 
 	// Custom version strings
 	public const DISTRO_NAME = "UNWDS";
-	public const DISTRO_VERSION = "3.0.3";
+	public const DISTRO_VERSION = "3.0.4";
 	public const CODENAME = "onboard";
 
 	private function __construct(){
