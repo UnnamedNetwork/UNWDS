@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5ff906a0eb6bab2a00407b556918f38c",
+    "content-hash": "13339ac4964b06815bfbdca3f927e1a8",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -497,16 +497,16 @@
         },
         {
             "name": "pocketmine/errorhandler",
-            "version": "0.4.0",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/ErrorHandler.git",
-                "reference": "5bb9e2b66551ef7383da85165b7e8a7cc9aa162a"
+                "reference": "41ff9c09f52fbc688633c74ea76c8855ec0c843b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/ErrorHandler/zipball/5bb9e2b66551ef7383da85165b7e8a7cc9aa162a",
-                "reference": "5bb9e2b66551ef7383da85165b7e8a7cc9aa162a",
+                "url": "https://api.github.com/repos/pmmp/ErrorHandler/zipball/41ff9c09f52fbc688633c74ea76c8855ec0c843b",
+                "reference": "41ff9c09f52fbc688633c74ea76c8855ec0c843b",
                 "shasum": ""
             },
             "require": {
@@ -529,9 +529,9 @@
             "description": "Utilities to handle nasty PHP E_* errors in a usable way",
             "support": {
                 "issues": "https://github.com/pmmp/ErrorHandler/issues",
-                "source": "https://github.com/pmmp/ErrorHandler/tree/0.4.0"
+                "source": "https://github.com/pmmp/ErrorHandler/tree/0.5.0"
             },
-            "time": "2021-12-16T18:13:42+00:00"
+            "time": "2022-01-07T23:16:40+00:00"
         },
         {
             "name": "pocketmine/log",
